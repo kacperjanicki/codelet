@@ -1,9 +1,8 @@
 import { useState } from "react";
 import "./css/game.css";
-import "./css/codeWindow.css";
-import Timer, { createNewTimer } from "./Timer";
 import SimpleCountdown from "./SimpleCountdown.jsx";
 import { createContext } from "react";
+import { CodeBlock, atomOneDark } from "react-code-blocks";
 
 const COUNTDOWN_TIME = 5;
 const CHANGE_QUESTION_DELAY = 2000;
@@ -17,7 +16,7 @@ const Quiz = () => {
             code: "x=[i-1 for i in range(1,10)]\nprint(x)",
             location: "/codelet-frontendassets/2.png",
             options: [
-                { choice: "A", answer: "[0, l1, 2, 3, 4, 5, 6, 7, 8]" },
+                { choice: "A", answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8]" },
                 { choice: "B", answer: "0 1 2 3 4 5 6 7 8 9" },
                 { choice: "C", answer: "0 1 2 3 4 5 6 7 8" },
                 { choice: "D", answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" },
@@ -91,7 +90,13 @@ const Quiz = () => {
                 </div>
                 <div className="question">{questions[currentQuestion].question}</div>
                 <div className="osx">
-                    <code>{questions[currentQuestion].code}</code>
+                    <CodeBlock
+                        text={questions[currentQuestion].code}
+                        language="python"
+                        showLineNumbers={true}
+                        theme={atomOneDark}
+                        customStyle={{ borderRadius: ".5rem", textAlign: "left" }}
+                    ></CodeBlock>
                 </div>
                 <div className="options">
                     {questions[currentQuestion].options.map((option) => {

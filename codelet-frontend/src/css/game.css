@@ -1,6 +1,19 @@
+/* button styling */
 .option-btn {
     height: 50px;
+    /* width: 150px; */
+    font-family: monospace;
+    border: none;
+    padding: 1rem;
     margin: 0.5rem;
+    background-color: #282c34;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.option-btn:hover {
+    cursor: pointer;
+    background-color: #20242b;
 }
 .correct {
     background-color: green;
@@ -9,10 +22,7 @@
     background-color: red;
 }
 
-.codeImg {
-    height: 250px;
-}
-
+/* timer styling */
 .timer {
     width: 0%;
     height: 20px;
@@ -36,4 +46,12 @@
         width: 0%;
         background: rgba(2, 42, 224, 1);
     }
+}
+
+/* style that is being applied to code container */
+.osx {
+    width: 500px;
+    /* height: 200px; */
+    /* border: 1px solid black; */
+    font-family: monospace;
 }
