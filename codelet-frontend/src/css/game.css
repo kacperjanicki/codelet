@@ -1,0 +1,39 @@
+.option-btn {
+    height: 50px;
+    margin: 0.5rem;
+}
+.correct {
+    background-color: green;
+}
+.incorrect {
+    background-color: red;
+}
+
+.codeImg {
+    height: 250px;
+}
+
+.timer {
+    width: 0%;
+    height: 20px;
+    background: rgba(2, 42, 224, 0.3);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 0.5rem;
+}
+
+.timerActive {
+    animation: runProgress 5s linear forwards 0.5s;
+}
+
+@keyframes runProgress {
+    0% {
+        width: 100%;
+        background: rgba(2, 42, 224, 0.3);
+    }
+    100% {
+        width: 0%;
+        background: rgba(2, 42, 224, 1);
+    }
+}

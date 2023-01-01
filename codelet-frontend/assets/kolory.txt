@@ -1,0 +1,2 @@
+tlo - hex = 2d2f33
+ciekawy niebieski odcien (moze logo) - hex = 183153
