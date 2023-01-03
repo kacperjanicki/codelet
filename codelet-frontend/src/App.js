@@ -2,6 +2,7 @@ import "./css/Core.css";
 import Quiz from "./components/Quiz";
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
                 <Routes>
                     <Route exact path="/" element={<LandingPage />}></Route>
                     <Route exact path="/login" element={<Login />}></Route>
+                    <Route exact path="/signup" element={<Signup />}></Route>
                     <Route exact path="/quiz" element={<Quiz />}></Route>
                 </Routes>
             </BrowserRouter>
