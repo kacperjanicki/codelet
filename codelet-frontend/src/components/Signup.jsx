@@ -4,13 +4,16 @@ import { singUpReq } from "../api_helper/user_functions";
 const Signup = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
+    // const [email, setEmail] = useState("");
     return (
         <form
             className="login"
             onSubmit={(e) => {
                 e.preventDefault();
-                singUpReq(username, password, email);
+                let result = singUpReq(username, password);
+                result.then((data) => {
+                    console.log(data);
+                });
             }}
         >
             <div>
@@ -37,7 +40,7 @@ const Signup = () => {
                     required
                 />
             </div>
-            <div>
+            {/* <div>
                 <input
                     type="email"
                     placeholder="Email"
@@ -48,7 +51,7 @@ const Signup = () => {
                     }}
                     required
                 />
-            </div>
+            </div> */}
 
             <div>
                 <button>Sign up</button>

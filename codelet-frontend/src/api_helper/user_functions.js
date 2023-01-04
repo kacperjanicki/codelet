@@ -13,14 +13,26 @@ export const loginReq = (username, password) => {
         .then((data) => console.log(data));
 };
 
-export const singUpReq = (username, password, email) =>
-    fetch(apiUrl + "signup", {
+export const singUpReq = (username, password) => {
+    let request = fetch(apiUrl + "signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ username: username, pass: password, email: email }),
+        body: JSON.stringify({ username: username, password: password }),
     })
-        .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((res) => {
+            if (res.ok) return res.json();
+            return res.text().then((txt) => {
+                throw new Error(txt);
+            });
+        })
+        .then((data) => {
+            return data;
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+    return request;
+};
