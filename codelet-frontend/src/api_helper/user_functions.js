@@ -24,7 +24,9 @@ export const singUpReq = (username, password) => {
         .then((res) => {
             if (res.ok) return res.json();
             return res.text().then((txt) => {
-                throw new Error(txt);
+                let err = JSON.parse(txt);
+                throw new Error(err.msg);
+                return err;
             });
         })
         .then((data) => {

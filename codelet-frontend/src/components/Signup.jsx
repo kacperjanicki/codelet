@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { singUpReq } from "../api_helper/user_functions";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [email, setEmail] = useState("");
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (shouldRedirect)
+            navigate(`/login?msg=Account created, now you can log in
+        &username=${username}`);
+    }, [shouldRedirect]);
     return (
         <form
             className="login"
             onSubmit={(e) => {
                 e.preventDefault();
                 let result = singUpReq(username, password);
+                console.log(result);
                 result.then((data) => {
                     console.log(data);
+                    if (data.ok) {
+                        console.log(data);
+                        setShouldRedirect(true);
+                    }
                 });
             }}
         >
@@ -52,7 +64,6 @@ const Signup = () => {
                     required
                 />
             </div> */}
-
             <div>
                 <button>Sign up</button>
             </div>

@@ -30,21 +30,23 @@ app.post("/signup", async (req, res) => {
             var msg;
             if (err.code === "23505") msg = "User already exists";
             if (err.code === "23514") msg = "Fields cannot contain empty values";
-            res.status(400).send(msg);
+            var response = { msg: msg, ok: false };
+            res.status(400).send(response);
         });
-    if (query) res.status(201).send({ msg: "user created" });
+    if (query) res.status(201).send({ msg: "user created", ok: true });
 });
-
-app.get("/login", async (req, res) => {
-    const result = await pool.query("INSERT INTO users (name) VALUES($1) RETURNING *;", ["koles"]);
-    console.log(result);
-
-    res.redirect("/");
-});
-
-app.post("/login", (req, res) => {
-    console.log(req.body);
-    res.send({ res: "login request" });
+//Log in route
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    let query = await pool.query(`SELECT name,password FROM users WHERE name=($1);`, [username]);
+    if (query.rowCount > 0) {
+        let queryRes = query.rows[0];
+        console.log(queryRes);
+        //if password correct
+        res.status(200).send({ user: queryRes, ok: true });
+    } else {
+        res.status(400).send({ msg: "User not found", ok: false });
+    }
 });
 
 app.listen(PORT, () => {
