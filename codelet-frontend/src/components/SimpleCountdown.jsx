@@ -10,7 +10,6 @@ function SimpleCountdown() {
     const { nextQuestion, seconds, setSeconds, COUNTDOWN_TIME } = useContext(quizContext);
 
     useEffect(() => {
-        if (deployed) {
             if (seconds > 0) {
                 const interval = setInterval(() => {
                     setSeconds((seconds) => seconds - 1);
@@ -21,10 +20,10 @@ function SimpleCountdown() {
             }
             if (seconds == 0) {
                 console.log("catch");
-                // nextQuestion();
-                // setSeconds(COUNTDOWN_TIME);
+                if(deployed) nextQuestion();
+                setSeconds(COUNTDOWN_TIME);
             }
-        }
+        
     }, [seconds]);
 
     return (
