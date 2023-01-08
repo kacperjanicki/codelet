@@ -1,7 +1,6 @@
 import { loginReq } from "../api_helper/user_functions";
-import React, { useState, useSearchParams } from "react";
-import { useEffect } from "react";
-import { Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -9,6 +8,8 @@ const Login = () => {
     const [autoFocus, setAutoFocus] = useState(false);
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState();
+    const [err, setErr] = useState("");
+    const history = useNavigate();
 
     useEffect(() => {
         const search = window.location.search;
@@ -23,11 +24,16 @@ const Login = () => {
     return (
         <Fragment>
             {msg ? msg : ""}
+            {err}
             <form
                 className="login"
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                     e.preventDefault();
-                    loginReq(username, password);
+                    let result = await loginReq(username, password);
+                    if (result) {
+                        if (result.ok) history("/LoggedIn");
+                        else setErr(result.msg);
+                    }
                 }}
             >
                 <div>
@@ -38,7 +44,7 @@ const Login = () => {
                         onChange={(e) => {
                             setUsername(e.target.value);
                         }}
-                        value={username}
+                        // value={username}
                         required
                     />
                 </div>

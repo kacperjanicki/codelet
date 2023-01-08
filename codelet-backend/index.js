@@ -3,6 +3,7 @@ const app = express();
 const PORT = 3001;
 const cors = require("cors");
 const pool = require("./db");
+const bcrypt = require("bcrypt");
 
 app.use(cors());
 app.use(express.json());
@@ -23,8 +24,9 @@ app.get("/", (req, res) => {
 // Signining up routes
 app.post("/signup", async (req, res) => {
     const { username, password } = req.body;
+    let hashedPass = await bcrypt.hash(password, 10);
     let query = await pool
-        .query("INSERT INTO users (name,password) VALUES($1,$2) RETURNING *;", [username, password])
+        .query("INSERT INTO users (name,password) VALUES($1,$2) RETURNING *;", [username, hashedPass])
         .catch((err) => {
             console.error(err);
             var msg;
@@ -41,9 +43,11 @@ app.post("/login", async (req, res) => {
     let query = await pool.query(`SELECT name,password FROM users WHERE name=($1);`, [username]);
     if (query.rowCount > 0) {
         let queryRes = query.rows[0];
+        let correctPass = await bcrypt.compare(password, queryRes.password);
+
         console.log(queryRes);
-        //if password correct
-        res.status(200).send({ user: queryRes, ok: true });
+        if (correctPass) res.status(200).send({ user: queryRes, ok: correctPass });
+        else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
     } else {
         res.status(400).send({ msg: "User not found", ok: false });
     }

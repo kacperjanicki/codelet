@@ -1,16 +1,20 @@
 let apiUrl = process.env.REACT_APP_apiURL;
 
 export const loginReq = (username, password) => {
-    fetch(apiUrl + "login", {
+    return fetch(apiUrl + "login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             // 'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ user: username, pass: password }),
+        body: JSON.stringify({ username: username, password: password }),
     })
-        .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            return data;
+        });
 };
 
 export const singUpReq = (username, password) => {
