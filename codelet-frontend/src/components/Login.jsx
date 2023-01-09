@@ -1,11 +1,14 @@
 import { loginReq } from "../api_helper/user_functions";
 import React, { useState, Fragment, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../App";
+import { useSignIn } from "react-auth-kit";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [redirectedUser, setRedirectedUser] = useState(undefined);
-    const [autoFocus, setAutoFocus] = useState(false);
+    // const [autoFocus, setAutoFocus] = useState(false);
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState();
     const [err, setErr] = useState("");
@@ -21,6 +24,9 @@ const Login = () => {
         setUsername(user);
     }, [msg, redirectedUser]);
 
+    const userObj = useContext(UserContext);
+    // console.log(userObj);
+
     return (
         <Fragment>
             {msg ? msg : ""}
@@ -30,9 +36,16 @@ const Login = () => {
                 onSubmit={async (e) => {
                     e.preventDefault();
                     let result = await loginReq(username, password);
+                    const signIn = useSignIn();
                     if (result) {
-                        if (result.ok) history("/LoggedIn");
-                        else setErr(result.msg);
+                        // signIn({token:result.token,expiresIn:36000,authState={name:result.}})
+                        console.log(result);
+                        if (result.ok) {
+                            userObj.setUserObj(result.user);
+                            // history("/LoggedIn");
+                        } else {
+                            setErr(result.msg);
+                        }
                     }
                 }}
             >

@@ -9,4 +9,20 @@
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    width: 100vw;
+}
+.navbar {
+    list-style: none;
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 2rem;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #242527;
+}
+.navbar > li > a {
+    text-decoration: none;
+    color: white;
 }

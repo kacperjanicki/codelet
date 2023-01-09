@@ -4,6 +4,7 @@ const PORT = 3001;
 const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 app.use(cors());
 app.use(express.json());
@@ -17,10 +18,6 @@ pool.query(
             );`
 ).catch((err) => console.error(err));
 
-app.get("/", (req, res) => {
-    pool.query("SELECT * FROM users;");
-    res.send("simple endpoint");
-});
 // Signining up routes
 app.post("/signup", async (req, res) => {
     const { username, password } = req.body;
@@ -37,17 +34,35 @@ app.post("/signup", async (req, res) => {
         });
     if (query) res.status(201).send({ msg: "user created", ok: true });
 });
+
+const verifyJwt = (req, res, next) => {
+    const token = req.headers["x-access-token"];
+    if (!token) return res.send("no token found");
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.send({ ok: false, msg: "Authentication failed" });
+        req.userId = decoded.name;
+    });
+};
+
+app.get("/isAuth", verifyJwt, (req, res) => {
+    res.status(200).send("you are authenticated");
+});
+
 //Log in route
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     let query = await pool.query(`SELECT name,password FROM users WHERE name=($1);`, [username]);
     if (query.rowCount > 0) {
         let queryRes = query.rows[0];
+        console.log(query);
         let correctPass = await bcrypt.compare(password, queryRes.password);
-
-        console.log(queryRes);
-        if (correctPass) res.status(200).send({ user: queryRes, ok: correctPass });
-        else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
+        // console.log(queryRes);
+        if (correctPass) {
+            const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+                expiresIn: 3600,
+            });
+            res.status(200).send({ token: token, user: queryRes, ok: correctPass });
+        } else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
     } else {
         res.status(400).send({ msg: "User not found", ok: false });
     }
