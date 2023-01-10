@@ -3,7 +3,6 @@ import React, { useState, Fragment, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../App";
-import { useSignIn } from "react-auth-kit";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -36,9 +35,7 @@ const Login = () => {
                 onSubmit={async (e) => {
                     e.preventDefault();
                     let result = await loginReq(username, password);
-                    const signIn = useSignIn();
                     if (result) {
-                        // signIn({token:result.token,expiresIn:36000,authState={name:result.}})
                         console.log(result);
                         if (result.ok) {
                             userObj.setUserObj(result.user);

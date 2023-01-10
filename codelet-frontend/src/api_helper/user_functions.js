@@ -5,7 +5,6 @@ export const loginReq = (username, password) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({ username: username, password: password }),
     })
@@ -13,6 +12,8 @@ export const loginReq = (username, password) => {
             return res.json();
         })
         .then((data) => {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
             return data;
         });
 };
@@ -26,19 +27,25 @@ export const singUpReq = (username, password) => {
         body: JSON.stringify({ username: username, password: password }),
     })
         .then((res) => {
-            if (res.ok) return res.json();
-            return res.text().then((txt) => {
-                let err = JSON.parse(txt);
-                throw new Error(err.msg);
-                return err;
-            });
+            return res.json();
         })
         .then((data) => {
             return data;
-        })
-        .catch((err) => {
-            console.error(err);
         });
-
+    return request;
+};
+export const isUserAuth = () => {
+    let request = fetch(apiUrl + "isAuth", {
+        method: "GET",
+        headers: {
+            "x-access-token": localStorage.getItem("token"),
+        },
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
     return request;
 };

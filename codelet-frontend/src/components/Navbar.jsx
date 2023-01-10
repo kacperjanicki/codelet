@@ -1,6 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { signOut } from "../api_helper/user_functions";
 import { UserContext } from "../App";
 
 const Navbar = () => {
@@ -22,7 +23,19 @@ const Navbar = () => {
                     </li>
                 </>
             ) : (
-                <>logged in as {userCon.userObj.name}</>
+                <>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            localStorage.removeItem("user");
+                            localStorage.removeItem("token");
+                            userCon.setUserObj();
+                        }}
+                    >
+                        Sign out
+                    </button>
+                    logged in as {userCon.userObj.name}
+                </>
             )}
         </ul>
     );

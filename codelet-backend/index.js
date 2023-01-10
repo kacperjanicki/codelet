@@ -37,15 +37,16 @@ app.post("/signup", async (req, res) => {
 
 const verifyJwt = (req, res, next) => {
     const token = req.headers["x-access-token"];
-    if (!token) return res.send("no token found");
+    if (token == "null") return res.send({ ok: false, msg: "no token found" });
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) return res.send({ ok: false, msg: "Authentication failed" });
         req.userId = decoded.name;
+        next();
     });
 };
 
 app.get("/isAuth", verifyJwt, (req, res) => {
-    res.status(200).send("you are authenticated");
+    res.status(200).send({ ok: true, msg: "you are authenticated" });
 });
 
 //Log in route
