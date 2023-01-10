@@ -1,4 +1,7 @@
 /* general core styles, background */
+* {
+    box-sizing: border-box;
+}
 .bgDefault {
     text-align: center;
     background-color: #2d2f33;
@@ -10,19 +13,27 @@
     font-size: calc(10px + 2vmin);
     color: white;
     width: 100vw;
+    margin: 0;
 }
 .navbar {
-    list-style: none;
     position: absolute;
     display: flex;
-    justify-content: space-evenly;
-    gap: 2rem;
+    justify-content: space-between;
     top: 0;
     left: 0;
-    padding: 1rem;
+    /* padding: 1rem; */
     background-color: #242527;
+    width: 100vw;
 }
-.navbar > li > a {
+.navRight {
+    margin-right: 1rem;
+}
+.nav {
+    list-style: none;
+    gap: 2rem;
+    display: flex;
+}
+.nav > li > a {
     text-decoration: none;
     color: white;
 }

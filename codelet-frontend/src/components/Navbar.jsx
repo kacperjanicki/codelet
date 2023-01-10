@@ -1,43 +1,65 @@
 import React from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../api_helper/user_functions";
 import { UserContext } from "../App";
 
 const Navbar = () => {
     const userCon = useContext(UserContext);
-    // console.log(userCon.userObj);
+    const history = useNavigate();
+
+    console.log(userCon.userObj);
 
     return (
-        <ul className="navbar">
-            <li>
-                <Link to="/home">Home</Link>
-            </li>
-            {!userCon.userObj ? (
-                <>
+        <nav className="navbar">
+            <ul className="nav navLeft">
+                <li>
+                    <Link to="/home">Home</Link>
+                </li>
+                <li>
+                    <Link to="/quiz">Quiz</Link>
+                </li>
+                {!userCon.userObj ? (
+                    <>
+                        <li>
+                            <Link to="/login">Login</Link>
+                        </li>
+                        <li>
+                            <Link to="/signup">Signup</Link>
+                        </li>
+                    </>
+                ) : null}
+            </ul>
+            {userCon.userObj ? (
+                <ul className="nav navRight">
                     <li>
-                        <Link to="/login">Login</Link>
+                        <span style={{ fontSize: "1rem" }}>logged in as {userCon.userObj.name}</span>
                     </li>
                     <li>
-                        <Link to="/signup">Signup</Link>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                localStorage.removeItem("user");
+                                localStorage.removeItem("token");
+                                userCon.setUserObj();
+                            }}
+                        >
+                            Sign out
+                        </button>
                     </li>
-                </>
-            ) : (
-                <>
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            localStorage.removeItem("user");
-                            localStorage.removeItem("token");
-                            userCon.setUserObj();
-                        }}
-                    >
-                        Sign out
-                    </button>
-                    logged in as {userCon.userObj.name}
-                </>
-            )}
-        </ul>
+                    <li>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                history(`/profile/${userCon.userObj.name}`);
+                            }}
+                        >
+                            Profile
+                        </button>
+                    </li>
+                </ul>
+            ) : null}
+        </nav>
     );
 };
 
