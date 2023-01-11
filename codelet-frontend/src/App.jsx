@@ -1,5 +1,5 @@
 import "./css/Core.css";
-import Quiz from "./components/Quiz";
+import Quiz from "./components/quiz/Quiz";
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -31,6 +31,8 @@ function App() {
                 if (res.ok) {
                     const foundUser = JSON.parse(localStorage.getItem("user"));
                     setUserObj(foundUser);
+                    setLoading(false);
+                } else if (!res.ok) {
                     setLoading(false);
                 }
             });
