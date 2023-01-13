@@ -5,6 +5,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Alert from "./components/Alert";
 import { createContext, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -36,6 +38,8 @@ function App() {
                     setLoading(false);
                 }
             });
+        } else {
+            setLoading(false);
         }
     }, []);
     return (
@@ -45,13 +49,24 @@ function App() {
                     <div className="bgDefault">
                         <BrowserRouter>
                             <Navbar />
+
                             <Routes>
+                                <Route exact path="/home" element={"a"}></Route>
                                 <Route exact path="/" element={<LandingPage />}></Route>
                                 <Route exact path="/login" element={<Login />}></Route>
                                 <Route exact path="/signup" element={<Signup />}></Route>
-                                <Route exact path="/quiz" element={<Quiz />}></Route>
+                                <Route
+                                    exact
+                                    path="/quiz"
+                                    element={
+                                        <ProtectedRoute>
+                                            <Quiz />
+                                        </ProtectedRoute>
+                                    }
+                                ></Route>
                                 <Route path="/profile/*" element={<Profile />}></Route>
                             </Routes>
+                            <Alert />
                         </BrowserRouter>
                     </div>
                 ) : (

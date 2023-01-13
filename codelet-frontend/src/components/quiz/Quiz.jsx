@@ -1,11 +1,13 @@
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useContext } from "react";
 import "./game.css";
 import SimpleCountdown from "./SimpleCountdown.jsx";
 import EndScreen from "./EndScreen.jsx";
 import { createContext } from "react";
 import { CodeBlock, atomOneDark } from "react-code-blocks";
+import { saveQuizToDb } from "../../api_helper/user_functions";
+import { UserContext } from "../../App";
 
-const COUNTDOWN_TIME = 5;
+const COUNTDOWN_TIME = 3;
 const CHANGE_QUESTION_DELAY = 2000;
 
 export const quizContext = createContext({});
@@ -53,8 +55,17 @@ const Quiz = () => {
     const [answerGiven, setanswerGiven] = useState(false);
     const [shouldDisplayAnswer, setShouldDisplayAnswer] = useState(false);
     const [score, setScore] = useState(0);
+    const [shouldEnd, setShouldEnd] = useState(false);
 
     var quizEnded = currentQuestion + 1 == questions.length + 1;
+    const userObj = useContext(UserContext).userObj;
+
+    useEffect(() => {
+        //wait until questions run out and save quiz results into database
+        if (quizEnded) {
+            saveQuizToDb(userObj.id, score);
+        }
+    }, [currentQuestion]);
 
     const nextQuestion = () => {
         setCurrentQuestion(currentQuestion + 1);
@@ -76,6 +87,7 @@ const Quiz = () => {
         if (currentQuestion + 1 == questions.length + 1) setanswerGiven(false);
     };
     useEffect(() => {
+        // reveal answer after timer passes
         if (seconds == 0) setShouldDisplayAnswer(true);
     }, [seconds]);
     useEffect(() => {
@@ -122,11 +134,10 @@ const Quiz = () => {
             btn.classList.remove("defaultOption");
         }
     };
-
     return (
-        <quizContext.Provider value={{ nextQuestion, seconds, setSeconds }}>
-            {currentQuestion + 1 == questions.length + 1 ? (
-                <EndScreen score={score} quizLen={questions.length} />
+        <quizContext.Provider value={{ nextQuestion, seconds, setSeconds, shouldEnd, setShouldEnd }}>
+            {quizEnded ? (
+                <EndScreen />
             ) : (
                 <Fragment>
                     <div className="score">Score: {score}</div>

@@ -8,8 +8,6 @@ const Navbar = () => {
     const userCon = useContext(UserContext);
     const history = useNavigate();
 
-    console.log(userCon.userObj);
-
     return (
         <nav className="navbar">
             <ul className="nav navLeft">

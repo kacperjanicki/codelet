@@ -49,3 +49,25 @@ export const isUserAuth = () => {
         });
     return request;
 };
+
+export const saveQuizToDb = (id, score) => {
+    console.log(id, score);
+    let request = fetch(apiUrl + "newquiz", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+            user_id: id,
+            score: score,
+        }),
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
