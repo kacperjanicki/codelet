@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Navbar from "./components/Navbar";
 import Profile from "./components/profile/Profile";
+import Homepage from "./components/homepage/Homepage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Alert from "./components/Alert";
 import { createContext, useState } from "react";
@@ -51,13 +52,13 @@ function App() {
                             <Navbar />
 
                             <Routes>
-                                <Route exact path="/home" element={"a"}></Route>
+                                <Route exact path="/home" element={<Homepage />}></Route>
                                 <Route exact path="/" element={<LandingPage />}></Route>
                                 <Route exact path="/login" element={<Login />}></Route>
                                 <Route exact path="/signup" element={<Signup />}></Route>
                                 <Route
                                     exact
-                                    path="/quiz"
+                                    path="/quiz/*"
                                     element={
                                         <ProtectedRoute>
                                             <Quiz />

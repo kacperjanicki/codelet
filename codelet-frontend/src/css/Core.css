@@ -1,17 +1,17 @@
 /* general core styles, background */
-* {
+.navbar {
     box-sizing: border-box;
 }
 .bgDefault {
-    text-align: center;
     background-color: #2d2f33;
     min-height: 100vh;
-    font-size: calc(10px + 2vmin);
+    font-size: 2rem;
     color: white;
     width: 100vw;
     margin: 0;
 }
 .middle {
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -26,12 +26,13 @@
     left: 0;
     /* padding: 1rem; */
     background-color: #242527;
-    width: 100vw;
+    /* width: 100vw; */
 }
 .navRight {
     margin-right: 1rem;
 }
 .nav {
+    display: block;
     list-style: none;
     gap: 2rem;
     display: flex;

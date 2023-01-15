@@ -6,6 +6,7 @@ const GameHistory = ({ games }) => {
 
     return (
         <div className="gameLog">
+            Game History:
             {games.map((game) => (
                 <GameRaport data={game} key={game.id} />
             ))}
@@ -16,7 +17,6 @@ const GameHistory = ({ games }) => {
 const GameRaport = ({ data }) => {
     return (
         <div key={data.id} className="gameLogCard">
-            Game History:
             <div>Quiz played at {data.date}</div>
             <div>Score: {data.score}</div>
         </div>

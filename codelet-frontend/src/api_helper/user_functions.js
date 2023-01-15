@@ -52,7 +52,7 @@ export const isUserAuth = () => {
 
 export const saveQuizToDb = (id, score) => {
     // console.log(id, score);
-    let request = fetch(apiUrl + "newquiz", {
+    let request = fetch(apiUrl + "quiz/newquiz", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -77,6 +77,23 @@ export const getProfileInfo = (username) => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
+        },
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+
+export const fetchQuiz = (name) => {
+    let request = fetch(apiUrl + `quiz/fetchQuiz/${name}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
         },
     })
         .then((response) => {

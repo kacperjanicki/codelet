@@ -5,6 +5,8 @@ const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const quizRouter = require("./quizHandlingApi.js");
+const verifyJwt = require("./verifyJWT");
 
 app.use(cors());
 app.use(express.json());
@@ -23,15 +25,7 @@ pool.query(
         CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));`
 ).catch((err) => console.error(err));
 
-const verifyJwt = (req, res, next) => {
-    const token = req.headers["x-access-token"];
-    if (token == "null") return res.send({ ok: false, msg: "no token found" });
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.send({ ok: false, msg: "Authentication failed" });
-        req.userId = decoded.name;
-        next();
-    });
-};
+app.use("/quiz", quizRouter);
 
 // Signining up routes
 app.post("/signup", async (req, res) => {
@@ -49,16 +43,6 @@ app.post("/signup", async (req, res) => {
             res.status(400).send(response);
         });
     if (query) res.status(201).send({ msg: "user created", ok: true });
-});
-
-app.post("/newquiz", verifyJwt, (req, res) => {
-    const { user_id, score } = req.body;
-    let pol = pool.query(`INSERT INTO quizgames(player_id,score,date) VALUES($1,$2,$3);`, [
-        user_id,
-        score,
-        new Date(),
-    ]);
-    res.send(pol);
 });
 
 app.get("/isAuth", verifyJwt, (req, res) => {

@@ -27,7 +27,7 @@ const Login = () => {
     // console.log(userObj);
 
     return (
-        <Fragment>
+        <div className="middle">
             {msg ? msg : ""}
             {err}
             <form
@@ -75,7 +75,7 @@ const Login = () => {
                     <button>Log in</button>
                 </div>
             </form>
-        </Fragment>
+        </div>
     );
 };
 export default Login;

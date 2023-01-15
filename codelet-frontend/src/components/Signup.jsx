@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import { singUpReq } from "../api_helper/user_functions";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const Signup = () => {
         &username=${username}`);
     }, [shouldRedirect]);
     return (
-        <Fragment>
+        <div className="middle">
             {err}
             <form
                 className="login"
@@ -67,7 +67,7 @@ const Signup = () => {
                     <button>Sign up</button>
                 </div>
             </form>
-        </Fragment>
+        </div>
     );
 };
 

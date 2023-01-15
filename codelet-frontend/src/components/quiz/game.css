@@ -56,7 +56,7 @@
 
 /* style that is being applied to code container */
 .osx {
-    width: 500px;
+    /* width: 500px; */
     /* height: 200px; */
     /* border: 1px solid black; */
     font-family: monospace;

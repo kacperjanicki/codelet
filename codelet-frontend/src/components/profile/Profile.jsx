@@ -2,9 +2,9 @@ import React, { useState, useEffect, Fragment } from "react";
 import { getProfileInfo } from "../../api_helper/user_functions";
 import GameHistory from "./GameHistory";
 
-let username = window.location.href.split("/")[4];
-
 const Profile = () => {
+    let username = window.location.href.split("/")[4];
+
     const [profile, setProfile] = useState(false);
     const [loaded, setLoaded] = useState(false);
     useEffect(() => {
