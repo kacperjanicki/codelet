@@ -18,7 +18,7 @@ const Alert = () => {
     useEffect(() => {
         if (queryParams.msg) setShouldDisplay(true);
     }, [queryParams]);
-    console.log(queryParams);
+
     if (shouldDisplay) {
         return (
             <>

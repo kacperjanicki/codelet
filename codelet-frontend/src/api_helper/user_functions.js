@@ -51,7 +51,7 @@ export const isUserAuth = () => {
 };
 
 export const saveQuizToDb = (id, score) => {
-    console.log(id, score);
+    // console.log(id, score);
     let request = fetch(apiUrl + "newquiz", {
         method: "POST",
         headers: {
@@ -62,6 +62,22 @@ export const saveQuizToDb = (id, score) => {
             user_id: id,
             score: score,
         }),
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+
+export const getProfileInfo = (username) => {
+    let request = fetch(apiUrl + `getProfileInfo?usr=${username}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
     })
         .then((response) => {
             return response.json();

@@ -80,6 +80,7 @@ const Quiz = () => {
         //hide indication for correct/wrong answer, all btns white
         btns.forEach((btn) => {
             btn.classList = "option-btn";
+            btn.disabled = false;
         });
         setanswerGiven([undefined, questions[currentQuestion].correct]);
         setBtnClicked(false);
@@ -117,6 +118,11 @@ const Quiz = () => {
                 correctAns.classList.add("correct");
             }
         }
+        let buttons = document.querySelectorAll(".option-btn");
+        buttons.forEach((btn) => {
+            btn.disabled = true;
+        });
+
         //  after 3s go to next question
         // setTimeout(() => {
         //     nextQuestion();
@@ -139,7 +145,7 @@ const Quiz = () => {
             {quizEnded ? (
                 <EndScreen />
             ) : (
-                <Fragment>
+                <div className="middle">
                     <div className="score">Score: {score}</div>
                     <div className="game-progress">
                         Question {currentQuestion + 1} out of {questions.length}
@@ -183,7 +189,7 @@ const Quiz = () => {
                         </button>
                         <SimpleCountdown />
                     </div>
-                </Fragment>
+                </div>
             )}
         </quizContext.Provider>
     );

@@ -88,6 +88,21 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.get("/getProfileInfo", async (req, res) => {
+    let requestedUser = req.query.usr;
+    let query = await pool.query(`SELECT * FROM users WHERE name=$1;`, [requestedUser]);
+    if (query.rows.length > 0) {
+        let user_id = query.rows[0].user_id;
+        let games = await pool.query(`SELECT * FROM quizgames WHERE player_id=$1;`, [user_id]);
+        let userObject = query.rows[0];
+        userObject.games = games.rows;
+
+        res.status(200).json({ res: userObject, err: false });
+    } else {
+        res.status(404).json({ msg: "User not found", err: true });
+    }
+});
+
 app.listen(PORT, () => {
     console.log("server listening on port " + PORT);
 });

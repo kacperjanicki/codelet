@@ -1,0 +1,9 @@
+.gameLog {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.gameLogCard {
+    height: 200px;
+}

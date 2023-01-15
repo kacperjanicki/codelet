@@ -4,7 +4,7 @@ import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Navbar from "./components/Navbar";
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Alert from "./components/Alert";
 import { createContext, useState } from "react";
