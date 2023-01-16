@@ -10,20 +10,21 @@ function SimpleCountdown() {
     const { nextQuestion, seconds, setSeconds, COUNTDOWN_TIME } = useContext(quizContext);
 
     useEffect(() => {
-            if (seconds > 0) {
-                const interval = setInterval(() => {
+        if (seconds > 0) {
+            const interval = setInterval(() => {
+                if (seconds > 0) {
                     setSeconds((seconds) => seconds - 1);
-                }, 1000);
-                return () => {
-                    clearInterval(interval);
-                };
-            }
-            if (seconds == 0) {
-                console.log("catch");
-                if(deployed) nextQuestion();
-                setSeconds(COUNTDOWN_TIME);
-            }
-        
+                }
+            }, 1000);
+            return () => {
+                clearInterval(interval);
+            };
+        }
+        if (seconds == 0) {
+            // console.log("catch");
+            if (deployed) nextQuestion();
+            setSeconds(COUNTDOWN_TIME);
+        }
     }, [seconds]);
 
     return (

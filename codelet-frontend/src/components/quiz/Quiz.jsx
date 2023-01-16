@@ -50,22 +50,29 @@ const Quiz = () => {
         }
     }, [currentQuestion]);
 
+    useEffect(() => {
+        if (currentQuestion == 0 && questions)
+            //when on first question, after questions are fetched from db
+            //add correct option to `answerGiven` state so it can be validated propertly
+            setanswerGiven([undefined, questions[currentQuestion].correct]);
+    }, [questions]);
+
     const nextQuestion = () => {
         setCurrentQuestion(currentQuestion + 1);
+        setanswerGiven([undefined, questions[currentQuestion].correct]);
         setSeconds(COUNTDOWN_TIME);
 
         let timerParent = document.querySelector(".timerParent");
         let timer = document.querySelector(".timer");
         timerParent.removeChild(timer);
         timerParent.appendChild(timer);
-        // console.log(timer);
         let btns = document.querySelectorAll(".option-btn");
+        console.log(btns);
         //hide indication for correct/wrong answer, all btns white
         btns.forEach((btn) => {
             btn.classList = "option-btn";
             btn.disabled = false;
         });
-        setanswerGiven([undefined, questions[currentQuestion].correct]);
         setBtnClicked(false);
         setShouldDisplayAnswer(false);
         if (currentQuestion + 1 == questions.length + 1) setanswerGiven(false);
@@ -74,49 +81,58 @@ const Quiz = () => {
         // reveal answer after timer passes
         if (seconds == 0) setShouldDisplayAnswer(true);
     }, [seconds]);
+
     useEffect(() => {
-        if (!quizEnded && questions) {
+        if (!shouldDisplayAnswer) return;
+        if (!quizEnded) {
+            console.log("catch");
             setanswerGiven([undefined, questions[currentQuestion].correct]);
         }
+    }, [shouldDisplayAnswer]);
+
+    useEffect(() => {
         // this piece of code is handling what happens when timer passes
         // it reveals correct answer whether user clicked something or not
         // if user selected correct option his score goes up
         // if user had not selected any option, correct option is revealed
         // without granting any points
-        if (seconds > 0) return;
+
+        //  after 3s go to next question
+        // setTimeout(() => {
+        //     nextQuestion();
+        // }, CHANGE_QUESTION_DELAY);
+        if (!shouldDisplayAnswer) return;
+        console.log(answerGiven);
         let correctAns = document.getElementById(answerGiven[1]);
-        console.log(answerGiven[0], answerGiven[1]);
-        console.log(btnClicked);
+
         if (!btnClicked) {
             correctAns.classList.add("correct");
         } else if (btnClicked) {
-            if (answerGiven[0] === answerGiven[1]) {
+            if (answerGiven[0] == answerGiven[1]) {
                 console.log("correct");
                 btnClicked.classList.add("correct");
                 btnClicked.classList.remove("answerGiven");
                 setScore(score + 1);
+                return;
             } else {
                 //mark selected answer as incorrect and reveal correct answer
+                console.log(answerGiven);
                 btnClicked.classList.add("incorrect");
                 correctAns.classList.add("correct");
+                return;
             }
         }
         let buttons = document.querySelectorAll(".option-btn");
         buttons.forEach((btn) => {
             btn.disabled = true;
         });
-
-        //  after 3s go to next question
-        // setTimeout(() => {
-        //     nextQuestion();
-        // }, CHANGE_QUESTION_DELAY);
     }, [shouldDisplayAnswer]);
 
     const optionClicked = (choice, correct) => {
         // following code will make button yellow indicating that option
         // has been selected, it also prevents from selecting two options at the same time
-        console.log(choice, correct);
         if (!answerGiven[0]) {
+            console.log(choice, correct);
             setanswerGiven([choice, correct]);
             let btn = document.getElementById(choice);
             btn.classList.add("answerGiven");
