@@ -39,7 +39,7 @@ const Login = () => {
                         console.log(result);
                         if (result.ok) {
                             userObj.setUserObj(result.user);
-                            // history("/LoggedIn");
+                            history("/home");
                         } else {
                             setErr(result.msg);
                         }

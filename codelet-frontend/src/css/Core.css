@@ -7,7 +7,7 @@
     min-height: 100vh;
     font-size: 2rem;
     color: white;
-    width: 100vw;
+    /* width: 100vw; */
     margin: 0;
 }
 .middle {
@@ -84,4 +84,18 @@
 .bottomLeft {
     bottom: 10;
     left: 10;
+}
+
+.notFound {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.notFoundmsg {
+    font-size: 1rem;
+    font-style: italic;
+
+    margin-top: 1rem;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { getProfileInfo } from "../../api_helper/user_functions";
+import RouteNotFound from "../RouteNotFound";
 import GameHistory from "./GameHistory";
 
 const Profile = () => {
@@ -30,7 +31,7 @@ const Profile = () => {
             </Fragment>
         );
     } else {
-        return "User not found";
+        return <RouteNotFound msg={"User not found"} />;
     }
 };
 

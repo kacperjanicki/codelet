@@ -1,5 +1,6 @@
 import "./css/Core.css";
 import Quiz from "./components/quiz/Quiz";
+import QuizRoute from "./components/quiz/QuizRoute";
 import LandingPage from "./components/LandingPage";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -14,6 +15,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "react-auth-kit";
 import { useEffect } from "react";
 import { isUserAuth } from "./api_helper/user_functions";
+import RouteNotFound from "./components/RouteNotFound";
 
 export const UserContext = createContext();
 
@@ -61,11 +63,12 @@ function App() {
                                     path="/quiz/*"
                                     element={
                                         <ProtectedRoute>
-                                            <Quiz />
+                                            <QuizRoute children={<Quiz />} />
                                         </ProtectedRoute>
                                     }
                                 ></Route>
                                 <Route path="/profile/*" element={<Profile />}></Route>
+                                <Route path="/*" element={<RouteNotFound msg={"Route not found"} />}></Route>
                             </Routes>
                             <Alert />
                         </BrowserRouter>
