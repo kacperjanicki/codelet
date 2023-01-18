@@ -15,7 +15,7 @@ const Navbar = () => {
                     <Link to="/home">Home</Link>
                 </li>
                 <li>
-                    <Link to="/quiz">Quiz</Link>
+                    <Link to="/explore">Explore</Link>
                 </li>
                 {!userCon.userObj ? (
                     <>
@@ -46,14 +46,15 @@ const Navbar = () => {
                         </button>
                     </li>
                     <li>
-                        <button
+                        {/* <button
                             onClick={(e) => {
                                 e.preventDefault();
                                 history(`/profile/${userCon.userObj.name}`);
                             }}
                         >
                             Profile
-                        </button>
+                        </button> */}
+                        <Link to={`/profile/${userCon.userObj.name}`}>Profile</Link>
                     </li>
                 </ul>
             ) : null}

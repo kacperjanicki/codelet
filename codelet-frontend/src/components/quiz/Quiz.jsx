@@ -13,8 +13,11 @@ const CHANGE_QUESTION_DELAY = 2000;
 export const quizContext = createContext({});
 
 const Quiz = () => {
-    let quizName = window.location.href.split("/")[4];
+    let quizLang = window.location.href.split("/")[4];
+    let quizId = window.location.href.split("/")[5];
+
     const [questions, setQuestions] = useState(false);
+    const [quizFetched, setQuizFetched] = useState();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -24,9 +27,12 @@ const Quiz = () => {
     useEffect(() => {
         if (!loading) {
             async function getQuiz() {
-                let quiz = await fetchQuiz(quizName);
+                let quiz = await fetchQuiz(quizLang, quizId);
                 console.log(quiz);
-                setQuestions(quiz.data);
+                quiz.data.questions = quiz.data.questions.questions;
+
+                setQuestions(quiz.data.questions);
+                setQuizFetched(quiz);
             }
             getQuiz();
         }
@@ -38,6 +44,9 @@ const Quiz = () => {
     const [answerGiven, setanswerGiven] = useState(false);
     const [shouldDisplayAnswer, setShouldDisplayAnswer] = useState(false);
     const [score, setScore] = useState(0);
+    const [progress, setProgress] = useState([]);
+    const [omitted, setOmitted] = useState(false);
+
     const [shouldEnd, setShouldEnd] = useState(false);
 
     var quizEnded = currentQuestion + 1 == questions.length + 1;
@@ -46,8 +55,9 @@ const Quiz = () => {
     useEffect(() => {
         //wait until questions run out and save quiz results into database
         if (quizEnded) {
-            saveQuizToDb(userObj.id, score);
+            saveQuizToDb(userObj.id, score, progress, questions);
         }
+        if (!answerGiven[0]) setOmitted(true);
     }, [currentQuestion]);
 
     useEffect(() => {
@@ -59,6 +69,16 @@ const Quiz = () => {
 
     const nextQuestion = () => {
         setCurrentQuestion(currentQuestion + 1);
+        if (omitted) {
+            setProgress((progress) => [
+                ...progress,
+                {
+                    questionId: currentQuestion,
+                    correct: false,
+                    answerGiven: false,
+                },
+            ]);
+        }
         setanswerGiven([undefined, questions[currentQuestion].correct]);
         setSeconds(COUNTDOWN_TIME);
 
@@ -67,7 +87,6 @@ const Quiz = () => {
         timerParent.removeChild(timer);
         timerParent.appendChild(timer);
         let btns = document.querySelectorAll(".option-btn");
-        console.log(btns);
         //hide indication for correct/wrong answer, all btns white
         btns.forEach((btn) => {
             btn.classList = "option-btn";
@@ -85,7 +104,6 @@ const Quiz = () => {
     useEffect(() => {
         if (!shouldDisplayAnswer) return;
         if (!quizEnded) {
-            console.log("catch");
             setanswerGiven([undefined, questions[currentQuestion].correct]);
         }
     }, [shouldDisplayAnswer]);
@@ -102,21 +120,29 @@ const Quiz = () => {
         //     nextQuestion();
         // }, CHANGE_QUESTION_DELAY);
         if (!shouldDisplayAnswer) return;
-        console.log(answerGiven);
         let correctAns = document.getElementById(answerGiven[1]);
 
         if (!btnClicked) {
             correctAns.classList.add("correct");
+            setOmitted(true);
         } else if (btnClicked) {
+            setProgress((progress) => [
+                ...progress,
+                {
+                    questionId: currentQuestion,
+                    correct: answerGiven[0] == answerGiven[1],
+                    answerGiven: answerGiven[0],
+                },
+            ]);
+            setOmitted(false);
+
             if (answerGiven[0] == answerGiven[1]) {
-                console.log("correct");
                 btnClicked.classList.add("correct");
                 btnClicked.classList.remove("answerGiven");
                 setScore(score + 1);
                 return;
             } else {
                 //mark selected answer as incorrect and reveal correct answer
-                console.log(answerGiven);
                 btnClicked.classList.add("incorrect");
                 correctAns.classList.add("correct");
                 return;
@@ -132,7 +158,6 @@ const Quiz = () => {
         // following code will make button yellow indicating that option
         // has been selected, it also prevents from selecting two options at the same time
         if (!answerGiven[0]) {
-            console.log(choice, correct);
             setanswerGiven([choice, correct]);
             let btn = document.getElementById(choice);
             btn.classList.add("answerGiven");
@@ -173,7 +198,11 @@ const Quiz = () => {
                     optionClicked,
                 }}
             >
-                {quizEnded ? <EndScreen /> : <QuizCore f={coreFunctions} />}
+                {quizEnded ? (
+                    <EndScreen data={progress} quizObj={quizFetched} />
+                ) : (
+                    <QuizCore f={coreFunctions} />
+                )}
             </quizContext.Provider>
         );
     } else {

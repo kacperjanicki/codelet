@@ -3,3 +3,4 @@
 DONE - Don't show correct answer immediately, wait for question timer to pass, while it passes make button turn yellow. Then after timer passes, make button green or red.
 
 -   handle what happens when someone refreshes quiz
+-   bug: clicking profile button in navbar when on 404 not found

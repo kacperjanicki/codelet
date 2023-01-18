@@ -8,26 +8,32 @@ const fs = require("fs");
 //when more quizes are available and users can create quizes
 let allQuizIds = ["python001"];
 
-router.get("/fetchQuiz/:id", verifyJwt, (req, res) => {
-    let requestedQuiz = req.params.id;
-    let file;
-    if (allQuizIds.includes(requestedQuiz)) {
-        fs.readFile("./" + requestedQuiz + ".json", (err, data) => {
-            file = JSON.parse(data);
-            res.json({ ok: true, data: JSON.parse(data) });
-        });
+router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {
+    let requestedLang = req.params.lang;
+    let requestedId = req.params.id;
+
+    let query = await pool.query(`SELECT * FROM quizes WHERE lang=$1 AND no=$2;`, [
+        requestedLang,
+        requestedId,
+    ]);
+    if (query.rowCount > 0) {
+        let quiz = query.rows[0];
+
+        res.status(200).json({ ok: true, data: quiz });
+        // res.json({ok:true,data:query})
     } else {
-        res.status(404).json({ ok: false, msg: `Quiz ${requestedQuiz} not found` });
+        res.status(404).json({ ok: false, msg: `Quiz ${requestedLang}${requestedId} not found` });
     }
 });
 
 router.post("/newquiz", (req, res) => {
-    const { user_id, score } = req.body;
-    let pol = pool.query(`INSERT INTO quizgames(player_id,score,date) VALUES($1,$2,$3);`, [
-        user_id,
-        score,
-        new Date(),
-    ]);
+    const { user_id, score, callback, questions } = req.body;
+    let raport = { callback: callback };
+    let questionData = { questions: questions };
+    let pol = pool.query(
+        `INSERT INTO quizgames(player_id,score,date,callback,questions) VALUES($1,$2,$3,$4,$5);`,
+        [user_id, score, new Date(), raport, questionData]
+    );
     res.send(pol);
 });
 

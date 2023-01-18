@@ -5,12 +5,14 @@ import { saveQuizToDb } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 import { quizContext } from "./Quiz";
 
-const EndScreen = (data) => {
-    // useEffect(() => {
-    //
-    // }, []);
+const EndScreen = ({ data, quizObj }) => {
+    console.log(data);
+    console.log(quizObj);
+    return <Callback />;
+};
 
-    return `end`;
+const Callback = () => {
+    return "callback";
 };
 
 export default EndScreen;

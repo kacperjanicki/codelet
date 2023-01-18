@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
+import { Link, useParams } from "react-router-dom";
 import { getProfileInfo } from "../../api_helper/user_functions";
 import RouteNotFound from "../RouteNotFound";
 import GameHistory from "./GameHistory";
 
 const Profile = () => {
-    let username = window.location.href.split("/")[4];
+    let { username } = useParams();
 
     const [profile, setProfile] = useState(false);
     const [loaded, setLoaded] = useState(false);
@@ -20,18 +21,24 @@ const Profile = () => {
                 console.log(info);
             }
             fetchProfile();
+            console.log(profile);
         }
     }, [loaded]);
+    let personalContent = true;
 
-    if (profile) {
-        return (
-            <Fragment>
-                <div>{profile.name} Profile</div>
-                <GameHistory games={profile.games} />
-            </Fragment>
-        );
-    } else {
-        return <RouteNotFound msg={"User not found"} />;
+    if (!loaded) return "loading..";
+    if (loaded) {
+        if (profile) {
+            return (
+                <div className="profile">
+                    <div>{profile.name} Profile</div>
+                    {personalContent ? <Link to="/profile/a/edit">Edit profile</Link> : null}
+                    <GameHistory games={profile.games} />
+                </div>
+            );
+        } else {
+            return <RouteNotFound msg={["User", "not found", username]} />;
+        }
     }
 };
 

@@ -16,6 +16,7 @@ import { AuthProvider } from "react-auth-kit";
 import { useEffect } from "react";
 import { isUserAuth } from "./api_helper/user_functions";
 import RouteNotFound from "./components/RouteNotFound";
+import EditProfile from "./components/profile/EditProfile";
 
 export const UserContext = createContext();
 
@@ -67,8 +68,12 @@ function App() {
                                         </ProtectedRoute>
                                     }
                                 ></Route>
-                                <Route path="/profile/*" element={<Profile />}></Route>
-                                <Route path="/*" element={<RouteNotFound msg={"Route not found"} />}></Route>
+                                <Route exact path="/profile/:username/edit" element={<EditProfile />}></Route>
+                                <Route exact path="/profile/:username" element={<Profile />}></Route>
+                                <Route
+                                    path="/*"
+                                    element={<RouteNotFound msg={["Route", "not found"]} />}
+                                ></Route>
                             </Routes>
                             <Alert />
                         </BrowserRouter>

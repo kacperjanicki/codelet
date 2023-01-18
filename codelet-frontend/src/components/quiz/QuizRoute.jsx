@@ -5,14 +5,15 @@ import RouteNotFound from "../RouteNotFound";
 //this component will redirect when quizId is not valid
 
 const QuizRoute = ({ children }) => {
-    let quizName = window.location.href.split("/")[4];
+    let quizId = window.location.href.split("/")[5];
+    let quizLang = window.location.href.split("/")[4];
     const [loading, setLoading] = useState(true);
     const [valid, setValid] = useState(false);
     const [msg, setMsg] = useState(false);
 
     useEffect(() => {
         async function isQuizValid() {
-            let response = await fetchQuiz(quizName);
+            let response = await fetchQuiz(quizLang, quizId);
             if (response.ok) setValid(true);
             else if (!response.ok) setMsg(response.msg);
             setLoading(false);

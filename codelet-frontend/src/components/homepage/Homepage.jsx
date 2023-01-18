@@ -34,7 +34,7 @@ const Card = ({ type, id }) => {
                 {type}
                 {id}
                 <div>
-                    <Link to={`/quiz/${type}${id}`}>Start quiz</Link>
+                    <Link to={`/quiz/${type}/${id}`}>Start quiz</Link>
                 </div>
             </div>
             <div className="description"></div>

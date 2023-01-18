@@ -50,7 +50,7 @@ export const isUserAuth = () => {
     return request;
 };
 
-export const saveQuizToDb = (id, score) => {
+export const saveQuizToDb = (id, score, callback, questions) => {
     // console.log(id, score);
     let request = fetch(apiUrl + "quiz/newquiz", {
         method: "POST",
@@ -61,6 +61,8 @@ export const saveQuizToDb = (id, score) => {
         body: JSON.stringify({
             user_id: id,
             score: score,
+            callback: callback,
+            questions: questions,
         }),
     })
         .then((response) => {
@@ -88,8 +90,8 @@ export const getProfileInfo = (username) => {
     return request;
 };
 
-export const fetchQuiz = (name) => {
-    let request = fetch(apiUrl + `quiz/fetchQuiz/${name}`, {
+export const fetchQuiz = (lang, id) => {
+    let request = fetch(apiUrl + `quiz/fetchQuiz/${lang}/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

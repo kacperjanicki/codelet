@@ -21,8 +21,16 @@ pool.query(
         id SERIAL PRIMARY KEY,
         player_id INT NOT NULL,
         score INT NOT NULL,
+        callback JSONB NOT NULL,
+        questions JSONB NOT NULL,
         date TIMESTAMP,
-        CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));`
+        CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));
+    CREATE TABLE IF NOT EXISTS quizes (
+        id SERIAL PRIMARY KEY,
+        no VARCHAR(255) NOT NULL CHECK (no <> ''),
+        lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
+        public BOOLEAN NOT NULL,
+        questions JSONB NOT NULL);`
 ).catch((err) => console.error(err));
 
 app.use("/quiz", quizRouter);
@@ -47,6 +55,85 @@ app.post("/signup", async (req, res) => {
 
 app.get("/isAuth", verifyJwt, (req, res) => {
     res.status(200).send({ ok: true, msg: "you are authenticated" });
+});
+
+app.get("/insert", async (req, res) => {
+    let questions = [
+        {
+            question: "What will be the output?",
+            code: "x=[i-1 for i in range(1,10)]\nprint(x)",
+            options: [
+                {
+                    choice: "A",
+                    answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8]",
+                },
+                {
+                    choice: "B",
+                    answer: "0 1 2 3 4 5 6 7 8 9",
+                },
+                {
+                    choice: "C",
+                    answer: "0 1 2 3 4 5 6 7 8",
+                },
+                {
+                    choice: "D",
+                    answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+                },
+            ],
+            correct: "A",
+        },
+        {
+            question: "What will this code produce?",
+            code: "name='jAck'\nname = name.capitalize()\nprint(name)",
+            options: [
+                {
+                    choice: "A",
+                    answer: "JACK",
+                },
+                {
+                    choice: "B",
+                    answer: "jack",
+                },
+                {
+                    choice: "C",
+                    answer: "Jack",
+                },
+                {
+                    choice: "D",
+                    answer: "JAck",
+                },
+            ],
+            correct: "A",
+        },
+        {
+            question: "What will be the output?",
+            code: "x = [1,2,3]\ny=x\ny[1] = 4\nprint(x)",
+            options: [
+                {
+                    choice: "A",
+                    answer: "[1,2,3]",
+                },
+                {
+                    choice: "B",
+                    answer: "[4,2,3]",
+                },
+                {
+                    choice: "C",
+                    answer: "[1,4,3]",
+                },
+                {
+                    choice: "D",
+                    answer: "[1,2,4]",
+                },
+            ],
+            correct: "A",
+        },
+    ];
+    let query = await pool.query(
+        `INSERT INTO quizes(no,lang,public,questions) VALUES('001','python',TRUE,$1);`,
+        [{ questions: questions }]
+    );
+    res.send(query);
 });
 
 //Log in route
@@ -75,6 +162,7 @@ app.post("/login", async (req, res) => {
 app.get("/getProfileInfo", async (req, res) => {
     let requestedUser = req.query.usr;
     let query = await pool.query(`SELECT * FROM users WHERE name=$1;`, [requestedUser]);
+
     if (query.rows.length > 0) {
         let user_id = query.rows[0].user_id;
         let games = await pool.query(`SELECT * FROM quizgames WHERE player_id=$1;`, [user_id]);
