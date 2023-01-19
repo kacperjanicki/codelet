@@ -15,7 +15,7 @@ const QuizRoute = ({ children }) => {
         async function isQuizValid() {
             let response = await fetchQuiz(quizLang, quizId);
             if (response.ok) setValid(true);
-            else if (!response.ok) setMsg(response.msg);
+            else if (!response.ok) setMsg(["Quiz", `${quizLang}${quizId}`, "not found"]);
             setLoading(false);
         }
         isQuizValid();

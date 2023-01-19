@@ -37,7 +37,7 @@ const Profile = () => {
                 </div>
             );
         } else {
-            return <RouteNotFound msg={["User", "not found", username]} />;
+            return <RouteNotFound msg={["User", username, "not found"]} />;
         }
     }
 };

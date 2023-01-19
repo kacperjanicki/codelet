@@ -1,16 +1,30 @@
 import React from "react";
 import "./homepage.css";
 import { Link } from "react-router-dom";
+import { quizesAvailable } from "../../api_helper/user_functions";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Homepage = () => {
+    let availableQuizes = false;
+    const [quizes, setQuizes] = useState([]);
+
+    useEffect(() => {
+        async function getAllQuizes() {
+            let res = await quizesAvailable();
+            setQuizes(res.quizList);
+        }
+        getAllQuizes();
+    }, []);
+
+    console.log(quizes);
+
     return (
         <div className="homePage">
             <div className="homeBlock">
-                <div className="header">Quizes for you:</div>
+                <div className="header">All quizes</div>
                 <div className="cardsContainer">
-                    <Card type="python" id="001" />
-                    <Card type="python" id="001" />
-                    <Card type="python" id="001" />
+                    {quizes && quizes.map((quiz) => <Card type={quiz.lang} id={quiz.no} />)}
                 </div>
             </div>
             <div className="homeBlock">

@@ -57,19 +57,21 @@ app.get("/isAuth", verifyJwt, (req, res) => {
     res.status(200).send({ ok: true, msg: "you are authenticated" });
 });
 
+//dont look at this, couldnt get this working otherwise ;/
 app.get("/insert", async (req, res) => {
     let questions = [
         {
-            question: "What will be the output?",
-            code: "x=[i-1 for i in range(1,10)]\nprint(x)",
+            question:
+                "What is the correct JavaScript syntax to change the content of the HTML element below?",
+            code: "<p id=`demo`>This is a demonstration.</p>",
             options: [
                 {
                     choice: "A",
-                    answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8]",
+                    answer: "document.getElementByName(`p`).innerHTML = `Hello World!`",
                 },
                 {
                     choice: "B",
-                    answer: "0 1 2 3 4 5 6 7 8 9",
+                    answer: "document.getElementById(`demo`).innerHTML = `Hello World!`",
                 },
                 {
                     choice: "C",
@@ -80,57 +82,11 @@ app.get("/insert", async (req, res) => {
                     answer: "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
                 },
             ],
-            correct: "A",
-        },
-        {
-            question: "What will this code produce?",
-            code: "name='jAck'\nname = name.capitalize()\nprint(name)",
-            options: [
-                {
-                    choice: "A",
-                    answer: "JACK",
-                },
-                {
-                    choice: "B",
-                    answer: "jack",
-                },
-                {
-                    choice: "C",
-                    answer: "Jack",
-                },
-                {
-                    choice: "D",
-                    answer: "JAck",
-                },
-            ],
-            correct: "A",
-        },
-        {
-            question: "What will be the output?",
-            code: "x = [1,2,3]\ny=x\ny[1] = 4\nprint(x)",
-            options: [
-                {
-                    choice: "A",
-                    answer: "[1,2,3]",
-                },
-                {
-                    choice: "B",
-                    answer: "[4,2,3]",
-                },
-                {
-                    choice: "C",
-                    answer: "[1,4,3]",
-                },
-                {
-                    choice: "D",
-                    answer: "[1,2,4]",
-                },
-            ],
-            correct: "A",
+            correct: "B",
         },
     ];
     let query = await pool.query(
-        `INSERT INTO quizes(no,lang,public,questions) VALUES('001','python',TRUE,$1);`,
+        `INSERT INTO quizes(no,lang,public,questions) VALUES('001','javascript',TRUE,$1);`,
         [{ questions: questions }]
     );
     res.send(query);

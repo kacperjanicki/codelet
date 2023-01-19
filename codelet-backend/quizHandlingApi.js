@@ -26,6 +26,15 @@ router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {
     }
 });
 
+router.get("/allQuizesFetch", async (req, res) => {
+    let query = await pool.query(`SELECT * FROM quizes;`);
+    if (query.rowCount > 0) {
+        res.status(200).json({ ok: true, quizList: query.rows });
+    } else {
+        res.status(404).json({ ok: false, msg: `No available quizes` });
+    }
+});
+
 router.post("/newquiz", (req, res) => {
     const { user_id, score, callback, questions } = req.body;
     let raport = { callback: callback };
