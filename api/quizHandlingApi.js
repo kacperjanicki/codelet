@@ -35,15 +35,30 @@ router.get("/allQuizesFetch", async (req, res) => {
     }
 });
 
-router.post("/newquiz", (req, res) => {
+router.post("/newquiz", async (req, res) => {
     const { user_id, score, callback, questions } = req.body;
     let raport = { callback: callback };
     let questionData = { questions: questions };
-    let pol = pool.query(
+    let date = new Date();
+    let pol = await pool.query(
         `INSERT INTO quizgames(player_id,score,date,callback,questions) VALUES($1,$2,$3,$4,$5);`,
-        [user_id, score, new Date(), raport, questionData]
+        [user_id, score, date, raport, questionData]
     );
-    res.send(pol);
+    let id = await pool.query(
+        `
+    SELECT id FROM quizgames WHERE date=$1;`,
+        [date]
+    );
+    let quizID = id.rows[0].id;
+
+    let quizObj = await pool.query(
+        `
+    SELECT * FROM quizgames WHERE id=$1;
+    `,
+        [quizID]
+    );
+
+    res.json(quizObj.rows);
 });
 
 module.exports = router;

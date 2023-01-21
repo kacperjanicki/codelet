@@ -28,7 +28,6 @@ const Quiz = () => {
         if (!loading) {
             async function getQuiz() {
                 let quiz = await fetchQuiz(quizLang, quizId);
-                console.log(quiz);
                 quiz.data.questions = quiz.data.questions.questions;
 
                 setQuestions(quiz.data.questions);
@@ -52,10 +51,15 @@ const Quiz = () => {
     var quizEnded = currentQuestion + 1 == questions.length + 1;
     const userObj = useContext(UserContext).userObj;
 
+    const [quizObj, setQuizObj] = useState(false);
     useEffect(() => {
         //wait until questions run out and save quiz results into database
         if (quizEnded) {
-            saveQuizToDb(userObj.id, score, progress, questions);
+            async function saveQuiz() {
+                let res = await saveQuizToDb(userObj.id, score, progress, questions);
+                setQuizObj(res);
+            }
+            saveQuiz();
         }
         if (!answerGiven[0]) setOmitted(true);
     }, [currentQuestion]);
@@ -199,11 +203,7 @@ const Quiz = () => {
                     optionClicked,
                 }}
             >
-                {quizEnded ? (
-                    <EndScreen data={progress} quizObj={quizFetched} />
-                ) : (
-                    <QuizCore f={coreFunctions} />
-                )}
+                {quizEnded ? quizObj && <EndScreen data={quizObj} /> : <QuizCore f={coreFunctions} />}
             </quizContext.Provider>
         );
     } else {

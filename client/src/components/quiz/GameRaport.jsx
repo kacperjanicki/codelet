@@ -59,7 +59,10 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                 setSelected(btn.id);
                 btn.classList.add("answerGiven");
             }
-            // console.log(btn.id, callback.answerGiven);
+            // console.log();
+
+            // console.log(callback);
+            // // console.log(btn.id, callback.answerGiven);
         });
     }, []);
 
@@ -84,7 +87,9 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                     <button className="option-btn defaultOption" id={option.choice}>
                         {option.choice}: {option.answer}
                     </button>
-                    {option.choice == selected && "Your answer"}
+                    {option.choice == selected && "You selected"}
+                    {option.choice == correct && "Correct answer"}
+                    {/* {option.choice == selected && "You selected"} */}
                 </div>
             ))}
         </div>

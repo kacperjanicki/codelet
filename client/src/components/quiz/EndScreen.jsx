@@ -5,32 +5,22 @@ import GameRaport from "./GameRaport";
 import { getProfileInfo } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 
-const EndScreen = ({ data, quizObj }) => {
+const EndScreen = ({ data }) => {
     const [profile, setProfile] = useState(false);
     const [loaded, setLoaded] = useState(false);
+    const [profileSet, setProfileSet] = useState(false);
 
     const user = useContext(UserContext).userObj;
+    data = data[0];
 
-    useEffect(() => {
-        setLoaded(true);
-    }, []);
+    console.log(data);
 
-    useEffect(() => {
-        if (loaded) {
-            async function fetchProfile() {
-                let info = await getProfileInfo(user.name);
-                if (!info.err) setProfile(info.res);
-                console.log(info);
-            }
-            fetchProfile();
-            console.log(profile);
-        }
-    }, [loaded]);
-    if (profile) return <Callback data={profile.games[profile.games.length - 1]} />;
+    // console.log(profile.games, profile.games.length - 1);
+    return <GameRaport data={data} />;
 };
 
 const Callback = ({ data }) => {
-    console.log(data);
+    // console.log(data);
     return <GameRaport data={data} />;
 };
 
