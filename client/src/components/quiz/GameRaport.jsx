@@ -4,7 +4,7 @@ import { CodeBlock } from "react-code-blocks";
 import { atomOneDark } from "react-code-blocks";
 import { useEffect } from "react";
 
-const GameRaport = ({ data }) => {
+const GameRaport = ({ data, key }) => {
     const [isOpen, setIsOpen] = useState(false);
     function openModal() {
         setIsOpen(true);
@@ -48,8 +48,16 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
     let questionId = questionArr.indexOf(question);
     // console.log(callback);
     const [selected, setSelected] = useState();
-    const [correct, setCorrect] = useState();
     const [wrong, setWrong] = useState();
+
+    let correct = questionArr[questionArr.indexOf(question)].correct;
+    let isCorrect = correct == selected;
+    let isOmitted = !selected;
+
+    const [indicationStr, setIndicationStr] = useState("");
+    console.log(isOmitted);
+
+    // console.log(correct);
 
     useEffect(() => {
         let questionDiv = document.getElementById(questionId);
@@ -59,20 +67,37 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                 setSelected(btn.id);
                 btn.classList.add("answerGiven");
             }
-            // console.log();
-
-            // console.log(callback);
-            // // console.log(btn.id, callback.answerGiven);
+            if (btn.id == correct) {
+                btn.classList.add("correct");
+            }
         });
+        let numStr = questionDiv.querySelector(`.questionNum${questionDiv.id}`);
+        if (isOmitted) {
+            numStr.style = "color:grey;";
+            setIndicationStr("You omitted this question");
+        } else {
+            if (!isCorrect && !isOmitted) {
+                numStr.style = "color:red;";
+            } else if (isCorrect) {
+                numStr.style = "color:green;";
+            }
+            setIndicationStr("");
+        }
+
+        // console.log(callback);
     }, []);
 
     // callback.map((call) => {});
 
     return (
         <div id={questionId}>
-            <div>Question {questionId + 1}</div>
+            <div className={`questionNum${questionId}`}>
+                Question {questionId + 1} {indicationStr}
+            </div>
             <div>{question.question}</div>
-            You answered: {callback.answerGiven}
+            <div>You answered: {callback.answerGiven}</div>
+            <div>Correct answer: {correct}</div>
+            {`${isCorrect}`}
             <div>
                 <CodeBlock
                     text={question.code}
@@ -87,8 +112,9 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                     <button className="option-btn defaultOption" id={option.choice}>
                         {option.choice}: {option.answer}
                     </button>
-                    {option.choice == selected && "You selected"}
-                    {option.choice == correct && "Correct answer"}
+                    {option.choice == correct && selected == option.choice && "You got it right"}
+                    {option.choice == correct && selected != option.choice && "Correct answer"}
+                    {option.choice != correct && selected == option.choice && "You got it wrong"}
                     {/* {option.choice == selected && "You selected"} */}
                 </div>
             ))}
