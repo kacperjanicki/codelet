@@ -4,3 +4,4 @@ DONE - Don't show correct answer immediately, wait for question timer to pass, w
 
 -   handle what happens when someone refreshes quiz
 -   bug: clicking profile button in navbar when on 404 not found
+-   when adding comments in future make sure that when someone comments and then changes username it will show properly

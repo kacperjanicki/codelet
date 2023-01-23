@@ -68,7 +68,15 @@ function App() {
                                         </ProtectedRoute>
                                     }
                                 ></Route>
-                                <Route exact path="/profile/:username/edit" element={<EditProfile />}></Route>
+                                <Route
+                                    exact
+                                    path="/profile/:username/edit"
+                                    element={
+                                        <ProtectedRoute>
+                                            <EditProfile />
+                                        </ProtectedRoute>
+                                    }
+                                ></Route>
                                 <Route exact path="/profile/:username" element={<Profile />}></Route>
                                 <Route
                                     path="/*"

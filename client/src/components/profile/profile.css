@@ -11,3 +11,10 @@
 .profile {
     padding: 1rem;
 }
+.sortBtn {
+    width: 100px;
+}
+.sortDiv {
+    display: flex;
+    gap: 1rem;
+}

@@ -5,7 +5,8 @@ const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const quizRouter = require("./quizHandlingApi.js");
+const quizRouter = require("./quiz.js");
+const userRouter = require("./user.js");
 const verifyJwt = require("./verifyJWT");
 
 app.use(cors());
@@ -34,6 +35,7 @@ pool.query(
 ).catch((err) => console.error(err));
 
 app.use("/quiz", quizRouter);
+app.use("/user", userRouter);
 
 // Signining up routes
 app.post("/signup", async (req, res) => {

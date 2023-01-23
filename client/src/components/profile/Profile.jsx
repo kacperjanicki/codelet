@@ -31,7 +31,7 @@ const Profile = () => {
             return (
                 <div className="profile">
                     <div>{profile.name} Profile</div>
-                    {personalContent ? <Link to="/profile/a/edit">Edit profile</Link> : null}
+                    {personalContent ? <Link to={`/profile/${profile.name}/edit`}>Edit profile</Link> : null}
                     <GameHistory games={profile.games} />
                 </div>
             );

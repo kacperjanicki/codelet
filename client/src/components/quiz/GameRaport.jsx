@@ -46,22 +46,21 @@ const GameRaport = ({ data, key }) => {
 
 const SingleQuestion = ({ question, questionArr, callback }) => {
     let questionId = questionArr.indexOf(question);
-    // console.log(callback);
     const [selected, setSelected] = useState();
-    const [wrong, setWrong] = useState();
 
     let correct = questionArr[questionArr.indexOf(question)].correct;
     let isCorrect = correct == selected;
-    let isOmitted = !selected;
+    let omitted = callback.answerGiven == false;
+
+    console.log(callback.answerGiven);
 
     const [indicationStr, setIndicationStr] = useState("");
-    console.log(isOmitted);
-
-    // console.log(correct);
 
     useEffect(() => {
+        setIndicationStr("");
         let questionDiv = document.getElementById(questionId);
         let btns = questionDiv.querySelectorAll(".option-btn");
+
         btns.forEach((btn) => {
             if (btn.id == callback.answerGiven) {
                 setSelected(btn.id);
@@ -72,22 +71,17 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
             }
         });
         let numStr = questionDiv.querySelector(`.questionNum${questionDiv.id}`);
-        if (isOmitted) {
+        if (omitted) {
             numStr.style = "color:grey;";
             setIndicationStr("You omitted this question");
         } else {
-            if (!isCorrect && !isOmitted) {
+            if (!isCorrect && !omitted) {
                 numStr.style = "color:red;";
             } else if (isCorrect) {
                 numStr.style = "color:green;";
             }
-            setIndicationStr("");
         }
-
-        // console.log(callback);
     }, []);
-
-    // callback.map((call) => {});
 
     return (
         <div id={questionId}>
@@ -115,7 +109,6 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                     {option.choice == correct && selected == option.choice && "You got it right"}
                     {option.choice == correct && selected != option.choice && "Correct answer"}
                     {option.choice != correct && selected == option.choice && "You got it wrong"}
-                    {/* {option.choice == selected && "You selected"} */}
                 </div>
             ))}
         </div>

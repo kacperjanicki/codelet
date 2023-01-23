@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
         if (userCon.userObj) {
             return children;
         } else {
-            return <Navigate to="/home" replace />;
+            return <Navigate to="/home?msg=Login required" replace />;
         }
     } else {
         return "loading...";
