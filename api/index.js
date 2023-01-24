@@ -151,13 +151,14 @@ app.post("/login", async (req, res) => {
         let queryRes = query.rows[0];
         let correctPass = await bcrypt.compare(password, queryRes.password);
         if (correctPass) {
-            const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
                 expiresIn: 3600,
             });
 
             res.status(200).send({ token: token, user: queryRes, ok: correctPass });
         } else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
     } else {
+        console.log(username, password);
         res.status(400).send({ msg: "User not found", ok: false });
     }
 });

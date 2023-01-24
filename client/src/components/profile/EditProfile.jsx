@@ -10,6 +10,8 @@ const EditProfile = () => {
     const [name, setName] = useState(userCon.userObj.name);
     const [msg, setMsg] = useState();
 
+    console.log(userCon.userObj);
+
     const submitProfileEdit = () => {
         async function edit() {
             let res = await editProfile(userCon.userObj.name, name);

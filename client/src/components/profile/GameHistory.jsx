@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./profile.css";
-import Modal from "react-modal";
 import GameRaport from "../quiz/GameRaport";
+import DeleteGame from "./DeleteGame";
 
 const GameHistory = ({ games }) => {
     const [sorting, setSorting] = useState("desc");
@@ -48,7 +48,10 @@ const GameHistory = ({ games }) => {
                     </div>
                     Game history:
                     {games.map((game) => (
-                        <GameRaport data={game} />
+                        <>
+                            <GameRaport data={game} />
+                            <DeleteGame game={game} />
+                        </>
                     ))}
                 </>
             )}

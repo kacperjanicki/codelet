@@ -1,9 +1,12 @@
 /* general core styles, background */
 :root {
     color-scheme: dark;
+    background-color: #2d2f33;
 }
 .navbar {
     box-sizing: border-box;
+    z-index: 2;
+    position: sticky;
 }
 .bgDefault {
     background-color: #2d2f33;

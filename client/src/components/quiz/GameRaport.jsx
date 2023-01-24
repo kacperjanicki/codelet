@@ -4,7 +4,7 @@ import { CodeBlock } from "react-code-blocks";
 import { atomOneDark } from "react-code-blocks";
 import { useEffect } from "react";
 
-const GameRaport = ({ data, key }) => {
+const GameRaport = ({ data }) => {
     const [isOpen, setIsOpen] = useState(false);
     function openModal() {
         setIsOpen(true);

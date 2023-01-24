@@ -124,14 +124,14 @@ export const quizesAvailable = () => {
     return request;
 };
 
-export const editProfile = (username, newName) => {
-    let request = fetch(apiUrl + `user/${username}/editProfile`, {
+export const editProfile = (name, newName) => {
+    let request = fetch(apiUrl + `user/${name}/editProfile`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "x-access-token": localStorage.getItem("token"),
         },
-        body: JSON.stringify({ id: username, username: newName }),
+        body: JSON.stringify({ username: newName }),
     })
         .then((response) => {
             return response.json();
@@ -141,3 +141,21 @@ export const editProfile = (username, newName) => {
         });
     return request;
 };
+
+// export const deleteGameFromHistory = (id, player_id) => {
+//     let request = fetch(apiUrl + `user/${id}/editProfile`, {
+//         method: "PUT",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "x-access-token": localStorage.getItem("token"),
+//         },
+//         body: JSON.stringify({ id: username, username: newName }),
+//     })
+//         .then((response) => {
+//             return response.json();
+//         })
+//         .then((data) => {
+//             return data;
+//         });
+//     return request;
+// };

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("./db");
+const personalAction = require("./personalAction");
 const verifyJWT = require("./verifyJWT");
 
 // this endpoint is used to fetch user data from db based on ID
@@ -17,9 +18,11 @@ router.get("/:id/byId", verifyJWT, async (req, res) => {
     res.send(query);
 });
 
-router.put("/:username/editProfile", verifyJWT, async (req, res) => {
-    console.log(req.body);
-    const { id, username } = req.body;
+router.put("/:id/editProfile", verifyJWT, personalAction, async (req, res) => {
+    const { username } = req.body;
+    const { id } = req.params;
+
+    console.log(id);
 
     try {
         let query = await pool.query(
@@ -28,7 +31,12 @@ router.put("/:username/editProfile", verifyJWT, async (req, res) => {
         `,
             [username, id]
         );
-        res.status(201).json({ ok: true, msg: "Updated successfully" });
+        console.log(req.body);
+        if (query.rowCount > 0) {
+            res.status(201).json({ ok: true, msg: "Updated successfully" });
+        } else {
+            res.status(400).json({ ok: false, msg: "An error occurred" });
+        }
     } catch (err) {
         res.status(400).json({ ok: false, msg: err });
     }
