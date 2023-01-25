@@ -24,7 +24,7 @@ const GameHistory = ({ games }) => {
     return (
         <div className="gameLog">
             {games.length > 0 && (
-                <>
+                <div>
                     <div>Games are being sorted {sortingStr}</div>
                     <div className="sortDiv">
                         <button
@@ -46,14 +46,16 @@ const GameHistory = ({ games }) => {
                             Sort by oldest
                         </button>
                     </div>
-                    Game history:
-                    {games.map((game) => (
-                        <>
-                            <GameRaport data={game} />
-                            <DeleteGame game={game} />
-                        </>
-                    ))}
-                </>
+                    <div className="gamesContainer">
+                        Game history:
+                        {games.map((game) => (
+                            <div className="gameDiv">
+                                <GameRaport data={game} />
+                                <DeleteGame game={game} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
             )}
             {games.length === 0 && "No games found"}
         </div>

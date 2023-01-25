@@ -6,7 +6,7 @@ const DeleteGame = ({ game }) => {
 
     // deleteGameFromHistory(id, player_id);
 
-    return "Delete game from history";
+    // return "Delete game from history";
     //ask for confirmation
 };
 

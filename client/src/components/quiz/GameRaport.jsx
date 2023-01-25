@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { CodeBlock } from "react-code-blocks";
 import { atomOneDark } from "react-code-blocks";
 import { useEffect } from "react";
+import { changeQuizPrivacy } from "../../api_helper/user_functions";
 
 const GameRaport = ({ data }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,10 +21,42 @@ const GameRaport = ({ data }) => {
         callback = data.callback.callback;
     }
 
+    // console.log(data);
+
+    const changePrivacy = (privacy) => {
+        switch (privacy) {
+            case "public":
+                changeQuizPrivacy("public", data.id);
+                break;
+            case "private":
+                changeQuizPrivacy("private", data.id);
+                break;
+        }
+    };
+
     return (
         <div key={data.id} className="gameLogCard">
             <div>Quiz played at {data.date.toLocaleString()}</div>
             <div>Score: {data.score}</div>
+            <div>
+                <div>By default this game is visible to everyone visiting your page</div>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        changePrivacy("private");
+                    }}
+                >
+                    Private
+                </button>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        changePrivacy("public");
+                    }}
+                >
+                    Public
+                </button>
+            </div>
             <button onClick={openModal}>View Game report</button>
             <Modal
                 isOpen={isOpen}

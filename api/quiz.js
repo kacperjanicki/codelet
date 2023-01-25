@@ -1,12 +1,8 @@
 const express = require("express");
 const verifyJwt = require("./verifyJWT");
 const pool = require("./db");
+const personalAction = require("./personalAction");
 const router = express.Router();
-const fs = require("fs");
-
-//later this will be held in seperate endpoint
-//when more quizes are available and users can create quizes
-let allQuizIds = ["python001"];
 
 router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {
     let requestedLang = req.params.lang;
@@ -41,8 +37,8 @@ router.post("/newquiz", async (req, res) => {
     let questionData = { questions: questions };
     let date = new Date();
     let pol = await pool.query(
-        `INSERT INTO quizgames(player_id,score,date,callback,questions) VALUES($1,$2,$3,$4,$5);`,
-        [user_id, score, date, raport, questionData]
+        `INSERT INTO quizgames(player_id,score,date,callback,questions,public) VALUES($1,$2,$3,$4,$5,$6);`,
+        [user_id, score, date, raport, questionData, true]
     );
     let id = await pool.query(
         `
@@ -59,6 +55,16 @@ router.post("/newquiz", async (req, res) => {
     );
 
     res.json(quizObj.rows);
+});
+
+router.put("/:id/changePublicity", verifyJwt, personalAction, async (req, res) => {
+    console.log(req.body);
+    let publicity = req.body.public;
+    let query = await pool.query(`UPDATE quizgames SET public=$1 WHERE id=$2;`, [
+        publicity == "public",
+        req.body.id,
+    ]);
+    console.log(publicity);
 });
 
 module.exports = router;

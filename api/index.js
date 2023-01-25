@@ -25,6 +25,7 @@ pool.query(
         callback JSONB NOT NULL,
         questions JSONB NOT NULL,
         date TIMESTAMP,
+        public BOOLEAN NOT NULL,
         CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));
     CREATE TABLE IF NOT EXISTS quizes (
         id SERIAL PRIMARY KEY,

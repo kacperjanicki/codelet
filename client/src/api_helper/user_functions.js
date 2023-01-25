@@ -107,6 +107,24 @@ export const fetchQuiz = (lang, id) => {
     return request;
 };
 
+export const changeQuizPrivacy = (privacy, id) => {
+    let request = fetch(apiUrl + `quiz/${id}/changePublicity`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ privacy: privacy, id: id }),
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+
 export const quizesAvailable = () => {
     let request = fetch(apiUrl + `quiz/allQuizesFetch`, {
         method: "GET",
