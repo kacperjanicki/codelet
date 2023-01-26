@@ -64,6 +64,15 @@ router.put("/:id/changePublicity", verifyJwt, personalAction, async (req, res) =
         publicity == "public",
         req.body.id,
     ]);
+    if (query.rowCount > 0) {
+        res.status(200).json({
+            ok: true,
+            msg: "Successfully updated",
+            callback: `Quiz publicity is ${publicity}`,
+        });
+    } else {
+        res.status(400).json({ ok: false, msg: "An error occurred" });
+    }
     console.log(publicity);
 });
 

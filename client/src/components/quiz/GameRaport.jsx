@@ -4,8 +4,9 @@ import { CodeBlock } from "react-code-blocks";
 import { atomOneDark } from "react-code-blocks";
 import { useEffect } from "react";
 import { changeQuizPrivacy } from "../../api_helper/user_functions";
+import { quizContext } from "./Quiz";
 
-const GameRaport = ({ data }) => {
+const GameRaport = ({ data, personalContent }) => {
     const [isOpen, setIsOpen] = useState(false);
     function openModal() {
         setIsOpen(true);
@@ -21,58 +22,73 @@ const GameRaport = ({ data }) => {
         callback = data.callback.callback;
     }
 
-    // console.log(data);
-
-    const changePrivacy = (privacy) => {
+    console.log(data);
+    const [publicityString, setPublicityString] = useState("");
+    const changePrivacy = async (privacy) => {
+        let res;
         switch (privacy) {
             case "public":
-                changeQuizPrivacy("public", data.id);
+                res = await changeQuizPrivacy("public", data.id);
                 break;
             case "private":
-                changeQuizPrivacy("private", data.id);
+                res = await changeQuizPrivacy("private", data.id);
                 break;
         }
+        if (res.ok) {
+            setPublicityString(res.callback);
+        }
     };
+    useEffect(() => {
+        setPublicityString(data.public ? "Quiz publicity is public" : "Quiz publicity is private");
+    }, []);
 
     return (
         <div key={data.id} className="gameLogCard">
             <div>Quiz played at {data.date.toLocaleString()}</div>
             <div>Score: {data.score}</div>
             <div>
-                <div>By default this game is visible to everyone visiting your page</div>
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        changePrivacy("private");
-                    }}
-                >
-                    Private
-                </button>
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        changePrivacy("public");
-                    }}
-                >
-                    Public
-                </button>
+                <div>{publicityString}</div>
+                {personalContent && (
+                    <>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                changePrivacy("private");
+                            }}
+                        >
+                            Private
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                changePrivacy("public");
+                            }}
+                        >
+                            Public
+                        </button>
+                    </>
+                )}
             </div>
-            <button onClick={openModal}>View Game report</button>
-            <Modal
-                isOpen={isOpen}
-                onRequestClose={closeModal}
-                contentLabel="Example Modal"
-                overlayClassName={"Overlay"}
-                className={"Modal"}
-            >
-                {questions.map((question) => (
-                    <SingleQuestion
-                        question={question}
-                        questionArr={questions}
-                        callback={callback[questions.indexOf(question)]}
-                    />
-                ))}
-            </Modal>
+            {personalContent || (!personalContent && data.public) ? (
+                <>
+                    <button onClick={openModal}>View Game report</button>
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="Example Modal"
+                        overlayClassName={"Overlay"}
+                        className={"Modal"}
+                    >
+                        {questions.map((question) => (
+                            <SingleQuestion
+                                question={question}
+                                questionArr={questions}
+                                callback={callback[questions.indexOf(question)]}
+                            />
+                        ))}
+                    </Modal>
+                </>
+            ) : null}
         </div>
     );
 };

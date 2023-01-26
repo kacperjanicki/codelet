@@ -3,7 +3,7 @@ import "./profile.css";
 import GameRaport from "../quiz/GameRaport";
 import DeleteGame from "./DeleteGame";
 
-const GameHistory = ({ games }) => {
+const GameHistory = ({ games, personalContent }) => {
     const [sorting, setSorting] = useState("desc");
     // const [sortingStr, setSortingStr] = useState("");
 
@@ -50,7 +50,7 @@ const GameHistory = ({ games }) => {
                         Game history:
                         {games.map((game) => (
                             <div className="gameDiv">
-                                <GameRaport data={game} />
+                                <GameRaport data={game} personalContent={personalContent} />
                                 <DeleteGame game={game} />
                             </div>
                         ))}

@@ -114,7 +114,7 @@ export const changeQuizPrivacy = (privacy, id) => {
             "Content-Type": "application/json",
             "x-access-token": localStorage.getItem("token"),
         },
-        body: JSON.stringify({ privacy: privacy, id: id }),
+        body: JSON.stringify({ public: privacy, id: id }),
     })
         .then((response) => {
             return response.json();
