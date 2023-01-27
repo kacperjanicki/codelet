@@ -18,13 +18,13 @@ export const loginReq = (username, password) => {
         });
 };
 
-export const singUpReq = (username, password) => {
+export const singUpReq = (username, password, age) => {
     let request = fetch(apiUrl + "signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: username, password: password }),
+        body: JSON.stringify({ username: username, password: password, age: age }),
     })
         .then((res) => {
             return res.json();
@@ -142,14 +142,14 @@ export const quizesAvailable = () => {
     return request;
 };
 
-export const editProfile = (name, newName) => {
+export const editProfile = (name, valuesChanged) => {
     let request = fetch(apiUrl + `user/${name}/editProfile`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "x-access-token": localStorage.getItem("token"),
         },
-        body: JSON.stringify({ username: newName }),
+        body: JSON.stringify(valuesChanged),
     })
         .then((response) => {
             return response.json();

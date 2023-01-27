@@ -1,7 +1,7 @@
 const express = require("express");
-const verifyJwt = require("./verifyJWT");
-const pool = require("./db");
-const personalAction = require("./personalAction");
+const verifyJwt = require("../middleware/verifyJWT");
+const pool = require("../db");
+const personalAction = require("../middleware/personalAction");
 const router = express.Router();
 
 router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {

@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { editProfile } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 
@@ -8,25 +10,25 @@ const EditProfile = () => {
     const userCon = useContext(UserContext);
     // console.log(userCon.userObj);
     const [name, setName] = useState(userCon.userObj.name);
+    const [age, setAge] = useState(userCon.userObj.age);
     const [msg, setMsg] = useState();
 
-    console.log(userCon.userObj);
-
-    const submitProfileEdit = () => {
+    const navigate = useNavigate();
+    const submitProfileEdit = (changedValues) => {
         async function edit() {
-            let res = await editProfile(userCon.userObj.name, name);
+            console.log(changedValues);
+            let res = await editProfile(userCon.userObj.name, changedValues);
             if (res.ok) {
                 let newObj = userCon.userObj;
                 newObj.name = name;
                 localStorage.setItem("user", JSON.stringify(newObj));
                 userCon.setUserObj(newObj);
+                navigate(`/profile/${newObj.name}?msg=Updated successfully`);
             }
             setMsg(res.msg);
         }
         edit();
     };
-
-    console.log(userCon);
 
     return (
         <div>
@@ -41,15 +43,28 @@ const EditProfile = () => {
                 <input
                     type="text"
                     onChange={(e) => {
-                        setName(e.target.value);
+                        setName(e.target.value, true);
                     }}
                     defaultValue={userCon.userObj.name}
+                />
+            </div>
+            <div>
+                <label>Name</label>
+                <input
+                    type="number"
+                    onChange={(e) => {
+                        setAge(e.target.value);
+                    }}
+                    defaultValue={userCon.userObj.age}
                 />
             </div>
             <button
                 onClick={(e) => {
                     e.preventDefault();
-                    submitProfileEdit();
+                    let obj = {};
+                    if (name !== userCon.userObj.name) obj["name"] = name;
+                    if (age !== userCon.userObj.age) obj["age"] = age;
+                    submitProfileEdit(obj);
                 }}
             >
                 Edit

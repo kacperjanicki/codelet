@@ -16,7 +16,7 @@ const EndScreen = ({ data }) => {
     console.log(data);
 
     // console.log(profile.games, profile.games.length - 1);
-    return <GameRaport data={data} />;
+    return <GameRaport data={data} personalContent={true} />;
 };
 
 const Callback = ({ data }) => {

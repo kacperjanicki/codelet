@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [age, setAge] = useState();
+
     const [shouldRedirect, setShouldRedirect] = useState(false);
     const [err, setErr] = useState("");
     const navigate = useNavigate();
@@ -20,7 +22,7 @@ const Signup = () => {
                 className="login"
                 onSubmit={async (e) => {
                     e.preventDefault();
-                    let result = await singUpReq(username, password);
+                    let result = await singUpReq(username, password, age);
                     if (result) {
                         if (result.ok) setShouldRedirect(true);
                         else setErr(result.msg);
@@ -47,6 +49,19 @@ const Signup = () => {
                         // minLength={6}
                         onChange={(e) => {
                             setPassword(e.target.value);
+                        }}
+                        required
+                    />
+                </div>
+                <div>
+                    {/* add password regex validation */}
+                    <input
+                        type="number"
+                        placeholder="Age"
+                        name="age"
+                        // minLength={6}
+                        onChange={(e) => {
+                            setAge(e.target.value);
                         }}
                         required
                     />

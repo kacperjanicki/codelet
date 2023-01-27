@@ -43,53 +43,57 @@ const GameRaport = ({ data, personalContent }) => {
     }, []);
 
     return (
-        <div key={data.id} className="gameLogCard">
-            <div>Quiz played at {data.date.toLocaleString()}</div>
-            <div>Score: {data.score}</div>
-            <div>
-                <div>{publicityString}</div>
-                {personalContent && (
-                    <>
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                changePrivacy("private");
-                            }}
-                        >
-                            Private
-                        </button>
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                changePrivacy("public");
-                            }}
-                        >
-                            Public
-                        </button>
-                    </>
-                )}
-            </div>
+        <>
             {personalContent || (!personalContent && data.public) ? (
-                <>
-                    <button onClick={openModal}>View Game report</button>
-                    <Modal
-                        isOpen={isOpen}
-                        onRequestClose={closeModal}
-                        contentLabel="Example Modal"
-                        overlayClassName={"Overlay"}
-                        className={"Modal"}
-                    >
-                        {questions.map((question) => (
-                            <SingleQuestion
-                                question={question}
-                                questionArr={questions}
-                                callback={callback[questions.indexOf(question)]}
-                            />
-                        ))}
-                    </Modal>
-                </>
+                <div key={data.id} className="gameLogCard">
+                    <div>Quiz played at {data.date.toLocaleString()}</div>
+                    <div>Score: {data.score}</div>
+                    <div>
+                        <div>{publicityString}</div>
+                        {personalContent && (
+                            <>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        changePrivacy("private");
+                                    }}
+                                >
+                                    Private
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        changePrivacy("public");
+                                    }}
+                                >
+                                    Public
+                                </button>
+                            </>
+                        )}
+                    </div>
+                    {personalContent || (!personalContent && data.public) ? (
+                        <>
+                            <button onClick={openModal}>View Game report</button>
+                            <Modal
+                                isOpen={isOpen}
+                                onRequestClose={closeModal}
+                                contentLabel="Example Modal"
+                                overlayClassName={"Overlay"}
+                                className={"Modal"}
+                            >
+                                {questions.map((question) => (
+                                    <SingleQuestion
+                                        question={question}
+                                        questionArr={questions}
+                                        callback={callback[questions.indexOf(question)]}
+                                    />
+                                ))}
+                            </Modal>
+                        </>
+                    ) : null}
+                </div>
             ) : null}
-        </div>
+        </>
     );
 };
 

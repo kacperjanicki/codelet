@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("./db");
-const personalAction = require("./personalAction");
-const verifyJWT = require("./verifyJWT");
+const pool = require("../db");
+const personalAction = require("../middleware/personalAction");
+const verifyJWT = require("../middleware/verifyJWT");
 
 // this endpoint is used to fetch user data from db based on ID
 // instead of fetching by username, when fetching by username it can cause
@@ -19,25 +19,33 @@ router.get("/:id/byId", verifyJWT, async (req, res) => {
 });
 
 router.put("/:id/editProfile", verifyJWT, personalAction, async (req, res) => {
-    const { username } = req.body;
     const { id } = req.params;
 
-    console.log(id);
+    let valuesToChange = req.body;
 
     try {
-        let query = await pool.query(
-            `
-        UPDATE users SET name=$1 WHERE name=$2;
-        `,
-            [username, id]
-        );
-        console.log(req.body);
+        let initUserQuery = await pool.query(`SELECT * FROM users WHERE name=$1;`, [id]);
+        if (initUserQuery.rowCount == 0) return res.status(400, { ok: false, msg: "User does not exist" });
+
+        let initUser = initUserQuery.rows[0];
+
+        for (const [key, value] of Object.entries(valuesToChange)) {
+            initUser[key] = value;
+        }
+
+        let query = await pool.query(`UPDATE users SET name=$2,age=$3 WHERE name=$1;`, [
+            id,
+            initUser.name,
+            initUser.age,
+        ]);
+
         if (query.rowCount > 0) {
             res.status(201).json({ ok: true, msg: "Updated successfully" });
         } else {
             res.status(400).json({ ok: false, msg: "An error occurred" });
         }
     } catch (err) {
+        console.log(err);
         res.status(400).json({ ok: false, msg: err });
     }
 });

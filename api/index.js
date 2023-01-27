@@ -5,9 +5,9 @@ const cors = require("cors");
 const pool = require("./db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const quizRouter = require("./quiz.js");
-const userRouter = require("./user.js");
-const verifyJwt = require("./verifyJWT");
+const quizRouter = require("./routes/quiz.js");
+const userRouter = require("./routes/user.js");
+const verifyJwt = require("./middleware/verifyJWT");
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +17,8 @@ pool.query(
     `CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) UNIQUE NOT NULL CHECK (name <> ''),
-                password VARCHAR(255) NOT NULL CHECK (password <> ''));
+                password VARCHAR(255) NOT NULL CHECK (password <> ''),
+                age INT NOT NULL);
     CREATE TABLE IF NOT EXISTS quizgames (
         id SERIAL PRIMARY KEY,
         player_id INT NOT NULL,
@@ -40,11 +41,15 @@ app.use("/user", userRouter);
 
 // Signining up routes
 app.post("/signup", async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, age } = req.body;
     let hashedPass = await bcrypt.hash(password, 10);
 
     let query = await pool
-        .query("INSERT INTO users (name,password) VALUES($1,$2) RETURNING *;", [username, hashedPass])
+        .query("INSERT INTO users (name,password,age) VALUES($1,$2,$3) RETURNING *;", [
+            username,
+            hashedPass,
+            age,
+        ])
         .catch((err) => {
             console.error(err);
             var msg;
@@ -143,7 +148,7 @@ app.get("/insert", async (req, res) => {
 //Log in route
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
-    let query = await pool.query(`SELECT name,password FROM users WHERE name=($1);`, [username]);
+    let query = await pool.query(`SELECT name,password,age FROM users WHERE name=($1);`, [username]);
     if (query.rowCount > 0) {
         let userIdQuery = await pool.query(`SELECT user_id FROM users WHERE name=($1)`, [query.rows[0].name]);
         let userId = userIdQuery.rows[0].user_id;
