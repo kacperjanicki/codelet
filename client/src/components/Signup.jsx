@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [username, setUsername] = useState("");
+    const [fname, setFname] = useState("");
     const [password, setPassword] = useState("");
     const [age, setAge] = useState();
 
@@ -22,7 +23,7 @@ const Signup = () => {
                 className="login"
                 onSubmit={async (e) => {
                     e.preventDefault();
-                    let result = await singUpReq(username, password, age);
+                    let result = await singUpReq(username, fname, password, age);
                     if (result) {
                         if (result.ok) setShouldRedirect(true);
                         else setErr(result.msg);
@@ -36,6 +37,17 @@ const Signup = () => {
                         name="username"
                         onChange={(e) => {
                             setUsername(e.target.value);
+                        }}
+                        required
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="First Name"
+                        name="fname"
+                        onChange={(e) => {
+                            setFname(e.target.value);
                         }}
                         required
                     />

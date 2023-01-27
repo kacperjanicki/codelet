@@ -17,6 +17,7 @@ pool.query(
     `CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) UNIQUE NOT NULL CHECK (name <> ''),
+                fname VARCHAR NOT NULL CHECK (fname <> ''),
                 password VARCHAR(255) NOT NULL CHECK (password <> ''),
                 age INT NOT NULL);
     CREATE TABLE IF NOT EXISTS quizgames (
@@ -39,14 +40,40 @@ pool.query(
 app.use("/quiz", quizRouter);
 app.use("/user", userRouter);
 
+//Log in route
+app.post("/login", async (req, res) => {
+    const { username, password } = req.body;
+    let query = await pool.query(`SELECT * FROM users WHERE name=($1);`, [username]);
+    if (query.rowCount > 0) {
+        let userIdQuery = await pool.query(`SELECT user_id FROM users WHERE name=($1)`, [query.rows[0].name]);
+        let userId = userIdQuery.rows[0].user_id;
+        query.rows[0].id = userId;
+
+        let queryRes = query.rows[0];
+        console.log(queryRes);
+        let correctPass = await bcrypt.compare(password, queryRes.password);
+        if (correctPass) {
+            const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+                expiresIn: 3600,
+            });
+
+            res.status(200).send({ token: token, user: queryRes, ok: correctPass });
+        } else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
+    } else {
+        console.log(username, password);
+        res.status(400).send({ msg: "User not found", ok: false });
+    }
+});
+
 // Signining up routes
 app.post("/signup", async (req, res) => {
-    const { username, password, age } = req.body;
+    const { username, fname, password, age } = req.body;
     let hashedPass = await bcrypt.hash(password, 10);
 
     let query = await pool
-        .query("INSERT INTO users (name,password,age) VALUES($1,$2,$3) RETURNING *;", [
+        .query("INSERT INTO users (name,fname,password,age) VALUES($1,$2,$3,$4) RETURNING *;", [
             username,
+            fname,
             hashedPass,
             age,
         ])
@@ -143,30 +170,6 @@ app.get("/insert", async (req, res) => {
         [{ questions: questions }]
     );
     res.send(query);
-});
-
-//Log in route
-app.post("/login", async (req, res) => {
-    const { username, password } = req.body;
-    let query = await pool.query(`SELECT name,password,age FROM users WHERE name=($1);`, [username]);
-    if (query.rowCount > 0) {
-        let userIdQuery = await pool.query(`SELECT user_id FROM users WHERE name=($1)`, [query.rows[0].name]);
-        let userId = userIdQuery.rows[0].user_id;
-        query.rows[0].id = userId;
-
-        let queryRes = query.rows[0];
-        let correctPass = await bcrypt.compare(password, queryRes.password);
-        if (correctPass) {
-            const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-                expiresIn: 3600,
-            });
-
-            res.status(200).send({ token: token, user: queryRes, ok: correctPass });
-        } else if (!correctPass) res.status(403).send({ msg: "Incorrect credentials", ok: false });
-    } else {
-        console.log(username, password);
-        res.status(400).send({ msg: "User not found", ok: false });
-    }
 });
 
 app.get("/getProfileInfo", async (req, res) => {

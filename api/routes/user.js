@@ -28,19 +28,25 @@ router.put("/:id/editProfile", verifyJWT, personalAction, async (req, res) => {
         if (initUserQuery.rowCount == 0) return res.status(400, { ok: false, msg: "User does not exist" });
 
         let initUser = initUserQuery.rows[0];
+        let hasChanged = false;
 
         for (const [key, value] of Object.entries(valuesToChange)) {
-            initUser[key] = value;
+            if (["fname", "age"].includes(key)) {
+                hasChanged = true;
+                initUser[key] = value;
+            }
         }
 
-        let query = await pool.query(`UPDATE users SET name=$2,age=$3 WHERE name=$1;`, [
+        let query = await pool.query(`UPDATE users SET fname=$2,age=$3 WHERE name=$1;`, [
             id,
-            initUser.name,
+            initUser.fname,
             initUser.age,
         ]);
 
-        if (query.rowCount > 0) {
+        if (hasChanged && query.rowCount > 0) {
             res.status(201).json({ ok: true, msg: "Updated successfully" });
+        } else if (!hasChanged) {
+            res.status(400).json({ ok: false, msg: "No changes applied" });
         } else {
             res.status(400).json({ ok: false, msg: "An error occurred" });
         }

@@ -9,21 +9,21 @@ import { UserContext } from "../../App";
 const EditProfile = () => {
     const userCon = useContext(UserContext);
     // console.log(userCon.userObj);
-    const [name, setName] = useState(userCon.userObj.name);
+    const [fname, setfName] = useState(userCon.userObj.fname);
     const [age, setAge] = useState(userCon.userObj.age);
     const [msg, setMsg] = useState();
 
     const navigate = useNavigate();
     const submitProfileEdit = (changedValues) => {
         async function edit() {
-            console.log(changedValues);
             let res = await editProfile(userCon.userObj.name, changedValues);
+            console.log(res);
             if (res.ok) {
                 let newObj = userCon.userObj;
-                newObj.name = name;
+                newObj.fname = fname;
                 localStorage.setItem("user", JSON.stringify(newObj));
                 userCon.setUserObj(newObj);
-                navigate(`/profile/${newObj.name}?msg=Updated successfully`);
+                navigate(`/profile/${userCon.userObj.name}?msg=Updated successfully`);
             }
             setMsg(res.msg);
         }
@@ -39,17 +39,21 @@ const EditProfile = () => {
                 </div>
             </div>
             <div>
+                <label>Username</label>
+                <input type="text" disabled defaultValue={userCon.userObj.name} />
+            </div>
+            <div>
                 <label>Name</label>
                 <input
                     type="text"
                     onChange={(e) => {
-                        setName(e.target.value, true);
+                        setfName(e.target.value);
                     }}
-                    defaultValue={userCon.userObj.name}
+                    defaultValue={userCon.userObj.fname}
                 />
             </div>
             <div>
-                <label>Name</label>
+                <label>Age</label>
                 <input
                     type="number"
                     onChange={(e) => {
@@ -62,7 +66,7 @@ const EditProfile = () => {
                 onClick={(e) => {
                     e.preventDefault();
                     let obj = {};
-                    if (name !== userCon.userObj.name) obj["name"] = name;
+                    if (fname !== userCon.userObj.fname) obj["fname"] = fname;
                     if (age !== userCon.userObj.age) obj["age"] = age;
                     submitProfileEdit(obj);
                 }}

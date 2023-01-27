@@ -32,7 +32,10 @@ const Profile = () => {
         if (profile) {
             return (
                 <div className="profile">
-                    <div>{profile.name}</div>
+                    <div>
+                        {profile.fname}
+                        <span style={{ fontSize: ".8rem" }}>@{profile.name}</span>
+                    </div>
                     {personalContent ? <Link to={`/profile/${profile.name}/edit`}>Edit profile</Link> : null}
                     <GameHistory games={profile.games} personalContent={personalContent} />
                 </div>
