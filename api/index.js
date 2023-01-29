@@ -20,6 +20,7 @@ pool.query(
                 fname VARCHAR NOT NULL CHECK (fname <> ''),
                 password VARCHAR(255) NOT NULL CHECK (password <> ''),
                 age INT NOT NULL);
+
     CREATE TABLE IF NOT EXISTS quizgames (
         id SERIAL PRIMARY KEY,
         player_id INT NOT NULL,
@@ -29,12 +30,15 @@ pool.query(
         date TIMESTAMP,
         public BOOLEAN NOT NULL,
         CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));
+
     CREATE TABLE IF NOT EXISTS quizes (
         id SERIAL PRIMARY KEY,
-        no VARCHAR(255) NOT NULL CHECK (no <> ''),
+        author_id INT NOT NULL,
         lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
+        quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
         public BOOLEAN NOT NULL,
-        questions JSONB NOT NULL);`
+        questions JSONB NOT NULL,
+        CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(user_id));`
 ).catch((err) => console.error(err));
 
 app.use("/quiz", quizRouter);
@@ -166,8 +170,8 @@ app.get("/insert", async (req, res) => {
         },
     ];
     let query = await pool.query(
-        `INSERT INTO quizes(no,lang,public,questions) VALUES('001','python',TRUE,$1);`,
-        [{ questions: questions }]
+        `INSERT INTO quizes(author_id,quizid,lang,public,questions) VALUES($1,'python001','python',TRUE,$2);`,
+        [1, { questions: questions }]
     );
     res.send(query);
 });

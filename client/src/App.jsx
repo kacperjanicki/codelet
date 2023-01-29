@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { isUserAuth } from "./api_helper/user_functions";
 import RouteNotFound from "./components/RouteNotFound";
 import EditProfile from "./components/profile/EditProfile";
+import Create from "./components/create/Create";
 
 export const UserContext = createContext();
 
@@ -59,6 +60,7 @@ function App() {
                                 <Route exact path="/" element={<LandingPage />}></Route>
                                 <Route exact path="/login" element={<Login />}></Route>
                                 <Route exact path="/signup" element={<Signup />}></Route>
+                                <Route exact path="/create" element={<Create />}></Route>
                                 <Route
                                     exact
                                     path="/quiz/*"

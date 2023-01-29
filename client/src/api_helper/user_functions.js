@@ -142,6 +142,49 @@ export const quizesAvailable = () => {
     return request;
 };
 
+export const createNewQuiz = (author_id, name, lang, desc, questions, id) => {
+    let request = fetch(apiUrl + "quiz/addNewQuiz", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+            author_id: author_id,
+            name: name,
+            desc: desc,
+            questions: questions,
+            lang: lang,
+            no: id,
+        }),
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+
+export const createQuizId = (lang) => {
+    let request = fetch(apiUrl + "quiz/newQuizId", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ lang: lang }),
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+
 export const editProfile = (name, valuesChanged) => {
     let request = fetch(apiUrl + `user/${name}/editProfile`, {
         method: "PUT",

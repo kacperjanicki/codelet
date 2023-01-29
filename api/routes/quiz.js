@@ -8,10 +8,8 @@ router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {
     let requestedLang = req.params.lang;
     let requestedId = req.params.id;
 
-    let query = await pool.query(`SELECT * FROM quizes WHERE lang=$1 AND no=$2;`, [
-        requestedLang,
-        requestedId,
-    ]);
+    let query = await pool.query(`SELECT * FROM quizes WHERE quizid=$1;`, [requestedLang + requestedId]);
+
     if (query.rowCount > 0) {
         let quiz = query.rows[0];
 
@@ -31,6 +29,7 @@ router.get("/allQuizesFetch", async (req, res) => {
     }
 });
 
+// this endpoint handles saving data about game that user just played, score,date etc.
 router.post("/newquiz", async (req, res) => {
     const { user_id, score, callback, questions } = req.body;
     let raport = { callback: callback };
@@ -55,6 +54,41 @@ router.post("/newquiz", async (req, res) => {
     );
 
     res.json(quizObj.rows);
+});
+
+// this endpoint handles adding new quizes by user at codelet.com/create
+router.post("/addNewQuiz", async (req, res) => {
+    const { name, lang, desc, questions, no, author_id } = req.body;
+    let query = await pool.query(
+        `INSERT INTO quizes(author_id,lang,quizid,public,questions) VALUES($1,$2,$3,$4,$5);`,
+        [author_id, lang, lang + no, true, questions]
+    );
+    console.log(query);
+});
+
+// will be as an endpoint when needed
+let langsAvailable = ["python", "javascript"];
+
+router.post("/newQuizId", async (req, res) => {
+    const { lang } = req.body;
+    if (lang) {
+        if (!langsAvailable.includes(lang))
+            return res.status(400).json({ ok: false, msg: "Language not supported" });
+
+        try {
+            let langQuery = await pool.query("SELECT id FROM quizes WHERE lang=$1;", [lang]);
+            let count = langQuery.rowCount + 1;
+            // `no` is used to generate a url for every quiz e.x. codelet.com/quiz/python/001
+            let no = count.toString().padStart(3, "0");
+
+            return res.status(200).json({ ok: true, data: { lang: lang, id: no } });
+        } catch (err) {
+            return res.status(400).json({ ok: false, msg: "An error occured", err: err });
+        }
+    } else if (!lang) {
+        return res.status(400).json({ ok: false, msg: "You need to specify a language" });
+    }
+    console.log(lang);
 });
 
 router.put("/:id/changePublicity", verifyJwt, personalAction, async (req, res) => {

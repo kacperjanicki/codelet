@@ -17,6 +17,9 @@ const Navbar = () => {
                 <li>
                     <Link to="/explore">Explore</Link>
                 </li>
+                <li>
+                    <Link to="/create">Create</Link>
+                </li>
                 {!userCon.userObj ? (
                     <>
                         <li>

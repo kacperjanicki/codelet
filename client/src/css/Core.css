@@ -1,5 +1,8 @@
 /* general core styles, background */
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;1,300&display=swap");
+* {
+    font-family: "Roboto mono";
+}
 :root {
     color-scheme: dark;
     background-color: #2d2f33;
