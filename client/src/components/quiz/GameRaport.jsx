@@ -39,7 +39,9 @@ const GameRaport = ({ data, personalContent }) => {
         }
     };
     useEffect(() => {
-        setPublicityString(data.public ? "Quiz publicity is public" : "Quiz publicity is private");
+        setPublicityString(
+            data.public ? "Everyone can see this game raport" : "Only you can see this game raport"
+        );
     }, []);
 
     return (
@@ -52,6 +54,7 @@ const GameRaport = ({ data, personalContent }) => {
                         <div>{publicityString}</div>
                         {personalContent && (
                             <>
+                                Change game raport publicity:
                                 <button
                                     onClick={(e) => {
                                         e.preventDefault();

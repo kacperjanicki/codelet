@@ -14,6 +14,7 @@ const Homepage = () => {
         async function getAllQuizes() {
             let res = await quizesAvailable();
             setQuizes(res.quizList);
+            console.log(res);
         }
         getAllQuizes();
     }, []);
@@ -27,22 +28,13 @@ const Homepage = () => {
                 <div className="cardsContainer">
                     {quizes &&
                         quizes.map((quiz) => (
-                            <Card
-                                type={quiz.lang}
-                                id={quiz.quizid}
-                                author={quiz.author_id}
-                                key={quiz.quizid}
-                            />
+                            <Card type={quiz.lang} id={quiz.quizid} author={quiz.author} key={quiz.quizid} />
                         ))}
                 </div>
             </div>
             <div className="homeBlock">
                 <div className="header">Explore more</div>
-                <div className="cardsContainer">
-                    <Card type="python" id="python001" />
-                    <Card type="python" id="python001" />
-                    <Card type="python" id="python001" />
-                </div>
+                <div className="cardsContainer"></div>
             </div>
         </div>
     );
@@ -61,6 +53,8 @@ const Card = ({ type, id, author }) => {
 
     let idString = id.split(type.slice(-1))[1];
 
+    console.log(author);
+
     return (
         <div className="homeCard">
             <div className="title">
@@ -75,12 +69,19 @@ const Card = ({ type, id, author }) => {
                         onRequestClose={closeModal}
                         contentLabel="Example Modal"
                         overlayClassName={"Overlay"}
-                        className={"Modal"}
+                        className={"small Modal"}
                     >
-                        <Link to={`/quiz/${type}/${idString}`}>Start quiz</Link>
+                        <div className="info">
+                            <div>
+                                Quiz created by: <Link to={`/profile/${author.name}`}>{author.name}</Link>
+                            </div>
+                            <div>Language: {type}</div>
+                            <div></div>
+                        </div>
+                        <Link to={`/quiz/${type}/${idString}`}>Play</Link>
                     </Modal>
                 </div>
-                <div className="info">Created by: {author}</div>
+                <div className="info">Created by: {author.name}</div>
             </div>
             <div className="description"></div>
             <div className="picture"></div>

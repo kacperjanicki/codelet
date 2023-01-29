@@ -34,6 +34,7 @@ pool.query(
     CREATE TABLE IF NOT EXISTS quizes (
         id SERIAL PRIMARY KEY,
         author_id INT NOT NULL,
+        author JSONB NOT NULL,
         lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
         quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
         public BOOLEAN NOT NULL,
@@ -170,8 +171,8 @@ app.get("/insert", async (req, res) => {
         },
     ];
     let query = await pool.query(
-        `INSERT INTO quizes(author_id,quizid,lang,public,questions) VALUES($1,'python001','python',TRUE,$2);`,
-        [1, { questions: questions }]
+        `INSERT INTO quizes(author_id,author,quizid,lang,public,questions) VALUES($1,$2,'python001','python',TRUE,$3);`,
+        [1, { name: "admin" }, { questions: questions }]
     );
     res.send(query);
 });

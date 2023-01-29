@@ -77,6 +77,7 @@
     right: 0;
     bottom: 0;
 }
+
 .Modal {
     background-color: #20242b;
     width: 800px;
@@ -90,6 +91,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+.small {
+    height: 350px;
+    width: 500px;
+    top: 30%;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 2rem;

@@ -59,11 +59,14 @@ router.post("/newquiz", async (req, res) => {
 // this endpoint handles adding new quizes by user at codelet.com/create
 router.post("/addNewQuiz", async (req, res) => {
     const { name, lang, desc, questions, no, author_id } = req.body;
+    let authorQuery = await pool.query(`SELECT * FROM users WHERE user_id=$1;`, [author_id]);
+    let author = authorQuery.rowCount > 0 && JSON.stringify(authorQuery.rows[0]);
+
     let query = await pool.query(
-        `INSERT INTO quizes(author_id,lang,quizid,public,questions) VALUES($1,$2,$3,$4,$5);`,
-        [author_id, lang, lang + no, true, questions]
+        `INSERT INTO quizes(author_id,author,lang,quizid,public,questions) VALUES($1,$2,$3,$4,$5,$6);`,
+        [author_id, author, lang, lang + no, true, questions]
     );
-    console.log(query);
+    // console.log(query);
 });
 
 // will be as an endpoint when needed

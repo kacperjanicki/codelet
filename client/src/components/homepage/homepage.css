@@ -22,6 +22,8 @@
 }
 
 .homeCard {
+    padding: 1rem;
+    border-radius: 0.5rem;
     height: 300px;
     word-wrap: break-word;
     border: 1px solid yellow;

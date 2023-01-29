@@ -17,7 +17,16 @@ const Create = () => {
     function closeModal() {
         setIsOpen(false);
     }
+
+    let context = useContext(UserContext);
+
+    let userLoggedIn = context.userObj ? true : false;
+
+    console.log(context);
+
     Modal.setAppElement(document.getElementById("root"));
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -25,7 +34,19 @@ const Create = () => {
                 <h5>Welcome!</h5>
                 Here you can contribute to our community and create your own quizes!
             </div>
-            <button onClick={openModal}>Create a new Quiz</button>
+            <button onClick={openModal} disabled={!userLoggedIn}>
+                Create a new Quiz
+            </button>
+            {!userLoggedIn && (
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        navigate("/login");
+                    }}
+                >
+                    Log in
+                </button>
+            )}
             <Modal
                 isOpen={isOpen}
                 onRequestClose={closeModal}
@@ -57,6 +78,8 @@ const AnimatedForm = () => {
             console.log(res);
         }
         generateQuizId();
+
+        console.log(lang);
     }, [lang]);
 
     let context = useContext(UserContext);
@@ -70,6 +93,8 @@ const AnimatedForm = () => {
                 { code: "?", correct: "?", options: [{ answer: "?", choice: "A" }], question: "question" },
             ],
         };
+
+        console.log(lang);
 
         createNewQuiz(author_id, quizName, lang, quizDesc, questions, id);
         // navigate("/test");

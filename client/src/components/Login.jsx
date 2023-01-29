@@ -1,6 +1,6 @@
 import { loginReq } from "../api_helper/user_functions";
 import React, { useState, Fragment, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../App";
 
@@ -71,8 +71,16 @@ const Login = () => {
                         required
                     />
                 </div>
-                <div>
-                    <button>Log in</button>
+                <div className="formBtns">
+                    <div>
+                        <button>Log in</button>
+                    </div>
+                    <div>
+                        <span style={{ fontSize: ".8rem" }}>Don't have an account?</span>
+                        <span style={{ fontSize: ".8rem", marginLeft: "10px" }}>
+                            <Link to="/signup">Create an account</Link>
+                        </span>
+                    </div>
                 </div>
             </form>
         </div>
