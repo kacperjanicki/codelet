@@ -1,15 +1,45 @@
 .card {
     background-color: grey;
-    height: 100px;
+    min-height: 100px;
     padding: 1rem;
     margin: 1rem;
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
 }
 .card > input {
     width: 250px;
 }
+.active {
+    display: flex;
+}
+.summary {
+    justify-content: unset;
+}
+.summary-row {
+    display: flex;
+    gap: 10px;
+}
+
+.summary-description {
+    flex-direction: column;
+    word-break: break-all;
+}
+.wrongInput {
+    border-color: red;
+}
+
+.formGroup {
+    width: 600px;
+}
+.bold {
+    font-weight: bold;
+}
+
 .description > input {
     width: 500px;
 }

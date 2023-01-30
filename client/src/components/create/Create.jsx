@@ -19,10 +19,7 @@ const Create = () => {
     }
 
     let context = useContext(UserContext);
-
     let userLoggedIn = context.userObj ? true : false;
-
-    console.log(context);
 
     Modal.setAppElement(document.getElementById("root"));
 
@@ -64,6 +61,7 @@ const AnimatedForm = () => {
     const [quizName, setQuizName] = useState();
     const [quizDesc, setQuizDesc] = useState();
     const [lang, setLang] = useState();
+    const [publicity, setPublicity] = useState();
     const [id, setId] = useState();
     const [questions, setQuestions] = useState();
     const navigate = useNavigate();
@@ -79,7 +77,7 @@ const AnimatedForm = () => {
         }
         generateQuizId();
 
-        console.log(lang);
+        // console.log(lang);
     }, [lang]);
 
     let context = useContext(UserContext);
@@ -93,117 +91,250 @@ const AnimatedForm = () => {
                 { code: "?", correct: "?", options: [{ answer: "?", choice: "A" }], question: "question" },
             ],
         };
-
-        console.log(lang);
-
         createNewQuiz(author_id, quizName, lang, quizDesc, questions, id);
-        // navigate("/test");
-
-        //  { "questions": [{"code":"?",
-        // "correct":"?","options":
-        // [{"answer":"code","choice":"A"}, ... ]
-        // "question":"pytanie"
-        //  }]}
         return false;
     };
 
-    return (
-        <form data-multi-step>
-            <div data-step="1" className="card">
-                <label htmlFor="quizName">Quiz Name</label>
-                <input
-                    type="text"
-                    name="quizName"
-                    onChange={(e) => {
-                        e.preventDefault();
-                        setQuizName(e.target.value);
-                    }}
-                    required
-                />
-                <div className="btnGroup">
-                    <button type="button">Next</button>
-                </div>
-            </div>
-            <div data-step="2" className="card description">
-                <label htmlFor="lang">Programming Language</label>
-                <select
-                    id="langs"
-                    required
-                    onChange={(e) => {
-                        e.preventDefault();
-                        if (e.target.value) setLang(e.target.value);
-                        // setLang(e.target.value);
-                    }}
-                >
-                    <option></option>
-                    <option value="python">Python</option>
-                    <option value="javascript">Javascript</option>
-                </select>
-                <div className="btnGroup">
-                    <button type="button">Previous</button>
-                    <button type="button">Next</button>
-                </div>
-            </div>
-            <div data-step="3" className="card description">
-                <label htmlFor="description">Description</label>
-                <textarea
-                    name="description"
-                    cols="30"
-                    rows="10"
-                    style={{ resize: "none" }}
-                    onChange={(e) => {
-                        e.preventDefault();
-                        setQuizDesc(e.target.value);
-                    }}
-                    required
-                ></textarea>
-                <div className="btnGroup">
-                    <button type="button">Previous</button>
-                    <button type="button">Next</button>
-                </div>
-            </div>
-            <div data-step="4" className="card">
-                <label htmlFor="questions">Questions</label>
-                <label htmlFor="howMany">How many questions?</label>
-                <input type="number" name="howMany" style={{ width: "50px" }} min={1} max={10} />
+    useEffect(() => {
+        const createQuizForm = document.querySelector("[data-multi-step]");
+        const formSteps = [...document.querySelectorAll("[data-step]")];
 
-                <div className="btnGroup">
-                    <button type="button">Previous</button>
-                    <button type="button">Next</button>
-                </div>
-            </div>
-            <div data-step="5" className="card">
-                <div className="formGroup">
-                    <div>
-                        {lang && id ? (
-                            <div>
-                                <span>
-                                    Quiz id: {lang}
-                                    {id}
-                                </span>
-                                <span className="cursive">
-                                    Your quiz will be available at codelet.com/quiz/{lang}/{id}
-                                </span>
-                            </div>
-                        ) : (
-                            <>
-                                <span>Quiz id:</span>
-                                <span className="cursive">Select a language</span>
-                            </>
-                        )}
-                    </div>
-                    <div>Quiz name: {quizName}</div>
-                    <div>Quiz description: {quizDesc}</div>
-                    <div>Quiz language: {lang ? lang : <span className="cursive">Not selected</span>}</div>
+        let currentStep = formSteps.findIndex((step) => step.classList.contains("active"));
+        if (currentStep < 0) {
+            currentStep = 0;
+            formSteps[currentStep].classList.add("active");
+        }
+
+        const nextBtns = [...document.querySelectorAll("[data-next]")];
+        const prvBtns = [...document.querySelectorAll("[data-previous]")];
+        nextBtns.forEach((nxt) => {
+            let parent = nxt.parentElement.parentElement;
+            let input =
+                parent.querySelector("input") ||
+                parent.querySelector("select") ||
+                parent.querySelector("#public");
+            nxt.onclick = (e) => {
+                e.preventDefault();
+                if (input && !input.checkValidity()) {
+                    input.classList.add("wrongInput");
+                    input.placeholder = "Input needed...";
+                } else {
+                    formSteps[currentStep].classList.remove("active");
+                    currentStep++;
+                    formSteps[currentStep].classList.add("active");
+                    input.classList.remove("wrongInput");
+                }
+            };
+            if (!input) return;
+            input.addEventListener("keydown", (e) => {
+                console.log(e.keyCode);
+                if (e.keyCode === 13) {
+                    let btn = parent.querySelector(".btnGroup").querySelector("[data-next]");
+                    console.log(btn);
+                    if (input.name == "select") {
+                        input.click();
+                    } else if (input.name !== "description") {
+                        btn.click();
+                    }
+                    // btn.click();
+                }
+            });
+        });
+        prvBtns.forEach((prv) => {
+            prv.onclick = (e) => {
+                e.preventDefault();
+                formSteps[currentStep].classList.remove("active");
+                currentStep--;
+                formSteps[currentStep].classList.add("active");
+            };
+        });
+    }, []);
+
+    return (
+        <>
+            <form data-multi-step onSubmit={submitQuiz}>
+                <div data-step className="card">
+                    <label htmlFor="quizName">Quiz Name</label>
+                    <input
+                        type="text"
+                        name="quizName"
+                        onChange={(e) => {
+                            e.preventDefault();
+                            setQuizName(e.target.value);
+                        }}
+                        required
+                    />
                     <div className="btnGroup">
-                        <button>Previous</button>
-                        <button type="submit" onClick={submitQuiz}>
-                            Submit
+                        <button type="button" data-next>
+                            Next
                         </button>
                     </div>
                 </div>
+                <div data-step className="card">
+                    <label htmlFor="lang">Programming Language</label>
+                    <select
+                        id="langs"
+                        name="select"
+                        required
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (e.target.value) setLang(e.target.value);
+                            // setLang(e.target.value);
+                        }}
+                    >
+                        <option></option>
+                        <option value="python">Python</option>
+                        <option value="javascript">Javascript</option>
+                    </select>
+                    <div className="btnGroup">
+                        <button type="button" data-previous>
+                            Previous
+                        </button>
+                        <button type="button" data-next>
+                            Next
+                        </button>
+                    </div>
+                </div>
+                <div data-step className="card description">
+                    <label htmlFor="description">Description</label>
+                    <textarea
+                        name="description"
+                        cols="30"
+                        rows="10"
+                        maxLength={255}
+                        style={{ resize: "none" }}
+                        onChange={(e) => {
+                            e.preventDefault();
+                            setQuizDesc(e.target.value);
+                        }}
+                    ></textarea>
+                    <div className="btnGroup">
+                        <button type="button" data-previous>
+                            Previous
+                        </button>
+                        <button type="button" data-next>
+                            Next
+                        </button>
+                    </div>
+                </div>
+                <div data-step className="card">
+                    <label htmlFor="questions">Questions</label>
+                    <label htmlFor="howMany">How many questions?</label>
+                    <input type="number" name="howMany" style={{ width: "50px" }} min={1} max={10} required />
+
+                    <div className="btnGroup">
+                        <button type="button" data-previous>
+                            Previous
+                        </button>
+                        <button type="button" data-next>
+                            Next
+                        </button>
+                    </div>
+                </div>
+                <div data-step className="card">
+                    <label htmlFor="questions">Publicity</label>
+                    <label htmlFor="howMany">Who should see your quiz?</label>
+                    <select
+                        id="public"
+                        name="select"
+                        required
+                        onChange={(e) => {
+                            e.preventDefault();
+                            if (e.target.value) setPublicity(e.target.value);
+                        }}
+                    >
+                        <option></option>
+                        <option value={true}>Everyone</option>
+                        <option value={false}>Only me</option>
+                    </select>
+
+                    <div className="btnGroup">
+                        <button type="button" data-previous>
+                            Previous
+                        </button>
+                        <button type="button" data-next>
+                            Next
+                        </button>
+                    </div>
+                </div>
+                <div data-step className="card">
+                    <div className="formGroup">
+                        <Summary
+                            quizDesc={quizDesc}
+                            quizName={quizName}
+                            id={id}
+                            lang={lang}
+                            publicity={publicity}
+                        />
+                        <button type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <div className="card active summary">
+                <div className="formGroup">
+                    <div style={{ textAlign: "center", fontWeight: "bold" }}>Quiz preview</div>
+                    <Summary
+                        quizDesc={quizDesc}
+                        quizName={quizName}
+                        id={id}
+                        lang={lang}
+                        publicity={publicity}
+                    />
+                </div>
             </div>
-        </form>
+        </>
+    );
+};
+
+const Summary = ({ lang, id, quizName, quizDesc, publicity }) => {
+    return (
+        <div style={{ display: "flex", gap: ".5rem", flexDirection: "column" }}>
+            {quizName && (
+                <div className="summary-row">
+                    <div className="bold">Quiz name:</div>
+                    <div>{quizName}</div>
+                </div>
+            )}
+            {quizDesc && (
+                <div className="summary-row summary-description">
+                    <div className="bold">Quiz description:</div>
+                    <div>{quizDesc}</div>
+                </div>
+            )}
+            {lang && (
+                <div className="summary-row ">
+                    <div className="bold">Quiz language:</div>
+                    <div>{lang}</div>
+                </div>
+            )}
+            {publicity && (
+                <div className="summary-row ">
+                    <div className="bold">Quiz publicity:</div>
+                    <div>{publicity ? "public" : "private"}</div>
+                </div>
+            )}
+            <div>
+                {lang && id ? (
+                    <div className="summary-row">
+                        <div className="bold">Quiz id:</div>
+                        <div>
+                            {lang}
+                            {id}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="summary-row">
+                        <div className="bold">Quiz id:</div>
+                        <div className="cursive">Select a language</div>
+                    </div>
+                )}
+            </div>
+            {lang && id && (
+                <span className="cursive">
+                    Your quiz will be available at codelet.com/quiz/{lang}/{id}
+                </span>
+            )}
+        </div>
     );
 };
 

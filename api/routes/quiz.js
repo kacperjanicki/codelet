@@ -63,10 +63,10 @@ router.post("/addNewQuiz", async (req, res) => {
     let author = authorQuery.rowCount > 0 && JSON.stringify(authorQuery.rows[0]);
 
     let query = await pool.query(
-        `INSERT INTO quizes(author_id,author,lang,quizid,public,questions) VALUES($1,$2,$3,$4,$5,$6);`,
-        [author_id, author, lang, lang + no, true, questions]
+        `INSERT INTO quizes(author_id,author,lang,quizid,quizName,quizDesc,public,questions,date) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9);`,
+        [author_id, author, lang, lang + no, name, desc, true, questions, new Date()]
     );
-    // console.log(query);
+    console.log(desc);
 });
 
 // will be as an endpoint when needed

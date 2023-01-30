@@ -28,7 +28,7 @@ const Homepage = () => {
                 <div className="cardsContainer">
                     {quizes &&
                         quizes.map((quiz) => (
-                            <Card type={quiz.lang} id={quiz.quizid} author={quiz.author} key={quiz.quizid} />
+                            <Card id={quiz.quizid} author={quiz.author} key={quiz.quizid} quiz={quiz} />
                         ))}
                 </div>
             </div>
@@ -40,8 +40,10 @@ const Homepage = () => {
     );
 };
 
-const Card = ({ type, id, author }) => {
-    // fetchQuiz(type, id);
+const Card = ({ type, id, author, quiz }) => {
+    console.log(quiz);
+    type = quiz.lang;
+
     const [isOpen, setIsOpen] = useState(false);
     function openModal() {
         setIsOpen(true);
@@ -51,42 +53,44 @@ const Card = ({ type, id, author }) => {
     }
     Modal.setAppElement(document.getElementById("root"));
 
-    let idString = id.split(type.slice(-1))[1];
+    let idString = id.split(quiz.lang.slice(-1))[1];
 
-    console.log(author);
-
-    return (
-        <div className="homeCard">
-            <div className="title">
-                {id}
-                <div>
-                    <Link to={`/quiz/${type}/${idString}`}>Start quiz</Link>
-                </div>
-                <div>
-                    <button onClick={openModal}>View more</button>
-                    <Modal
-                        isOpen={isOpen}
-                        onRequestClose={closeModal}
-                        contentLabel="Example Modal"
-                        overlayClassName={"Overlay"}
-                        className={"small Modal"}
-                    >
-                        <div className="info">
-                            <div>
-                                Quiz created by: <Link to={`/profile/${author.name}`}>{author.name}</Link>
+    if (quiz.public)
+        return (
+            <div className="homeCard">
+                <div className="title">
+                    {id}
+                    <div>
+                        <Link to={`/quiz/${type}/${idString}`}>Start quiz</Link>
+                    </div>
+                    <div>
+                        <button onClick={openModal}>View more</button>
+                        <Modal
+                            isOpen={isOpen}
+                            onRequestClose={closeModal}
+                            contentLabel="Example Modal"
+                            overlayClassName={"Overlay"}
+                            className={"small Modal"}
+                        >
+                            <div className="info">
+                                <div>
+                                    Quiz created by: <Link to={`/profile/${author.name}`}>{author.name}</Link>
+                                </div>
+                                <div>Quiz name: {quiz.quizname}</div>
+                                <div>Language: {type}</div>
+                                <div>Description: {quiz.quizdesc ? quiz.quizdesc : "No description"}</div>
+                                <div>Date: {new Date(quiz.date).toISOString()}</div>
+                                <div>Publicity: {quiz.public ? "public" : "private"}</div>
                             </div>
-                            <div>Language: {type}</div>
-                            <div></div>
-                        </div>
-                        <Link to={`/quiz/${type}/${idString}`}>Play</Link>
-                    </Modal>
+                            <Link to={`/quiz/${type}/${idString}`}>Play</Link>
+                        </Modal>
+                    </div>
+                    <div className="info">Created by: {author.name}</div>
                 </div>
-                <div className="info">Created by: {author.name}</div>
+                <div className="description"></div>
+                <div className="picture"></div>
             </div>
-            <div className="description"></div>
-            <div className="picture"></div>
-        </div>
-    );
+        );
 };
 
 export default Homepage;

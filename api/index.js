@@ -37,6 +37,9 @@ pool.query(
         author JSONB NOT NULL,
         lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
         quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
+        quizName VARCHAR(255) NOT NULL CHECK (quizName <> ''),
+        quizDesc VARCHAR(255),
+        date TIMESTAMP,
         public BOOLEAN NOT NULL,
         questions JSONB NOT NULL,
         CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(user_id));`
