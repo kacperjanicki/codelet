@@ -18,6 +18,7 @@ import { isUserAuth } from "./api_helper/user_functions";
 import RouteNotFound from "./components/RouteNotFound";
 import EditProfile from "./components/profile/EditProfile";
 import Create from "./components/create/Create";
+import Explore from "./components/explore/Explore";
 
 export const UserContext = createContext();
 
@@ -61,6 +62,7 @@ function App() {
                                 <Route exact path="/login" element={<Login />}></Route>
                                 <Route exact path="/signup" element={<Signup />}></Route>
                                 <Route exact path="/create" element={<Create />}></Route>
+                                <Route exact path="/explore" element={<Explore />}></Route>
                                 <Route
                                     exact
                                     path="/quiz/*"

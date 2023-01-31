@@ -85,7 +85,6 @@ const AnimatedForm = () => {
     let author_id = context.userObj.user_id;
 
     const submitQuiz = () => {
-        console.log(quizName, quizDesc, lang);
         let questions = {
             questions: [
                 { code: "?", correct: "?", options: [{ answer: "?", choice: "A" }], question: "question" },
