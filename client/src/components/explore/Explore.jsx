@@ -20,19 +20,22 @@ const Explore = () => {
     return (
         <>
             <div className="sortContainer">
-                <div>
-                    <label htmlFor="">Sort:</label>
-                    <label htmlFor="lang">By language:</label>
-                    <select
-                        onChange={(e) => {
-                            if (e.target.value !== "false") setLang(e.target.value);
-                        }}
-                        name="lang"
-                    >
-                        <option value={false}>By language</option>
-                        <option value="python">Python</option>
-                        <option value="javascript">Javascript</option>
-                    </select>
+                Sort:
+                <div className="sortOptions">
+                    <div>
+                        <label htmlFor="lang">By language:</label>
+                        <select
+                            onChange={(e) => {
+                                if (e.target.value !== "false") setLang(e.target.value);
+                            }}
+                            name="lang"
+                        >
+                            <option value={false}>By language</option>
+                            <option value="python">Python</option>
+                            <option value="javascript">Javascript</option>
+                        </select>
+                    </div>
+                    {/* copy from /profile sorting buttons */}
                 </div>
             </div>
             {lang && quizes && (

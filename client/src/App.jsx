@@ -19,6 +19,7 @@ import RouteNotFound from "./components/RouteNotFound";
 import EditProfile from "./components/profile/EditProfile";
 import Create from "./components/create/Create";
 import Explore from "./components/explore/Explore";
+import QuizPreview from "./components/quiz/QuizPreview";
 
 export const UserContext = createContext();
 
@@ -48,6 +49,7 @@ function App() {
             setLoading(false);
         }
     }, []);
+
     return (
         <AuthProvider authType="cookie" cookieSecure={false}>
             <UserContext.Provider value={{ userObj, setUserObj }}>
@@ -63,14 +65,20 @@ function App() {
                                 <Route exact path="/signup" element={<Signup />}></Route>
                                 <Route exact path="/create" element={<Create />}></Route>
                                 <Route exact path="/explore" element={<Explore />}></Route>
+
                                 <Route
                                     exact
-                                    path="/quiz/*"
+                                    path="/quiz/:id/play"
                                     element={
                                         <ProtectedRoute>
                                             <QuizRoute children={<Quiz />} />
                                         </ProtectedRoute>
                                     }
+                                ></Route>
+                                <Route
+                                    exact
+                                    path="/quiz/:id/"
+                                    element={<ProtectedRoute>{<QuizPreview />}</ProtectedRoute>}
                                 ></Route>
                                 <Route
                                     exact

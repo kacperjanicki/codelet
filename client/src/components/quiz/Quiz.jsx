@@ -13,8 +13,8 @@ const CHANGE_QUESTION_DELAY = 2000;
 export const quizContext = createContext({});
 
 const Quiz = () => {
-    let quizLang = window.location.href.split("/")[4];
-    let quizId = window.location.href.split("/")[5];
+    var quizId = window.location.href.split("/")[4].split("_")[1];
+    var quizLang = window.location.href.split("/")[4].split("_")[0];
 
     const [questions, setQuestions] = useState(false);
     const [quizFetched, setQuizFetched] = useState();

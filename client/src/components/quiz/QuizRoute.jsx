@@ -5,8 +5,11 @@ import RouteNotFound from "../RouteNotFound";
 //this component will redirect when quizId is not valid
 
 const QuizRoute = ({ children }) => {
-    let quizId = window.location.href.split("/")[5];
-    let quizLang = window.location.href.split("/")[4];
+    var quizId = window.location.href.split("/")[4].split("_")[1];
+    var quizLang = window.location.href.split("/")[4].split("_")[0];
+
+    console.log(quizId, quizLang);
+
     const [loading, setLoading] = useState(true);
     const [valid, setValid] = useState(false);
     const [msg, setMsg] = useState(false);
@@ -21,6 +24,9 @@ const QuizRoute = ({ children }) => {
         }
         isQuizValid();
     }, []);
+
+    console.log(valid);
+
     if (loading) return "loading...";
     if (valid) return children;
     else if (!valid) return <RouteNotFound msg={msg} />;

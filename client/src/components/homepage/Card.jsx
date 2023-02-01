@@ -25,7 +25,7 @@ const Card = ({ quiz }) => {
                 <div className="title">
                     {id}
                     <div>
-                        <Link to={`/quiz/${type}/${idString}`}>Start quiz</Link>
+                        <Link to={`/quiz/${type}_${idString}`}>Start quiz</Link>
                     </div>
                     <div>
                         <button onClick={openModal}>View more</button>
@@ -46,7 +46,7 @@ const Card = ({ quiz }) => {
                                 <div>Date: {new Date(quiz.date).toISOString()}</div>
                                 <div>Publicity: {quiz.public ? "public" : "private"}</div>
                             </div>
-                            <Link to={`/quiz/${type}/${idString}`}>Play</Link>
+                            <Link to={`/quiz/${type}_${idString}`}>Play</Link>
                         </Modal>
                     </div>
                     <div className="info">Created by: {author.name}</div>
