@@ -8,6 +8,7 @@ import { createNewQuiz, createQuizId } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 import "./createNewQuiz.css";
 import "./script.js";
+import SingleQuestionCreate from "./SingleQuestionCreate";
 
 const Create = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -149,6 +150,21 @@ const AnimatedForm = () => {
         });
     }, []);
 
+    // creating questions logic
+    const [isOpen, setIsOpen] = useState(false);
+    const [howMany, setHowMany] = useState(0);
+    const [questionsCreated, setQuestionsCreated] = useState([]);
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeModal() {
+        setIsOpen(false);
+    }
+    useEffect(() => {
+        if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
+        else setQuestionsCreated(Array(0).fill("_"));
+    }, [howMany]);
+
     return (
         <>
             <form data-multi-step onSubmit={submitQuiz}>
@@ -219,13 +235,41 @@ const AnimatedForm = () => {
                 <div data-step className="card">
                     <label htmlFor="questions">Questions</label>
                     <label htmlFor="howMany">How many questions?</label>
-                    <input type="number" name="howMany" style={{ width: "50px" }} min={1} max={10} required />
-
+                    <input
+                        type="number"
+                        name="howMany"
+                        style={{ width: "50px" }}
+                        min="1"
+                        max="10"
+                        required
+                        onChange={(e) => {
+                            e.preventDefault();
+                            setHowMany(parseInt(e.target.value));
+                            console.log(e.target.checkValidity());
+                            if (!e.target.checkValidity()) e.target.classList.add("wrongInput");
+                            else if (e.target.checkValidity()) e.target.classList.remove("wrongInput");
+                        }}
+                    />
+                    <Modal
+                        isOpen={isOpen}
+                        onRequestClose={closeModal}
+                        contentLabel="Example Modal"
+                        overlayClassName={"Overlay"}
+                        className={"Modal"}
+                    >
+                        {questionsCreated.map((question, number) => (
+                            <SingleQuestionCreate
+                                index={number}
+                                questions={questionsCreated}
+                                setQuestions={setQuestionsCreated}
+                            />
+                        ))}
+                    </Modal>
                     <div className="btnGroup">
                         <button type="button" data-previous>
                             Previous
                         </button>
-                        <button type="button" data-next>
+                        <button type="button" onClick={openModal}>
                             Next
                         </button>
                     </div>

@@ -25,30 +25,9 @@ const Card = ({ quiz }) => {
                 <div className="title">
                     {id}
                     <div>
-                        <Link to={`/quiz/${type}_${idString}`}>Start quiz</Link>
+                        <Link to={`/quiz/${type}_${idString}`}>See more</Link>
                     </div>
-                    <div>
-                        <button onClick={openModal}>View more</button>
-                        <Modal
-                            isOpen={isOpen}
-                            onRequestClose={closeModal}
-                            contentLabel="Example Modal"
-                            overlayClassName={"Overlay"}
-                            className={"small Modal"}
-                        >
-                            <div className="info">
-                                <div>
-                                    Quiz created by: <Link to={`/profile/${author.name}`}>{author.name}</Link>
-                                </div>
-                                <div>Quiz name: {quiz.quizname}</div>
-                                <div>Language: {type}</div>
-                                <div>Description: {quiz.quizdesc ? quiz.quizdesc : "No description"}</div>
-                                <div>Date: {new Date(quiz.date).toISOString()}</div>
-                                <div>Publicity: {quiz.public ? "public" : "private"}</div>
-                            </div>
-                            <Link to={`/quiz/${type}_${idString}`}>Play</Link>
-                        </Modal>
-                    </div>
+
                     <div className="info">Created by: {author.name}</div>
                 </div>
                 <div className="description"></div>

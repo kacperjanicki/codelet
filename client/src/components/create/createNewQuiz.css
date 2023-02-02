@@ -32,6 +32,9 @@
 .wrongInput {
     border-color: red;
 }
+.wrongInput:focus {
+    border-color: red;
+}
 
 .formGroup {
     width: 600px;
