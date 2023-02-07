@@ -263,6 +263,7 @@ const AnimatedForm = () => {
                                 index={number}
                                 questions={questionsCreated}
                                 setQuestions={setQuestionsCreated}
+                                key={number}
                             />
                         ))}
                     </Modal>
@@ -330,6 +331,7 @@ const AnimatedForm = () => {
                             index={number}
                             questions={questionsCreated}
                             setQuestions={setQuestionsCreated}
+                            key={number}
                         />
                     ))}
                 </div>

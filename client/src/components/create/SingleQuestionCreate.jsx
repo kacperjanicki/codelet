@@ -23,14 +23,14 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
         };
     }
     //make this component multi-step
+    const [currentStep, setCurrentStep] = useState(0);
     useEffect(() => {
-        const createQuizForm = document.querySelector("[data-multi-step-q]");
+        // const createQuizForm = document.querySelector("[data-multi-step-q]");
         const formSteps = [...document.querySelectorAll("[data-step-q]")];
-
         let currentStep = formSteps.findIndex((step) => step.classList.contains("active"));
+
         if (currentStep < 0) {
-            currentStep = 0;
-            formSteps[currentStep].classList.add("active");
+            formSteps[0].classList.add("active");
         }
 
         const nextBtns = [...document.querySelectorAll("[data-next-q]")];
@@ -41,18 +41,8 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                 parent.querySelector("input") ||
                 parent.querySelector("select") ||
                 parent.querySelector("#public");
-            nxt.onclick = (e) => {
-                e.preventDefault();
-                if (input && !input.checkValidity()) {
-                    input.classList.add("wrongInput");
-                    input.placeholder = "Input needed...";
-                } else {
-                    formSteps[currentStep].classList.remove("active");
-                    currentStep++;
-                    formSteps[currentStep].classList.add("active");
-                    input.classList.remove("wrongInput");
-                }
-            };
+            let txt = parent.querySelector("textarea");
+
             if (!input) return;
             input.addEventListener("keydown", (e) => {
                 if (e.keyCode === 13) {
@@ -66,14 +56,14 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                 }
             });
         });
-        prvBtns.forEach((prv) => {
-            prv.onclick = (e) => {
-                e.preventDefault();
-                formSteps[currentStep].classList.remove("active");
-                currentStep--;
-                formSteps[currentStep].classList.add("active");
-            };
-        });
+        // prvBtns.forEach((prv) => {
+        //     prv.onclick = (e) => {
+        //         e.preventDefault();
+        //         formSteps[currentStep].classList.remove("active");
+        //         currentStep--;
+        //         formSteps[currentStep].classList.add("active");
+        //     };
+        // });
     }, []);
 
     const submitQuiz = (e) => {
@@ -87,20 +77,11 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
     };
     let currentQuestions = questions;
 
-    const handleNextQ = (e) => {
-        e.preventDefault();
-        let index = parseInt(e.target.dataset.index);
-        currentQuestions[index] = { code: codeString, question: qBody };
-        console.log(currentQuestions);
-        setCodeString("");
-        setqBody("");
-    };
-
     return (
         <>
             <form data-multi-step-q onSubmit={submitQuiz}>
                 {questions.map((question, index) => (
-                    <div data-step-q className="card">
+                    <div data-step-q className="card" key={index}>
                         <div className={`questionCreate${index} questionCreate`}>
                             <div style={{ textAlign: "center", margin: "5px" }}>Question {index + 1}</div>
                             <div className="questionSection">
@@ -113,6 +94,7 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                     type="text"
                                     placeholder="What will be the output of the following code?"
                                     style={{ width: "400px" }}
+                                    required
                                 />
                             </div>
                             <div
@@ -123,8 +105,12 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                 }}
                             >
                                 <div className="questionBody">{qBody}</div>
-                                <SyntaxHighlighter language={lang} style={dracula} className="test">
-                                    {codeString}
+                                <SyntaxHighlighter
+                                    language={lang}
+                                    style={dracula}
+                                    className="highlighterContainer"
+                                >
+                                    {codeString ? codeString : ""}
                                 </SyntaxHighlighter>
                                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
                                 <div className="typeCode">
@@ -132,6 +118,9 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                         className="hiddenInput"
                                         placeholder="Enter your code body here..."
                                         onChange={(e) => {
+                                            e.preventDefault();
+                                            console.log(e.target.value);
+                                            console.log(codeString);
                                             setCodeString(e.target.value);
                                         }}
                                         style={{
@@ -140,15 +129,53 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                             height: "100px",
                                             overflow: "visible",
                                         }}
+                                        required
                                     ></textarea>
                                 </div>
                             </div>
                         </div>
                         <div className="btnGroup">
-                            <button type="button" data-previous-q>
+                            <button
+                                type="button"
+                                data-previous-q
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    let formSteps = document.querySelectorAll("[data-step-q]");
+                                    if (index == 0) return;
+                                    formSteps[index].classList.remove("active");
+                                    formSteps[index - 1].classList.add("active");
+                                }}
+                            >
                                 Previous
                             </button>
-                            <button type="button" data-next-q onClick={handleNextQ} data-index={index}>
+                            <button
+                                type="button"
+                                data-next-q
+                                data-index={index}
+                                onClick={(e) => {
+                                    e.preventDefault();
+
+                                    let formSteps = document.querySelectorAll("[data-step-q]");
+
+                                    let txt = e.target.parentElement.parentElement.querySelector("textarea");
+                                    let input = e.target.parentElement.parentElement.querySelector("input");
+
+                                    if (txt && !txt.checkValidity()) {
+                                        txt.classList.add("wrongInput");
+                                        txt.placeholder = "Code body required...";
+                                    } else if (input && !input.checkValidity()) {
+                                        input.classList.add("wrongInput");
+                                        input.placeholder = "Input needed...";
+                                    } else {
+                                        formSteps[index].classList.remove("active");
+                                        // parent.querySelector(".highlighterContainer").querySelector("span").innerHTML = "";
+                                        console.log(codeString);
+
+                                        formSteps[index + 1].classList.add("active");
+                                        input.classList.remove("wrongInput");
+                                    }
+                                }}
+                            >
                                 Next
                             </button>
                         </div>
