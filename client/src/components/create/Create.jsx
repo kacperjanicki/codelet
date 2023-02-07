@@ -152,7 +152,7 @@ const AnimatedForm = () => {
 
     // creating questions logic
     const [isOpen, setIsOpen] = useState(false);
-    const [howMany, setHowMany] = useState(0);
+    const [howMany, setHowMany] = useState(2);
     const [questionsCreated, setQuestionsCreated] = useState([]);
     function openModal() {
         setIsOpen(true);
@@ -164,6 +164,8 @@ const AnimatedForm = () => {
         if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
         else setQuestionsCreated(Array(0).fill("_"));
     }, [howMany]);
+
+    console.log(questionsCreated);
 
     return (
         <>
@@ -245,7 +247,6 @@ const AnimatedForm = () => {
                         onChange={(e) => {
                             e.preventDefault();
                             setHowMany(parseInt(e.target.value));
-                            console.log(e.target.checkValidity());
                             if (!e.target.checkValidity()) e.target.classList.add("wrongInput");
                             else if (e.target.checkValidity()) e.target.classList.remove("wrongInput");
                         }}
@@ -323,6 +324,14 @@ const AnimatedForm = () => {
                         lang={lang}
                         publicity={publicity}
                     />
+                    {questionsCreated.map((question, number) => (
+                        <SingleQuestionCreate
+                            lang={lang}
+                            index={number}
+                            questions={questionsCreated}
+                            setQuestions={setQuestionsCreated}
+                        />
+                    ))}
                 </div>
             </div>
         </>

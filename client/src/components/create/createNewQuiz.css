@@ -58,3 +58,24 @@
     /* letter-spacing: 1mm; */
     margin-left: 10px;
 }
+
+/* question create section */
+.questionSection {
+    display: flex;
+    gap: 0.2rem;
+}
+.questionCreate {
+    display: flex;
+    flex-direction: column;
+}
+
+.questionBody {
+    text-align: center;
+}
+.test {
+    min-height: 25px;
+}
+.typeCode {
+    display: flex;
+    justify-content: center;
+}
