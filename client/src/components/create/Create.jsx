@@ -8,7 +8,7 @@ import { createNewQuiz, createQuizId } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 import "./createNewQuiz.css";
 import "./script.js";
-import SingleQuestionCreate from "./SingleQuestionCreate";
+import QuestionCreate from "./QuestionCreate";
 
 const Create = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -58,13 +58,15 @@ const Create = () => {
     );
 };
 
+//when in production, fill inputs with dummy data
+let prod = true;
+
 const AnimatedForm = () => {
     const [quizName, setQuizName] = useState();
     const [quizDesc, setQuizDesc] = useState();
     const [lang, setLang] = useState();
     const [publicity, setPublicity] = useState();
     const [id, setId] = useState();
-    const [questions, setQuestions] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -165,7 +167,11 @@ const AnimatedForm = () => {
         else setQuestionsCreated(Array(0).fill("_"));
     }, [howMany]);
 
-    console.log(questionsCreated);
+    useEffect(() => {
+        if (questionsCreated[0] === "_") return;
+
+        console.log(questionsCreated);
+    }, [questionsCreated]);
 
     return (
         <>
@@ -179,6 +185,7 @@ const AnimatedForm = () => {
                             e.preventDefault();
                             setQuizName(e.target.value);
                         }}
+                        defaultValue={prod ? "test" : null}
                         required
                     />
                     <div className="btnGroup">
@@ -200,7 +207,9 @@ const AnimatedForm = () => {
                         }}
                     >
                         <option></option>
-                        <option value="python">Python</option>
+                        <option value="python" selected={prod}>
+                            Python
+                        </option>
                         <option value="javascript">Javascript</option>
                     </select>
                     <div className="btnGroup">
@@ -224,6 +233,7 @@ const AnimatedForm = () => {
                             e.preventDefault();
                             setQuizDesc(e.target.value);
                         }}
+                        defaultValue={prod ? "test description" : null}
                     ></textarea>
                     <div className="btnGroup">
                         <button type="button" data-previous>
@@ -259,11 +269,13 @@ const AnimatedForm = () => {
                         className={"Modal"}
                     >
                         {questionsCreated.map((question, number) => (
-                            <SingleQuestionCreate
-                                index={number}
+                            <QuestionCreate
+                                lang={lang}
                                 questions={questionsCreated}
                                 setQuestions={setQuestionsCreated}
                                 key={number}
+                                howMany={howMany}
+                                close={closeModal}
                             />
                         ))}
                     </Modal>
@@ -324,23 +336,16 @@ const AnimatedForm = () => {
                         id={id}
                         lang={lang}
                         publicity={publicity}
+                        questions={questionsCreated}
+                        preview={openModal}
                     />
-                    {questionsCreated.map((question, number) => (
-                        <SingleQuestionCreate
-                            lang={lang}
-                            index={number}
-                            questions={questionsCreated}
-                            setQuestions={setQuestionsCreated}
-                            key={number}
-                        />
-                    ))}
                 </div>
             </div>
         </>
     );
 };
 
-const Summary = ({ lang, id, quizName, quizDesc, publicity }) => {
+const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, preview }) => {
     return (
         <div style={{ display: "flex", gap: ".5rem", flexDirection: "column" }}>
             {quizName && (
@@ -380,6 +385,23 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity }) => {
                     <div className="summary-row">
                         <div className="bold">Quiz id:</div>
                         <div className="cursive">Select a language</div>
+                    </div>
+                )}
+            </div>
+            <div>
+                {questions && (
+                    <div className="summary-row">
+                        <div className="bold">Questions:</div>
+                        {questions.length}
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                preview();
+                            }}
+                        >
+                            Preview
+                        </button>
                     </div>
                 )}
             </div>

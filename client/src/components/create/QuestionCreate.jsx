@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
+const QuestionCreate = ({ howMany, questions, setQuestions, lang, close }) => {
     const [codeString, setCodeString] = useState("");
     const [qBody, setqBody] = useState("");
+    const [correct, setCorrect] = useState(false);
+    const [q, setQ] = useState([]);
     //make tab in textareas indent
     var textareas = document.getElementsByTagName("textarea");
     var count = textareas.length;
@@ -23,7 +25,6 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
         };
     }
     //make this component multi-step
-    const [currentStep, setCurrentStep] = useState(0);
     useEffect(() => {
         // const createQuizForm = document.querySelector("[data-multi-step-q]");
         const formSteps = [...document.querySelectorAll("[data-step-q]")];
@@ -67,15 +68,31 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
     }, []);
 
     const submitQuiz = (e) => {
+        console.log(q);
+        console.log(options);
+        console.log(correct);
+        setQuestions([...q]);
+
+        close();
+
         e.preventDefault();
-        // console.log(qBody);
-        // console.log(codeString);
-        // let question = { code: codeString, question: qBody };
-        // setQuestions((questions) => [...questions, (questions[index] = question)]);
-        console.log(qBody);
         return false;
     };
-    let currentQuestions = questions;
+
+    const [currentStep, setCurrentStep] = useState(0);
+
+    let letters = ["A", "B", "C", "D"];
+    const [options, setOptions] = useState([]);
+    const [option, setOption] = useState([]);
+    useEffect(() => {
+        let newOpt = options;
+        newOpt[letters.indexOf(option.choice)] = option;
+        setOptions(newOpt);
+    }, [option]);
+
+    useEffect(() => {
+        setQ([...q]);
+    }, [options]);
 
     return (
         <>
@@ -83,7 +100,9 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                 {questions.map((question, index) => (
                     <div data-step-q className="card" key={index}>
                         <div className={`questionCreate${index} questionCreate`}>
-                            <div style={{ textAlign: "center", margin: "5px" }}>Question {index + 1}</div>
+                            <div style={{ textAlign: "center", margin: "5px" }}>
+                                Question {currentStep + 1}
+                            </div>
                             <div className="questionSection">
                                 <div style={{ width: "150px" }}>Question body:</div>
                                 <input
@@ -119,8 +138,6 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                         placeholder="Enter your code body here..."
                                         onChange={(e) => {
                                             e.preventDefault();
-                                            console.log(e.target.value);
-                                            console.log(codeString);
                                             setCodeString(e.target.value);
                                         }}
                                         style={{
@@ -133,6 +150,58 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                     ></textarea>
                                 </div>
                             </div>
+                            <div>
+                                <div style={{ display: "flex", gap: "1rem" }}>
+                                    Correct answer:
+                                    {correct ? (
+                                        <div style={{ display: "flex", gap: "1rem" }}>
+                                            {correct}
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setCorrect(false);
+                                                    let container =
+                                                        e.target.parentElement.parentElement.parentElement;
+                                                    container
+                                                        .querySelector(".correctAnsBg")
+                                                        .classList.remove("correctAnsBg");
+                                                }}
+                                            >
+                                                Change
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        "Not set yet"
+                                    )}
+                                </div>
+                                {letters.map((letter) => (
+                                    <div className="option">
+                                        <div key={letter}>Option: {letter}</div>
+                                        <input
+                                            type="text"
+                                            placeholder="Option body"
+                                            onChange={(e) => {
+                                                setOption({ choice: letter, answer: e.target.value });
+                                            }}
+                                        />
+                                        {!correct && (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setCorrect(letter);
+                                                    e.target.parentElement
+                                                        .querySelector("div")
+                                                        .classList.add("correctAnsBg");
+                                                }}
+                                            >
+                                                Set as correct
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <div className="btnGroup">
                             <button
@@ -141,9 +210,10 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     let formSteps = document.querySelectorAll("[data-step-q]");
-                                    if (index == 0) return;
-                                    formSteps[index].classList.remove("active");
-                                    formSteps[index - 1].classList.add("active");
+                                    if (currentStep == 0) return;
+                                    formSteps[currentStep].classList.remove("active");
+                                    setCurrentStep((currentStep) => currentStep - 1);
+                                    formSteps[currentStep].classList.add("active");
                                 }}
                             >
                                 Previous
@@ -167,27 +237,39 @@ const SingleQuestionCreate = ({ index, questions, setQuestions, lang }) => {
                                         input.classList.add("wrongInput");
                                         input.placeholder = "Input needed...";
                                     } else {
-                                        formSteps[index].classList.remove("active");
+                                        formSteps[currentStep].classList.remove("active");
                                         // parent.querySelector(".highlighterContainer").querySelector("span").innerHTML = "";
-                                        console.log(codeString);
 
-                                        formSteps[index + 1].classList.add("active");
+                                        setCurrentStep((currentStep) => currentStep + 1);
+
+                                        let question = { code: codeString, question: qBody };
+                                        let questionAll = questions;
+                                        questionAll[currentStep] = question;
+                                        questionAll[currentStep].correct = correct;
+                                        questionAll[currentStep].options = options;
+                                        setQ(questionAll);
+
+                                        console.log(questionAll);
+                                        console.log(currentStep);
+
+                                        setOptions([]);
+                                        setCorrect(false);
+
+                                        formSteps[currentStep + 1].classList.add("active");
                                         input.classList.remove("wrongInput");
+                                        txt.classList.remove("wrongInput");
                                     }
                                 }}
                             >
                                 Next
                             </button>
                         </div>
+                        {howMany == currentStep && <button type="submit">Submit</button>}
                     </div>
                 ))}
-
-                <div data-step-q className="card">
-                    <button type="submit">Submit</button>
-                </div>
             </form>
         </>
     );
 };
 
-export default SingleQuestionCreate;
+export default QuestionCreate;

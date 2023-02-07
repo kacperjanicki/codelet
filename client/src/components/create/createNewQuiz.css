@@ -68,6 +68,10 @@
     display: flex;
     flex-direction: column;
 }
+.option {
+    display: flex;
+    gap: 1rem;
+}
 
 .questionBody {
     text-align: center;
@@ -78,4 +82,7 @@
 .typeCode {
     display: flex;
     justify-content: center;
+}
+.correctAnsBg {
+    background-color: green;
 }
