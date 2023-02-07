@@ -155,17 +155,17 @@ const AnimatedForm = () => {
     // creating questions logic
     const [isOpen, setIsOpen] = useState(false);
     const [howMany, setHowMany] = useState(2);
-    const [questionsCreated, setQuestionsCreated] = useState([]);
+    const [questionsCreated, setQuestionsCreated] = useState([...Array(howMany).keys()]);
     function openModal() {
         setIsOpen(true);
     }
     function closeModal() {
         setIsOpen(false);
     }
-    useEffect(() => {
-        if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
-        else setQuestionsCreated(Array(0).fill("_"));
-    }, [howMany]);
+    // useEffect(() => {
+    //     if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
+    //     else setQuestionsCreated(Array(0).fill("_"));
+    // }, []);
 
     useEffect(() => {
         if (questionsCreated[0] === "_") return;
@@ -185,7 +185,7 @@ const AnimatedForm = () => {
                             e.preventDefault();
                             setQuizName(e.target.value);
                         }}
-                        defaultValue={prod ? "test" : null}
+                        // defaultValue={prod ? "test" : null}
                         required
                     />
                     <div className="btnGroup">
@@ -268,7 +268,7 @@ const AnimatedForm = () => {
                         overlayClassName={"Overlay"}
                         className={"Modal"}
                     >
-                        {questionsCreated.map((question, number) => (
+                        {/* {questionsCreated.map((question, number) => (
                             <QuestionCreate
                                 lang={lang}
                                 questions={questionsCreated}
@@ -277,7 +277,7 @@ const AnimatedForm = () => {
                                 howMany={howMany}
                                 close={closeModal}
                             />
-                        ))}
+                        ))} */}
                     </Modal>
                     <div className="btnGroup">
                         <button type="button" data-previous>
@@ -338,6 +338,12 @@ const AnimatedForm = () => {
                         publicity={publicity}
                         questions={questionsCreated}
                         preview={openModal}
+                    />
+                    <QuestionCreate
+                        lang={lang}
+                        questions={questionsCreated}
+                        setQuestions={setQuestionsCreated}
+                        close={closeModal}
                     />
                 </div>
             </div>

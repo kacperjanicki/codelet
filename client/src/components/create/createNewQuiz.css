@@ -83,6 +83,13 @@
     display: flex;
     justify-content: center;
 }
+.typeCode textarea {
+    resize: none;
+    width: 400px;
+    height: 100px;
+    overflow: visible;
+}
+
 .correctAnsBg {
     background-color: green;
 }
