@@ -9,6 +9,7 @@ import { UserContext } from "../../App";
 import "./createNewQuiz.css";
 import "./script.js";
 import QuestionCreate from "./QuestionCreate";
+import { createContext } from "react";
 
 const Create = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +61,8 @@ const Create = () => {
 
 //when in production, fill inputs with dummy data
 let prod = true;
+
+export const questionContext = createContext();
 
 const AnimatedForm = () => {
     const [quizName, setQuizName] = useState();
@@ -170,8 +173,13 @@ const AnimatedForm = () => {
     useEffect(() => {
         if (questionsCreated[0] === "_") return;
 
+        // createNewQuiz(author_id, quizName, lang, quizDesc, questionsCreated, id);
+
         console.log(questionsCreated);
+        closeModal();
     }, [questionsCreated]);
+
+    console.log(questionsCreated);
 
     return (
         <>
@@ -339,12 +347,9 @@ const AnimatedForm = () => {
                         questions={questionsCreated}
                         preview={openModal}
                     />
-                    <QuestionCreate
-                        lang={lang}
-                        questions={questionsCreated}
-                        setQuestions={setQuestionsCreated}
-                        close={closeModal}
-                    />
+                    <questionContext.Provider value={{ setQuestionsCreated, questionsCreated, closeModal }}>
+                        <QuestionCreate lang={lang} close={closeModal} />
+                    </questionContext.Provider>
                 </div>
             </div>
         </>
