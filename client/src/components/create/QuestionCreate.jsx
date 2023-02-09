@@ -28,24 +28,17 @@ const tabsInTxt = () => {
 };
 
 const QuestionCreate = ({ lang }) => {
-    const { questionsCreated, setQuestionsCreated, closeModal } = useContext(questionContext);
+    const { questionsCreated, setQuestionsCreated, howMany } = useContext(questionContext);
     let questions = questionsCreated;
     let setQuestions = setQuestionsCreated;
-    let close = closeModal;
-
-    const [q, setQ] = useState([]);
     tabsInTxt();
 
     //make this component multi-step
     useEffect(() => {
         const createQuizForm = document.querySelector("[data-multi-step-q]");
-        console.log(createQuizForm);
         let formSteps = createQuizForm.querySelectorAll("[data-step-q]");
-        console.log(formSteps);
         if (formSteps) {
             formSteps[0].classList.add("active"); //make first form card visible by default
-
-            console.log(formSteps);
         }
     });
 
@@ -65,17 +58,17 @@ const QuestionCreate = ({ lang }) => {
             let txt = parent.querySelector("textarea");
 
             if (!input) return;
-            input.addEventListener("keydown", (e) => {
-                if (e.keyCode === 13) {
-                    let btn = parent.querySelector(".btnGroup").querySelector("[data-next-q]");
-                    if (input.name == "select") {
-                        input.click();
-                    } else if (input.name !== "description") {
-                        btn.click();
-                    }
-                    // btn.click();
-                }
-            });
+            // input.addEventListener("keydown", (e) => {
+            //     if (e.keyCode === 13) {
+            //         let btn = parent.querySelector(".btnGroup").querySelector("[data-next-q]");
+            //         if (input.name == "select") {
+            //             input.click();
+            //         } else if (input.name !== "description") {
+            //             btn.click();
+            //         }
+            //         // btn.click();
+            //     }
+            // });
         });
         // prvBtns.forEach((prv) => {
         //     prv.onclick = (e) => {
@@ -87,15 +80,18 @@ const QuestionCreate = ({ lang }) => {
         // });
     }, []);
 
+    useEffect(() => {
+        console.log(questions);
+        if (!questions.includes("_")) {
+            console.log("a");
+        }
+    }, [questions]);
+
     const submitQuiz = (e) => {
-        // setQuestions([...q]);
+        e.preventDefault();
         console.log(questions);
         setQuestionsCreated([...questions]);
         let formSteps = document.querySelectorAll("[data-step-q]");
-        console.log(formSteps);
-
-        e.preventDefault();
-        return false;
     };
 
     const [currentStep, setCurrentStep] = useState(0);
@@ -104,11 +100,13 @@ const QuestionCreate = ({ lang }) => {
         <questionCreateContext.Provider
             value={{ lang, currentStep, setCurrentStep, questions, setQuestions }}
         >
-            <form data-multi-step-q onSubmit={submitQuiz}>
+            <form data-multi-step-q>
                 {questions.map((q) => (
                     <SingleQuestion k={q} />
                 ))}
-                <button type="submmit">Submit</button>
+                <button onClick={submitQuiz} type="button">
+                    Submit
+                </button>
             </form>
         </questionCreateContext.Provider>
     );
@@ -122,7 +120,12 @@ const SingleQuestion = ({ k }) => {
     const [options, setOptions] = useState([]);
     const [option, setOption] = useState([]);
 
-    let key = questions.indexOf(k);
+    let key = questions.indexOf(k) !== -1 ? questions.indexOf(k) : 0;
+
+    useEffect(() => {
+        console.log(codeString);
+    });
+
     return (
         <div data-step-q className="card" key={key}>
             <div className={`questionCreate${key} questionCreate`}>
@@ -135,6 +138,7 @@ const SingleQuestion = ({ k }) => {
                         type="text"
                         placeholder="What will be the output of the following code?"
                         style={{ width: "400px" }}
+                        id={`qBody${key}`}
                         required
                     />
                 </div>
@@ -154,6 +158,7 @@ const SingleQuestion = ({ k }) => {
                     <div className="typeCode">
                         <textarea
                             required
+                            id={`codeBody${key}`}
                             className="hiddenInput"
                             placeholder="Enter your code body here..."
                             onChange={(e) => {
@@ -189,9 +194,17 @@ const SingleQuestion = ({ k }) => {
                                 .className.split(" ")[0]
                                 .split("e")[3]
                         );
-                        if (key == 0) return;
+                        console.log(key);
+                        if (key <= 0) return;
+                        let body = document.getElementById(`qBody${key}`);
+                        let code = document.getElementById(`codeBody${key}`);
+
+                        // setqBody()
+                        // console.log(body, code);
+                        console.log("catch1");
                         formSteps[key].classList.remove("active");
-                        key--;
+                        key -= 1;
+                        console.log("catch2");
                         formSteps[key].classList.add("active");
                     }}
                 >
@@ -202,7 +215,6 @@ const SingleQuestion = ({ k }) => {
                 <button
                     type="button"
                     data-next-q
-                    data-index={currentStep}
                     onClick={(e) => {
                         e.preventDefault();
                         let formSteps = document.querySelectorAll("[data-step-q]");
@@ -223,11 +235,12 @@ const SingleQuestion = ({ k }) => {
                             correct: correct,
                             options: options,
                         };
-                        console.log(question);
                         let q = questions;
                         q[key] = question;
                         setQuestions(q);
-                        console.log(questions);
+                        console.log(questions.length);
+                        console.log(key);
+
                         if (key + 1 == questions.length) return;
                         formSteps[key].classList.remove("active");
                         key++;
@@ -277,14 +290,7 @@ const Options = ({ correct, setCorrect, opt }) => {
         let newOpt = options;
         newOpt[letters.indexOf(option.choice)] = option;
         setOptions(newOpt);
-        console.log(option);
     }, [option]);
-
-    useEffect(() => {
-        console.log(options);
-    }, [options]);
-
-    console.log(options);
 
     return (
         <>

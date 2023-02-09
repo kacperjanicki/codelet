@@ -90,15 +90,17 @@ const AnimatedForm = () => {
 
     let author_id = context.userObj.user_id;
 
-    const submitQuiz = () => {
-        let questions = {
-            questions: [
-                { code: "?", correct: "?", options: [{ answer: "?", choice: "A" }], question: "question" },
-            ],
-        };
-        createNewQuiz(author_id, quizName, lang, quizDesc, questions, id);
+    const submitQuiz = (e) => {
+        e.preventDefault();
+        console.log(author_id, quizName, lang, quizDesc, questionsCreated, id);
+
+        createNewQuiz(author_id, quizName, lang, quizDesc, questionsCreated, id);
         return false;
     };
+
+    useEffect(() => {
+        console.log(quizDesc);
+    }, [quizDesc]);
 
     useEffect(() => {
         const createQuizForm = document.querySelector("[data-multi-step]");
@@ -165,21 +167,29 @@ const AnimatedForm = () => {
     function closeModal() {
         setIsOpen(false);
     }
+
     // useEffect(() => {
     //     if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
     //     else setQuestionsCreated(Array(0).fill("_"));
     // }, []);
-
     useEffect(() => {
-        if (questionsCreated[0] === "_") return;
+        let filtered = questionsCreated.filter((e) => typeof e === "object");
 
-        // createNewQuiz(author_id, quizName, lang, quizDesc, questionsCreated, id);
+        if (filtered.length > 0) {
+            // let objs = document.querySelectorAll("[data-step-q]");
+            // objs.forEach((o) => o.classList.remove("active"));
+            closeModal();
+            let all = [...document.querySelectorAll("[data-step]")];
+            let active = [...document.querySelectorAll("[data-step]")].filter((e) =>
+                e.classList.contains("active")
+            )[0];
+            let index = all.indexOf(active);
+            active.classList.remove("active");
+            all[index + 1].classList.add("active");
 
-        console.log(questionsCreated);
-        closeModal();
+            console.log(active);
+        }
     }, [questionsCreated]);
-
-    console.log(questionsCreated);
 
     return (
         <>
@@ -215,9 +225,7 @@ const AnimatedForm = () => {
                         }}
                     >
                         <option></option>
-                        <option value="python" selected={prod}>
-                            Python
-                        </option>
+                        <option value="python">Python</option>
                         <option value="javascript">Javascript</option>
                     </select>
                     <div className="btnGroup">
@@ -276,16 +284,11 @@ const AnimatedForm = () => {
                         overlayClassName={"Overlay"}
                         className={"Modal"}
                     >
-                        {/* {questionsCreated.map((question, number) => (
-                            <QuestionCreate
-                                lang={lang}
-                                questions={questionsCreated}
-                                setQuestions={setQuestionsCreated}
-                                key={number}
-                                howMany={howMany}
-                                close={closeModal}
-                            />
-                        ))} */}
+                        {/* <questionContext.Provider
+                            value={{ setQuestionsCreated, questionsCreated, closeModal, howMany }}
+                        >
+                            <QuestionCreate lang={lang} close={closeModal} />
+                        </questionContext.Provider> */}
                     </Modal>
                     <div className="btnGroup">
                         <button type="button" data-previous>
@@ -347,8 +350,10 @@ const AnimatedForm = () => {
                         questions={questionsCreated}
                         preview={openModal}
                     />
-                    <questionContext.Provider value={{ setQuestionsCreated, questionsCreated, closeModal }}>
-                        <QuestionCreate lang={lang} close={closeModal} />
+                    <questionContext.Provider
+                        value={{ setQuestionsCreated, questionsCreated, closeModal, howMany }}
+                    >
+                        <QuestionCreate lang={lang} />
                     </questionContext.Provider>
                 </div>
             </div>
