@@ -80,13 +80,6 @@ const QuestionCreate = ({ lang }) => {
         // });
     }, []);
 
-    useEffect(() => {
-        console.log(questions);
-        if (!questions.includes("_")) {
-            console.log("a");
-        }
-    }, [questions]);
-
     const submitQuiz = (e) => {
         e.preventDefault();
         console.log(questions);
@@ -113,7 +106,7 @@ const QuestionCreate = ({ lang }) => {
 };
 
 const SingleQuestion = ({ k }) => {
-    const { lang, currentStep, setCurrentStep, questions, setQuestions } = useContext(questionCreateContext);
+    const { lang, questions, setQuestions } = useContext(questionCreateContext);
     const [codeString, setCodeString] = useState("");
     const [qBody, setqBody] = useState("");
     const [correct, setCorrect] = useState(false);
@@ -121,10 +114,6 @@ const SingleQuestion = ({ k }) => {
     const [option, setOption] = useState([]);
 
     let key = questions.indexOf(k) !== -1 ? questions.indexOf(k) : 0;
-
-    useEffect(() => {
-        console.log(codeString);
-    });
 
     return (
         <div data-step-q className="card" key={key}>
@@ -142,13 +131,7 @@ const SingleQuestion = ({ k }) => {
                         required
                     />
                 </div>
-                <div
-                    onClick={() => {
-                        // let parent = document.querySelector(`.questionCreate${index}`);
-                        // let input = parent.querySelector(".hiddenInput");
-                        // input.focus();
-                    }}
-                >
+                <div>
                     <div className="questionBody">{qBody}</div>
                     <SyntaxHighlighter language={lang} style={dracula} className="highlighterContainer">
                         {codeString ? codeString : ""}

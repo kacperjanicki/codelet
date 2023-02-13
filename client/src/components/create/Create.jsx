@@ -19,13 +19,12 @@ const Create = () => {
     function closeModal() {
         setIsOpen(false);
     }
+    const navigate = useNavigate();
 
     let context = useContext(UserContext);
     let userLoggedIn = context.userObj ? true : false;
 
     Modal.setAppElement(document.getElementById("root"));
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -70,7 +69,6 @@ const AnimatedForm = () => {
     const [lang, setLang] = useState();
     const [publicity, setPublicity] = useState();
     const [id, setId] = useState();
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function generateQuizId() {
@@ -86,21 +84,21 @@ const AnimatedForm = () => {
         // console.log(lang);
     }, [lang]);
 
+    const navigate = useNavigate();
     let context = useContext(UserContext);
-
     let author_id = context.userObj.user_id;
 
-    const submitQuiz = (e) => {
+    const submitQuiz = async (e) => {
         e.preventDefault();
         console.log(author_id, quizName, lang, quizDesc, questionsCreated, id);
+        let res = await createNewQuiz(author_id, quizName, lang, quizDesc, questionsCreated, id);
+        if (res.ok) {
+            navigate(`/quiz/${lang}_${id}`);
+        }
+        console.log(res);
 
-        createNewQuiz(author_id, quizName, lang, quizDesc, questionsCreated, id);
         return false;
     };
-
-    useEffect(() => {
-        console.log(quizDesc);
-    }, [quizDesc]);
 
     useEffect(() => {
         const createQuizForm = document.querySelector("[data-multi-step]");
@@ -134,10 +132,8 @@ const AnimatedForm = () => {
             };
             if (!input) return;
             input.addEventListener("keydown", (e) => {
-                console.log(e.keyCode);
                 if (e.keyCode === 13) {
                     let btn = parent.querySelector(".btnGroup").querySelector("[data-next]");
-                    console.log(btn);
                     if (input.name == "select") {
                         input.click();
                     } else if (input.name !== "description") {
@@ -160,18 +156,20 @@ const AnimatedForm = () => {
     // creating questions logic
     const [isOpen, setIsOpen] = useState(false);
     const [howMany, setHowMany] = useState(2);
-    const [questionsCreated, setQuestionsCreated] = useState([...Array(howMany).keys()]);
+    const [questionsCreated, setQuestionsCreated] = useState([]);
     function openModal() {
         setIsOpen(true);
     }
     function closeModal() {
         setIsOpen(false);
     }
+    useEffect(() => {
+        console.log(howMany);
+        if (typeof howMany == "number" && howMany > 0) {
+            setQuestionsCreated([...Array(howMany).keys()]);
+        }
+    }, [howMany]);
 
-    // useEffect(() => {
-    //     if (howMany > 0) setQuestionsCreated(Array(howMany).fill("_"));
-    //     else setQuestionsCreated(Array(0).fill("_"));
-    // }, []);
     useEffect(() => {
         let filtered = questionsCreated.filter((e) => typeof e === "object");
 
@@ -203,7 +201,6 @@ const AnimatedForm = () => {
                             e.preventDefault();
                             setQuizName(e.target.value);
                         }}
-                        // defaultValue={prod ? "test" : null}
                         required
                     />
                     <div className="btnGroup">
@@ -221,7 +218,6 @@ const AnimatedForm = () => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (e.target.value) setLang(e.target.value);
-                            // setLang(e.target.value);
                         }}
                     >
                         <option></option>
@@ -249,7 +245,6 @@ const AnimatedForm = () => {
                             e.preventDefault();
                             setQuizDesc(e.target.value);
                         }}
-                        defaultValue={prod ? "test description" : null}
                     ></textarea>
                     <div className="btnGroup">
                         <button type="button" data-previous>
@@ -284,11 +279,11 @@ const AnimatedForm = () => {
                         overlayClassName={"Overlay"}
                         className={"Modal"}
                     >
-                        {/* <questionContext.Provider
+                        <questionContext.Provider
                             value={{ setQuestionsCreated, questionsCreated, closeModal, howMany }}
                         >
-                            <QuestionCreate lang={lang} close={closeModal} />
-                        </questionContext.Provider> */}
+                            <QuestionCreate lang={lang} />
+                        </questionContext.Provider>
                     </Modal>
                     <div className="btnGroup">
                         <button type="button" data-previous>
@@ -307,11 +302,11 @@ const AnimatedForm = () => {
                         name="select"
                         required
                         onChange={(e) => {
+                            console.log(publicity);
                             e.preventDefault();
-                            if (e.target.value) setPublicity(e.target.value);
+                            setPublicity(e.target.value);
                         }}
                     >
-                        <option></option>
                         <option value={true}>Everyone</option>
                         <option value={false}>Only me</option>
                     </select>
@@ -350,11 +345,6 @@ const AnimatedForm = () => {
                         questions={questionsCreated}
                         preview={openModal}
                     />
-                    <questionContext.Provider
-                        value={{ setQuestionsCreated, questionsCreated, closeModal, howMany }}
-                    >
-                        <QuestionCreate lang={lang} />
-                    </questionContext.Provider>
                 </div>
             </div>
         </>

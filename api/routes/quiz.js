@@ -58,7 +58,8 @@ router.post("/newquiz", async (req, res) => {
 
 // this endpoint handles adding new quizes by user at codelet.com/create
 router.post("/addNewQuiz", async (req, res) => {
-    const { name, lang, desc, questions, no, author_id } = req.body;
+    let { name, lang, desc, questions, no, author_id } = req.body;
+    questions = { questions: questions };
     let authorQuery = await pool.query(`SELECT * FROM users WHERE user_id=$1;`, [author_id]);
     let author = authorQuery.rowCount > 0 && JSON.stringify(authorQuery.rows[0]);
 
@@ -66,7 +67,11 @@ router.post("/addNewQuiz", async (req, res) => {
         `INSERT INTO quizes(author_id,author,lang,quizid,quizName,quizDesc,public,questions,date) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9);`,
         [author_id, author, lang, lang + no, name, desc, true, questions, new Date()]
     );
-    console.log(desc);
+    if (query.rowCount != 1) {
+        console.log(query);
+        return res.send({ ok: false });
+    }
+    return res.send({ ok: true });
 });
 
 // will be as an endpoint when needed
@@ -81,8 +86,12 @@ router.post("/newQuizId", async (req, res) => {
         try {
             let langQuery = await pool.query("SELECT id FROM quizes WHERE lang=$1;", [lang]);
             let count = langQuery.rowCount + 1;
-            // `no` is used to generate a url for every quiz e.x. codelet.com/quiz/python/001
+            // `no` is used to generate a url for every quiz e.x. codelet.com/quiz/python_001
             let no = count.toString().padStart(3, "0");
+
+            console.log(langQuery);
+            console.log(count);
+            console.log(no);
 
             return res.status(200).json({ ok: true, data: { lang: lang, id: no } });
         } catch (err) {

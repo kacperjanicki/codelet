@@ -37,7 +37,7 @@ pool.query(
         author JSONB NOT NULL,
         lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
         quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
-        quizName VARCHAR(255) NOT NULL CHECK (quizName <> ''),
+        quizname VARCHAR(255) NOT NULL CHECK (quizName <> ''),
         quizDesc VARCHAR(255),
         date TIMESTAMP,
         public BOOLEAN NOT NULL,
