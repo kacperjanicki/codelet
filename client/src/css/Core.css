@@ -48,6 +48,7 @@
     left: 0;
     /* padding: 1rem; */
     background-color: #242527;
+    height: 90px;
     /* width: 100vw; */
 }
 .navRight {
@@ -59,9 +60,13 @@
     gap: 2rem;
     display: flex;
 }
-.nav > li > a {
+.navItem > a {
     text-decoration: none;
     color: white;
+}
+.marker {
+    height: 5px;
+    background-color: blue;
 }
 
 .alert {

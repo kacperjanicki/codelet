@@ -141,6 +141,22 @@ export const quizesAvailable = () => {
         });
     return request;
 };
+// export const validateName = (name) => {
+//     let request = fetch(apiUrl + `quiz/validateName?name=${name}`, {
+//         method: "GET",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "x-access-token": localStorage.getItem("token"),
+//         },
+//     })
+//         .then((response) => {
+//             return response.json();
+//         })
+//         .then((data) => {
+//             return data;
+//         });
+//     return request;
+// };
 
 export const createNewQuiz = (author_id, name, lang, desc, questions, id) => {
     let request = fetch(apiUrl + "quiz/addNewQuiz", {

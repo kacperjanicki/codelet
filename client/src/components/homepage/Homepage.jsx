@@ -13,7 +13,7 @@ const Homepage = () => {
         async function getAllQuizes() {
             let res = await quizesAvailable();
             setQuizes(res.quizList);
-            console.log(res);
+            // console.log(res);
         }
         getAllQuizes();
     }, []);

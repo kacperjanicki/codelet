@@ -35,7 +35,8 @@ const EditProfile = () => {
             <div className="msgAlert">
                 <div className="bigMsg">{msg}</div>
                 <div className="smallMsg">
-                    {msg && "In order for changes to properly appear, we recommend refreshing your page"}
+                    {msg !== "No changes applied" &&
+                        "In order for changes to properly appear, we recommend refreshing your page"}
                 </div>
             </div>
             <div>

@@ -114,7 +114,6 @@ const SingleQuestion = ({ k }) => {
     const [option, setOption] = useState([]);
 
     let key = questions.indexOf(k) !== -1 ? questions.indexOf(k) : 0;
-
     return (
         <div data-step-q className="card" key={key}>
             <div className={`questionCreate${key} questionCreate`}>

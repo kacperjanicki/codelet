@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { createNewQuiz, createQuizId } from "../../api_helper/user_functions";
+import { createNewQuiz, createQuizId, validateName } from "../../api_helper/user_functions";
 import { UserContext } from "../../App";
 import "./createNewQuiz.css";
 import "./script.js";
@@ -100,6 +100,17 @@ const AnimatedForm = () => {
         return false;
     };
 
+    const [switched, setSwitched] = useState(false);
+
+    useEffect(() => {
+        // if (!switched) return;
+        // async function validate() {
+        //     let res = await validateName(quizName);
+        //     console.log(res);
+        // }
+        // validate();
+    }, [switched]);
+
     useEffect(() => {
         const createQuizForm = document.querySelector("[data-multi-step]");
         const formSteps = [...document.querySelectorAll("[data-step]")];
@@ -120,6 +131,7 @@ const AnimatedForm = () => {
                 parent.querySelector("#public");
             nxt.onclick = (e) => {
                 e.preventDefault();
+                setSwitched(true);
                 if (input && !input.checkValidity()) {
                     input.classList.add("wrongInput");
                     input.placeholder = "Input needed...";
@@ -164,7 +176,6 @@ const AnimatedForm = () => {
         setIsOpen(false);
     }
     useEffect(() => {
-        console.log(howMany);
         if (typeof howMany == "number" && howMany > 0) {
             setQuestionsCreated([...Array(howMany).keys()]);
         }
