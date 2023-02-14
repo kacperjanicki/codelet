@@ -11,7 +11,19 @@
     box-sizing: border-box;
     z-index: 2;
     position: sticky;
+    /* border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem; */
 }
+.navItem {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 1.5rem;
+}
+.icon:hover {
+    cursor: pointer;
+}
+
 .bgDefault {
     background-color: #2d2f33;
     min-height: 100vh;

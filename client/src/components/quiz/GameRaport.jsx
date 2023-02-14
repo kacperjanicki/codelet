@@ -108,6 +108,8 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
     let isCorrect = correct == selected;
     let omitted = callback.answerGiven == false;
 
+    console.log(callback);
+
     console.log(callback.answerGiven);
 
     const [indicationStr, setIndicationStr] = useState("");
@@ -144,10 +146,9 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
             <div className={`questionNum${questionId}`}>
                 Question {questionId + 1} {indicationStr}
             </div>
-            <div>{question.question}</div>
+            <div>Question prompt: {question.question}</div>
             <div>You answered: {callback.answerGiven}</div>
             <div>Correct answer: {correct}</div>
-            {`${isCorrect}`}
             <div>
                 <CodeBlock
                     text={question.code}
@@ -157,16 +158,20 @@ const SingleQuestion = ({ question, questionArr, callback }) => {
                     customStyle={{ borderRadius: ".5rem", textAlign: "left" }}
                 ></CodeBlock>
             </div>
-            {question.options.map((option) => (
-                <div className="option" key={option.choice}>
-                    <button className="option-btn defaultOption" id={option.choice}>
-                        {option.choice}: {option.answer}
-                    </button>
-                    {option.choice == correct && selected == option.choice && "You got it right"}
-                    {option.choice == correct && selected != option.choice && "Correct answer"}
-                    {option.choice != correct && selected == option.choice && "You got it wrong"}
-                </div>
-            ))}
+            <div className="options">
+                {question.options.map((option) => (
+                    <div className="option" key={question.options.indexOf(option)}>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                            <button className="option-btn defaultOption" id={option.choice}>
+                                {option.choice}: {option.answer}
+                            </button>
+                            {option.choice == correct && selected == option.choice && "You got it right"}
+                            {option.choice == correct && selected != option.choice && "Correct answer"}
+                            {option.choice != correct && selected == option.choice && "You got it wrong"}
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

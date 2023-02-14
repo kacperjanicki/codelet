@@ -41,7 +41,7 @@ const Explore = () => {
             {lang && quizes && (
                 <div className="quizRecommended">
                     {quizes.map((quiz) => (
-                        <div>
+                        <div key={quiz}>
                             <Card key={quiz.quizid} quiz={quiz} />
                         </div>
                     ))}

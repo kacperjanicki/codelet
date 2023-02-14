@@ -25,7 +25,8 @@ const Card = ({ quiz }) => {
                 <div className="title">
                     {id}
                     <div>
-                        <Link to={`/quiz/${type}_${idString}`}>See more</Link>
+                        <a href={`/quiz/${type}_${idString}`}>View more</a>
+                        {/* <Link to={`/quiz/${type}_${idString}`}>See more</Link> */}
                     </div>
 
                     <div className="info">Created by: {author.name}</div>
