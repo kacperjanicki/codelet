@@ -32,6 +32,12 @@ const Profile = () => {
         if (profile) {
             return (
                 <div className="profile">
+                    <div className="profImg profileImg">
+                        <img
+                            src="https://www.pwshoponline.com/assets/images/avatars/avatar1_big.png"
+                            alt={`${profile.name}'s profile image`}
+                        />
+                    </div>
                     <div>
                         {profile.fname}
                         <span style={{ fontSize: ".8rem" }}>@{profile.name}</span>

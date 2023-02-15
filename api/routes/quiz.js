@@ -20,6 +20,17 @@ router.get("/fetchQuiz/:lang/:id", verifyJwt, async (req, res) => {
     }
 });
 
+// router.get("/validateName", async (req, res) => {
+//     const { name } = req.query;
+//     let query = await pool.query("SELECT * FROM quizes WHERE quizname=$1;", [name]);
+//     if(query.rowCount>0){
+//         res.status(400).json({ok:false,msg:"Quiz name"})
+//     }else{
+
+//     }
+//     res.json({ name: name });
+// });
+
 router.get("/allQuizesFetch", async (req, res) => {
     let query = await pool.query(`SELECT * FROM quizes;`);
     if (query.rowCount > 0) {

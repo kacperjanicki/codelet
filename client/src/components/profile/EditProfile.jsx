@@ -29,13 +29,13 @@ const EditProfile = () => {
         }
         edit();
     };
-
     return (
         <div>
             <div className="msgAlert">
                 <div className="bigMsg">{msg}</div>
                 <div className="smallMsg">
-                    {msg !== "No changes applied" &&
+                    {msg &&
+                        msg !== "No changes applied" &&
                         "In order for changes to properly appear, we recommend refreshing your page"}
                 </div>
             </div>
@@ -63,6 +63,10 @@ const EditProfile = () => {
                     defaultValue={userCon.userObj.age}
                 />
             </div>
+            <div>
+                <AddProfilePic />
+            </div>
+
             <button
                 onClick={(e) => {
                     e.preventDefault();
@@ -76,6 +80,104 @@ const EditProfile = () => {
             </button>
         </div>
     );
+};
+// add profile photo component
+const AddProfilePic = () => {
+    return (
+        <div>
+            <span> Profile picture</span>
+            <div>
+                <DefaultPics />
+                <div>
+                    <input type="file" />
+                </div>
+            </div>
+        </div>
+    );
+};
+// user may not want to upload a profile picture,
+// give him few default pictures to pick from instead.
+const DefaultPics = () => {
+    function expand(e) {
+        let btn = e.target;
+        const hiddenDivs = document.querySelectorAll(".galleryHidden");
+        if (btn.innerHTML === "Expand") {
+            hiddenDivs.forEach((div) => {
+                div.classList.add("galleryActive");
+            });
+            btn.innerHTML = "Hide";
+        } else if (btn.innerHTML === "Hide") {
+            hiddenDivs.forEach((div) => {
+                div.classList.remove("galleryActive");
+            });
+            btn.innerHTML = "Expand";
+        }
+    }
+
+    const [img, setImg] = useState(null);
+    useEffect(() => {
+        console.log(img.classList);
+    }, [img]);
+
+    return (
+        <div>
+            <span style={{ fontSize: "1rem" }}>Choose from available default avatars</span>
+            <div className="gallery">
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        expand(e);
+                    }}
+                >
+                    Expand
+                </button>
+                <div className="galleryActive">
+                    <Img
+                        set={setImg}
+                        src={
+                            "https://cdn2.f-cdn.com/contestentries/1366909/28870354/5b47057dd991d_thumb900.jpg"
+                        }
+                    />
+                </div>
+                <div className="galleryActive">
+                    <Img
+                        set={setImg}
+                        src={
+                            "https://e7.pngegg.com/pngimages/90/53/png-clipart-team-fortress-2-playerunknown-s-battlegrounds-counter-strike-global-offensive-avatar-steam-avatar-thumbnail.png"
+                        }
+                    />
+                </div>
+                <div className="galleryActive">
+                    <Img
+                        set={setImg}
+                        src={
+                            "https://cdn.forums.klei.com/monthly_2019_07/20f26608ad4fe920ca079a5afdbb07b71120cdfd_full.jpg.1934c5e032dcceb97074e36cb8255018.jpg"
+                        }
+                    />
+                </div>
+                <div className="galleryHidden">
+                    <Img
+                        set={setImg}
+                        src={"https://www.pwshoponline.com/assets/images/avatars/avatar1_big.png"}
+                    />
+                </div>
+                {/* <div className="galleryHidden">
+                    <Img set={setImg} />
+                </div>
+                <div className="galleryHidden">
+                    <Img set={setImg} />
+                </div> */}
+            </div>
+        </div>
+    );
+};
+
+const Img = ({ set, src }) => {
+    const selectImg = (e) => {
+        e.target.classList.add("selected");
+        set(e.target);
+    };
+    return <img src={src} className="smallImg" onClick={selectImg} />;
 };
 
 export default EditProfile;

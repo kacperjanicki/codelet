@@ -11,8 +11,8 @@
     color: white;
 }
 
-.defaultOption:hover {
-    background-color: #20242b;
+.defaultOption:hover:not(.correct, .incorrect, .answerGiven) {
+    background-color: #1b1e24;
     cursor: pointer;
 }
 .option-btn:hover {

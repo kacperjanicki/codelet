@@ -13,6 +13,31 @@
     height: 200px;
 }
 
+.smallImg {
+    /* height: 75px;
+    width: 75px; */
+    height: 4rem;
+    width: 4rem;
+}
+.gallery {
+    display: flex;
+    gap: 1rem;
+    width: 350px;
+    flex-wrap: wrap;
+}
+.galleryHidden {
+    display: none;
+}
+.galleryActive {
+    display: block;
+}
+.smallImg:hover {
+    opacity: 50%;
+}
+.selected {
+    opacity: 50%;
+}
+
 .profile {
     padding: 1rem;
 }
@@ -23,7 +48,6 @@
     display: flex;
     gap: 1rem;
 }
-
 .Overlay {
     z-index: 3;
 }

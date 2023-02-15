@@ -60,6 +60,14 @@
     gap: 2rem;
     display: flex;
 }
+.loginList {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+    right: 0;
+    list-style: none;
+}
+
 .navItem > a {
     text-decoration: none;
     color: white;

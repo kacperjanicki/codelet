@@ -8,6 +8,7 @@ import { MdExplore } from "react-icons/md";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { useEffect } from "react";
+import logo from "./logo.png";
 
 const Navbar = () => {
     const userCon = useContext(UserContext);
@@ -41,7 +42,23 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <ul className="nav navLeft">
+                {/* <div>
+                    <li className="navItem"> */}
                 <div>
+                    <li
+                        className="navItem"
+                        data-location="home"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            history("/home");
+                        }}
+                    >
+                        <div style={{ display: "flex", bottom: "5px", position: "relative" }}>
+                            <img src={logo} style={{ height: "40px" }} />
+                        </div>
+                    </li>
+                </div>
+                {/* <div>
                     <li className="navItem" data-location="home">
                         <AiFillHome
                             className="icon"
@@ -52,8 +69,7 @@ const Navbar = () => {
                         />
                         <Link to="/home">Home</Link>
                     </li>
-                    {/* <div className="marker"></div> */}
-                </div>
+                </div> */}
                 <div>
                     <li className="navItem" data-location="explore">
                         <MdExplore
@@ -78,18 +94,21 @@ const Navbar = () => {
                         <Link to="/create">Create</Link>
                     </li>
                 </div>
-
-                {!userCon.userObj ? (
-                    <>
-                        <li>
+            </ul>
+            {!userCon.userObj ? (
+                <ul className="nav navRight">
+                    <div>
+                        <li className="navItem" data-location="login">
                             <Link to="/login">Login</Link>
                         </li>
-                        <li>
-                            <Link to="/signup">Signup</Link>
+                    </div>
+                    <div>
+                        <li className="navItem" data-location="signup">
+                            <Link to="/signup">Sign up</Link>
                         </li>
-                    </>
-                ) : null}
-            </ul>
+                    </div>
+                </ul>
+            ) : null}
             {userCon.userObj ? (
                 <ul className="nav navRight">
                     <div>
