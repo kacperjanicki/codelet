@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { quizesAvailable } from "../../api_helper/user_functions";
 import Card from "../homepage/Card";
 
@@ -17,6 +18,20 @@ const Explore = () => {
         }
         getQuizes();
     }, [lang]);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(() => {
+        console.log(searchParams.get("lang"));
+        let options = document.querySelectorAll("option");
+        console.log(options);
+        options.forEach((opt) => {
+            if (opt.value == searchParams.get("lang")) {
+                opt.selected = true;
+                setLang(searchParams.get("lang"));
+            }
+        });
+    }, []);
+
     return (
         <>
             <div className="sortContainer">

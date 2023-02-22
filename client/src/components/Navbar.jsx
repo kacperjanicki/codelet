@@ -9,6 +9,7 @@ import { RiLogoutBoxRFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { useEffect } from "react";
 import logo from "./logo.png";
+import Alert from "./Alert";
 
 const Navbar = () => {
     const userCon = useContext(UserContext);
@@ -35,30 +36,34 @@ const Navbar = () => {
             }
         });
     });
+
     // let current = locations.filter((loc) => console.log(loc));
     // console.log(locations);
     // let markerDiv = locations.parentElement
 
     return (
-        <nav className="navbar">
-            <ul className="nav navLeft">
-                {/* <div>
+        <>
+            <Alert url={window.location.search} />
+
+            <nav className="navbar">
+                <ul className="nav navLeft">
+                    {/* <div>
                     <li className="navItem"> */}
-                <div>
-                    <li
-                        className="navItem"
-                        data-location="home"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            history("/home");
-                        }}
-                    >
-                        <div style={{ display: "flex", bottom: "5px", position: "relative" }}>
-                            <img src={logo} style={{ height: "40px" }} />
-                        </div>
-                    </li>
-                </div>
-                {/* <div>
+                    <div>
+                        <li
+                            className="navItem"
+                            data-location="home"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                history("/home");
+                            }}
+                        >
+                            <div style={{ display: "flex", bottom: "5px", position: "relative" }}>
+                                <img src={logo} style={{ height: "40px" }} />
+                            </div>
+                        </li>
+                    </div>
+                    {/* <div>
                     <li className="navItem" data-location="home">
                         <AiFillHome
                             className="icon"
@@ -70,83 +75,84 @@ const Navbar = () => {
                         <Link to="/home">Home</Link>
                     </li>
                 </div> */}
-                <div>
-                    <li className="navItem" data-location="explore">
-                        <MdExplore
-                            className="icon"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                history("/explore");
-                            }}
-                        />
-                        <Link to="/explore">Explore</Link>
-                    </li>
-                </div>
-                <div>
-                    <li className="navItem" data-location="create">
-                        <AiFillFileAdd
-                            className="icon"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                history("/create");
-                            }}
-                        />
-                        <Link to="/create">Create</Link>
-                    </li>
-                </div>
-            </ul>
-            {!userCon.userObj ? (
-                <ul className="nav navRight">
                     <div>
-                        <li className="navItem" data-location="login">
-                            <Link to="/login">Login</Link>
-                        </li>
-                    </div>
-                    <div>
-                        <li className="navItem" data-location="signup">
-                            <Link to="/signup">Sign up</Link>
-                        </li>
-                    </div>
-                </ul>
-            ) : null}
-            {userCon.userObj ? (
-                <ul className="nav navRight">
-                    <div>
-                        <li className="navItem">
-                            <RiLogoutBoxRFill
+                        <li className="navItem" data-location="explore">
+                            <MdExplore
                                 className="icon"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    localStorage.removeItem("user");
-                                    localStorage.removeItem("token");
-                                    userCon.setUserObj();
+                                    history("/explore");
                                 }}
                             />
+                            <Link to="/explore">Explore</Link>
                         </li>
                     </div>
                     <div>
-                        <li className="navItem" data-location="profile">
-                            <FaUser
+                        <li className="navItem" data-location="create">
+                            <AiFillFileAdd
                                 className="icon"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    history(`/profile/${userCon.userObj.name}`);
+                                    history("/create");
                                 }}
                             />
-                            <span
-                                style={{ fontSize: "1rem" }}
-                                onClick={() => {
-                                    history(`/profile/${userCon.userObj.name}`);
-                                }}
-                            >
-                                {userCon.userObj.fname.charAt(0).toUpperCase() +
-                                    userCon.userObj.fname.slice(1)}
-                            </span>
+                            <Link to="/create">Create</Link>
                         </li>
                     </div>
                 </ul>
-            ) : null}
-        </nav>
+                {!userCon.userObj ? (
+                    <ul className="nav navRight">
+                        <div>
+                            <li className="navItem" data-location="login">
+                                <Link to="/login">Login</Link>
+                            </li>
+                        </div>
+                        <div>
+                            <li className="navItem" data-location="signup">
+                                <Link to="/signup">Sign up</Link>
+                            </li>
+                        </div>
+                    </ul>
+                ) : null}
+                {userCon.userObj ? (
+                    <ul className="nav navRight">
+                        <div>
+                            <li className="navItem">
+                                <RiLogoutBoxRFill
+                                    className="icon"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        localStorage.removeItem("user");
+                                        localStorage.removeItem("token");
+                                        userCon.setUserObj();
+                                    }}
+                                />
+                            </li>
+                        </div>
+                        <div>
+                            <li className="navItem" data-location="profile">
+                                <FaUser
+                                    className="icon"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        history(`/profile/${userCon.userObj.name}`);
+                                    }}
+                                />
+                                <span
+                                    style={{ fontSize: "1rem" }}
+                                    onClick={() => {
+                                        history(`/profile/${userCon.userObj.name}`);
+                                    }}
+                                >
+                                    {userCon.userObj.fname.charAt(0).toUpperCase() +
+                                        userCon.userObj.fname.slice(1)}
+                                </span>
+                            </li>
+                        </div>
+                    </ul>
+                ) : null}
+            </nav>
+        </>
     );
 };
 

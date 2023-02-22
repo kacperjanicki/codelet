@@ -20,6 +20,7 @@ import EditProfile from "./components/profile/EditProfile";
 import Create from "./components/create/Create";
 import Explore from "./components/explore/Explore";
 import QuizPreview from "./components/quiz/QuizPreview";
+import alert from "./alert.js";
 
 export const UserContext = createContext();
 
@@ -57,7 +58,7 @@ function App() {
                     <div className="bgDefault">
                         <BrowserRouter>
                             <Navbar />
-
+                            <Alert />
                             <Routes>
                                 <Route exact path="/home" element={<Homepage />}></Route>
                                 <Route exact path="/" element={<LandingPage />}></Route>

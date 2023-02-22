@@ -18,6 +18,7 @@ pool.query(
                 user_id SERIAL PRIMARY KEY,
                 name VARCHAR(255) UNIQUE NOT NULL CHECK (name <> ''),
                 fname VARCHAR NOT NULL CHECK (fname <> ''),
+                lname VARCHAR NOT NULL CHECK (lname <> ''),
                 password VARCHAR(255) NOT NULL CHECK (password <> ''),
                 age INT NOT NULL);
 
@@ -75,13 +76,14 @@ app.post("/login", async (req, res) => {
 
 // Signining up routes
 app.post("/signup", async (req, res) => {
-    const { username, fname, password, age } = req.body;
+    const { username, fname, lname, password, age } = req.body;
     let hashedPass = await bcrypt.hash(password, 10);
 
     let query = await pool
-        .query("INSERT INTO users (name,fname,password,age) VALUES($1,$2,$3,$4) RETURNING *;", [
+        .query("INSERT INTO users (name,fname,lname,password,age) VALUES($1,$2,$3,$4,$5) RETURNING *;", [
             username,
             fname,
+            lname,
             hashedPass,
             age,
         ])

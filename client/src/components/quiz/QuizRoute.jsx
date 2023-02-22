@@ -25,8 +25,6 @@ const QuizRoute = ({ children }) => {
         isQuizValid();
     }, []);
 
-    console.log(valid);
-
     if (loading) return "loading...";
     if (valid) return children;
     else if (!valid) return <RouteNotFound msg={msg} />;

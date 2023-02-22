@@ -41,6 +41,35 @@
 .profile {
     padding: 1rem;
 }
+.profileEdit {
+    display: flex;
+    margin-left: 20rem;
+    margin-right: 20rem;
+}
+.profileImage {
+    height: 100px;
+    width: 100px;
+}
+.smallImage {
+    height: 40px;
+    width: 40px;
+}
+
+.right {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+.preview {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.profPicSection {
+    display: flex;
+    gap: 1rem;
+}
+
 .sortBtn {
     width: 100px;
 }

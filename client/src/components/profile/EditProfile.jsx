@@ -39,45 +39,64 @@ const EditProfile = () => {
                         "In order for changes to properly appear, we recommend refreshing your page"}
                 </div>
             </div>
-            <div>
-                <label>Username</label>
-                <input type="text" disabled defaultValue={userCon.userObj.name} />
-            </div>
-            <div>
-                <label>Name</label>
-                <input
-                    type="text"
-                    onChange={(e) => {
-                        setfName(e.target.value);
-                    }}
-                    defaultValue={userCon.userObj.fname}
-                />
-            </div>
-            <div>
-                <label>Age</label>
-                <input
-                    type="number"
-                    onChange={(e) => {
-                        setAge(e.target.value);
-                    }}
-                    defaultValue={userCon.userObj.age}
-                />
-            </div>
-            <div>
-                <AddProfilePic />
-            </div>
+            <div className="profileEdit">
+                <div className="left">
+                    <div>
+                        <label>Username</label>
+                        <input type="text" disabled defaultValue={userCon.userObj.name} />
+                    </div>
+                    <div>
+                        <label>Name</label>
+                        <input
+                            type="text"
+                            onChange={(e) => {
+                                setfName(e.target.value);
+                            }}
+                            defaultValue={userCon.userObj.fname}
+                        />
+                    </div>
+                    <div>
+                        <label>Age</label>
+                        <input
+                            type="number"
+                            onChange={(e) => {
+                                setAge(e.target.value);
+                            }}
+                            defaultValue={userCon.userObj.age}
+                        />
+                    </div>
+                    <div>
+                        <AddProfilePic />
+                    </div>
 
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    let obj = {};
-                    if (fname !== userCon.userObj.fname) obj["fname"] = fname;
-                    if (age !== userCon.userObj.age) obj["age"] = age;
-                    submitProfileEdit(obj);
-                }}
-            >
-                Edit
-            </button>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            let obj = {};
+                            if (fname !== userCon.userObj.fname) obj["fname"] = fname;
+                            if (age !== userCon.userObj.age) obj["age"] = age;
+                            submitProfileEdit(obj);
+                        }}
+                    >
+                        Edit
+                    </button>
+                </div>
+                <div className="right">
+                    <div className="preview">
+                        <div>Profile preview</div>
+                        <div className="profPicSection">
+                            <img
+                                src="https://e7.pngegg.com/pngimages/90/53/png-clipart-team-fortress-2-playerunknown-s-battlegrounds-counter-strike-global-offensive-avatar-steam-avatar-thumbnail.png"
+                                style={{ height: "200px", width: "200px" }}
+                            />
+                            <span>
+                                {/* {userCon.userObj.fname[0].toUpperCase() + profile.fname.slice(1)}{" "}
+                                {userCon.userObj.lname[0].toUpperCase() + profile.lname.slice(1)} */}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
@@ -116,6 +135,7 @@ const DefaultPics = () => {
 
     const [img, setImg] = useState(null);
     useEffect(() => {
+        if (img == null) return;
         console.log(img.classList);
     }, [img]);
 
@@ -173,7 +193,11 @@ const DefaultPics = () => {
 };
 
 const Img = ({ set, src }) => {
+    const galleryImgs = document.querySelectorAll(".selected");
     const selectImg = (e) => {
+        galleryImgs.forEach((img) => {
+            img.classList.remove("selected");
+        });
         e.target.classList.add("selected");
         set(e.target);
     };

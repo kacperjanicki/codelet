@@ -23,21 +23,54 @@ const QuizPreview = () => {
         <>
             {quiz && (
                 <>
-                    <div>
-                        <div className="info">
-                            <div>
-                                Quiz created by:{" "}
-                                <Link to={`/profile/${quiz.author.name}`}>{quiz.author.name}</Link>
-                            </div>
-                            <div>Quiz name: {quiz.quizname}</div>
-                            <div>Language: {type}</div>
-                            <div>Description: {quiz.quizdesc ? quiz.quizdesc : "No description"}</div>
-                            <div>Date: {new Date(quiz.date).toISOString()}</div>
-                            <div>Publicity: {quiz.public ? "public" : "private"}</div>
+                    <div className="previewContainer">
+                        <div className="previewBg">
+                            <img src="https://nexttechnology.io/app/uploads/2022/01/13.png" alt="" />
                         </div>
-                    </div>
-                    <div>
-                        <Link to={`/quiz/${type}_${idString}/play`}>Start quiz</Link>
+                        <div className="info">
+                            <div className="previewRight">
+                                <div style={{ display: "flex" }}>
+                                    <span style={{ fontSize: "2.5rem" }}>{quiz.quizname}</span>
+                                </div>
+                                <div className="authorPreview">
+                                    <Link to={`/profile/${quiz.author.name}`} className="link">
+                                        {quiz.author.name}
+                                    </Link>
+
+                                    <img
+                                        className="profileImage smallImage"
+                                        src="https://www.pwshoponline.com/assets/images/avatars/avatar1_big.png"
+                                        alt=""
+                                    />
+                                </div>
+                            </div>
+                            <div className="previewSection">
+                                <span className="previewTop"> Description:</span>
+                                <span> {quiz.quizdesc ? quiz.quizdesc : "No description"}</span>
+                            </div>
+
+                            <div className="previewSection">
+                                <span className="previewTop"> Language:</span>
+                                <span>
+                                    <Link style={{ textDecoration: "none" }} to={`/explore?lang=${type}`}>
+                                        {type}
+                                    </Link>
+                                </span>
+                            </div>
+                            <div className="previewSection">
+                                <span className="previewTop"> Date:</span>
+                                <span>{new Date(quiz.date).toISOString()}</span>
+                            </div>
+                            <div className="previewRight">
+                                <div className="previewSection">
+                                    <span className="previewTop"> Publicity:</span>
+                                    <span>{quiz.public ? "Public" : "Private"}</span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <Link to={`/quiz/${type}_${idString}/play`}>Start quiz</Link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </>
             )}

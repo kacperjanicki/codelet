@@ -18,13 +18,19 @@ export const loginReq = (username, password) => {
         });
 };
 
-export const singUpReq = (username, fname, password, age) => {
+export const singUpReq = (username, fname, lname, password, age) => {
     let request = fetch(apiUrl + "signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: username, fname: fname, password: password, age: age }),
+        body: JSON.stringify({
+            username: username,
+            fname: fname,
+            lname: lname,
+            password: password,
+            age: age,
+        }),
     })
         .then((res) => {
             return res.json();

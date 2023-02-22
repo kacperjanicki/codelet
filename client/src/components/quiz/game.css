@@ -106,3 +106,54 @@
     border-radius: 1rem;
     background: #c2c9d2;
 }
+
+/* quiz preview */
+.previewContainer {
+    width: 700px;
+    background-color: #1b1e24;
+    position: relative;
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, 0%);
+    display: flex;
+    flex-direction: column;
+}
+.previewBg {
+    background-color: #282c34;
+    height: 300px;
+}
+.previewBg img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    filter: blur(1.5px);
+}
+.info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.link {
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+.previewSection {
+    display: flex;
+    flex-direction: column;
+}
+.authorPreview {
+    margin-top: -20px;
+    margin-right: -5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.previewTop {
+    font-size: 1.2rem;
+}
+
+.previewRight {
+    display: flex;
+    justify-content: space-between;
+}

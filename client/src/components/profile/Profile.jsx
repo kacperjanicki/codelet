@@ -39,7 +39,10 @@ const Profile = () => {
                         />
                     </div>
                     <div>
-                        {profile.fname}
+                        <span>
+                            {profile.fname[0].toUpperCase() + profile.fname.slice(1)}{" "}
+                            {profile.lname[0].toUpperCase() + profile.lname.slice(1)}
+                        </span>
                         <span style={{ fontSize: ".8rem" }}>@{profile.name}</span>
                     </div>
                     {personalContent ? <Link to={`/profile/${profile.name}/edit`}>Edit profile</Link> : null}
