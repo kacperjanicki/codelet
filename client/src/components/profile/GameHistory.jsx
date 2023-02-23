@@ -27,7 +27,7 @@ const GameHistory = ({ games, personalContent }) => {
         <div className="gameLog">
             {games.length > 0 && (
                 <div>
-                    <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         Games are being sorted {sortingStr}
                         {sorting == "desc" ? <RxClock /> : <RxCounterClockwiseClock />}
                     </div>
@@ -40,7 +40,7 @@ const GameHistory = ({ games, personalContent }) => {
                             className="sortBtn"
                         >
                             Sort by oldest
-                            <RxCounterClockwiseClock size="2em" />
+                            <RxCounterClockwiseClock size="1.5em" />
                         </button>
                         <button
                             onClick={(e) => {
@@ -50,7 +50,7 @@ const GameHistory = ({ games, personalContent }) => {
                             className="sortBtn"
                         >
                             Sort by newest
-                            <RxClock size="2em" />
+                            <RxClock size="1.5em" />
                         </button>
                     </div>
                     <div className="gamesContainer">

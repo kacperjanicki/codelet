@@ -69,9 +69,22 @@
     display: flex;
     gap: 1rem;
 }
+.gameLogCard {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    gap: 5px;
+}
+.changePublic {
+    font-size: 1rem;
+}
 
 .sortBtn {
-    width: 100px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 .sortDiv {
     display: flex;

@@ -106,7 +106,7 @@ const QuestionCreate = ({ lang }) => {
 };
 
 const SingleQuestion = ({ k }) => {
-    const { lang, questions, setQuestions } = useContext(questionCreateContext);
+    const { lang, questions, setQuestions, closeModal } = useContext(questionCreateContext);
     const [codeString, setCodeString] = useState("");
     const [qBody, setqBody] = useState("");
     const [correct, setCorrect] = useState(false);
@@ -220,10 +220,16 @@ const SingleQuestion = ({ k }) => {
                         let q = questions;
                         q[key] = question;
                         setQuestions(q);
-                        console.log(questions.length);
-                        console.log(key);
+                        if (key + 1 == questions.length) {
+                            console.log(e.target.innerHTML);
+                            e.target.innerHTML = "Submit";
+                            e.target.onclick = (e) => {
+                                e.preventDefault();
+                                closeModal();
+                            };
+                            return;
+                        }
 
-                        if (key + 1 == questions.length) return;
                         formSteps[key].classList.remove("active");
                         key++;
 
@@ -299,7 +305,7 @@ const Options = ({ correct, setCorrect, opt }) => {
             </div>
 
             {letters.map((letter) => (
-                <div className="option">
+                <div className="option" key={letters.indexOf(letter)}>
                     <div key={letter}>Option: {letter}</div>
                     <input
                         type="text"

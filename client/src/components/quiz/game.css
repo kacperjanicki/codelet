@@ -129,10 +129,9 @@
     filter: blur(1.5px);
 }
 .info {
-    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    padding: 1rem;
 }
 .link {
     font-size: 1.5rem;
@@ -143,9 +142,8 @@
     flex-direction: column;
 }
 .authorPreview {
-    margin-top: -20px;
-    margin-right: -5px;
     display: flex;
+    margin-right: 5px;
     align-items: center;
     gap: 0.5rem;
 }

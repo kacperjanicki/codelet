@@ -1,3 +1,12 @@
+.create {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 600px;
+    height: 300px;
+}
+
 .card {
     background-color: grey;
     min-height: 100px;

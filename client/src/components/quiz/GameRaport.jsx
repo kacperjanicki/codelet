@@ -5,6 +5,7 @@ import { atomOneDark } from "react-code-blocks";
 import { useEffect } from "react";
 import { changeQuizPrivacy } from "../../api_helper/user_functions";
 import { quizContext } from "./Quiz";
+import Moment from "react-moment";
 
 const GameRaport = ({ data, personalContent }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -43,40 +44,51 @@ const GameRaport = ({ data, personalContent }) => {
             data.public ? "Everyone can see this game raport" : "Only you can see this game raport"
         );
     }, []);
+    console.log(data);
 
     return (
         <>
             {personalContent || (!personalContent && data.public) ? (
                 <div key={data.id} className="gameLogCard">
-                    <div>Quiz played at {data.date.toLocaleString()}</div>
-                    <div>Score: {data.score}</div>
                     <div>
-                        <div>{publicityString}</div>
+                        Quiz played at <Moment date={data.date.toLocaleString()} format="DD/MM/YYYY"></Moment>
+                    </div>
+                    <div>
+                        Score: {data.score}/{data.callback.callback.length}
+                    </div>
+                    <div>
                         {personalContent && (
-                            <>
-                                Change game raport publicity:
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        changePrivacy("private");
-                                    }}
-                                >
-                                    Private
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        changePrivacy("public");
-                                    }}
-                                >
-                                    Public
-                                </button>
-                            </>
+                            <div className="changePublic">
+                                <div>{publicityString}</div>
+                                <div style={{ display: "flex", gap: "10px" }}>
+                                    Change game raport publicity:
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            changePrivacy("private");
+                                        }}
+                                    >
+                                        Private
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            changePrivacy("public");
+                                        }}
+                                    >
+                                        Public
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                     {personalContent || (!personalContent && data.public) ? (
                         <>
-                            <button onClick={openModal}>View Game report</button>
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                                <button onClick={openModal} style={{ width: "200px" }}>
+                                    View Game report
+                                </button>
+                            </div>
                             <Modal
                                 isOpen={isOpen}
                                 onRequestClose={closeModal}
@@ -89,6 +101,7 @@ const GameRaport = ({ data, personalContent }) => {
                                         question={question}
                                         questionArr={questions}
                                         callback={callback[questions.indexOf(question)]}
+                                        key={questions.indexOf(question)}
                                     />
                                 ))}
                             </Modal>

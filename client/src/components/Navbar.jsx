@@ -1,15 +1,16 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../api_helper/user_functions";
 import { UserContext } from "../App";
-import { AiFillHome, AiFillFileAdd } from "react-icons/ai";
+import { AiFillHome, AiFillFileAdd, AiFillBug } from "react-icons/ai";
 import { MdExplore } from "react-icons/md";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
 import { useEffect } from "react";
 import logo from "./logo.png";
 import Alert from "./Alert";
+import Modal from "react-modal";
 
 const Navbar = () => {
     const userCon = useContext(UserContext);
@@ -43,8 +44,6 @@ const Navbar = () => {
 
     return (
         <>
-            <Alert url={window.location.search} />
-
             <nav className="navbar">
                 <ul className="nav navLeft">
                     {/* <div>
@@ -63,18 +62,6 @@ const Navbar = () => {
                             </div>
                         </li>
                     </div>
-                    {/* <div>
-                    <li className="navItem" data-location="home">
-                        <AiFillHome
-                            className="icon"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                history("/home");
-                            }}
-                        />
-                        <Link to="/home">Home</Link>
-                    </li>
-                </div> */}
                     <div>
                         <li className="navItem" data-location="explore">
                             <MdExplore
@@ -101,7 +88,13 @@ const Navbar = () => {
                     </div>
                 </ul>
                 {!userCon.userObj ? (
-                    <ul className="nav navRight">
+                    <ul className="nav navRight" style={{ alignItems: "center" }}>
+                        <div>
+                            <li className="navItem">
+                                <span style={{ fontSize: "1rem" }}> Report a bug</span>
+                                <AiFillBug className="icon" />
+                            </li>
+                        </div>
                         <div>
                             <li className="navItem" data-location="login">
                                 <Link to="/login">Login</Link>
@@ -116,6 +109,16 @@ const Navbar = () => {
                 ) : null}
                 {userCon.userObj ? (
                     <ul className="nav navRight">
+                        <div>
+                            <li className="navItem">
+                                <span style={{ fontSize: "1rem" }} className="hidden">
+                                    {" "}
+                                    Report a bug
+                                </span>
+                                <Bug />
+                            </li>
+                        </div>
+
                         <div>
                             <li className="navItem">
                                 <RiLogoutBoxRFill
@@ -152,6 +155,61 @@ const Navbar = () => {
                     </ul>
                 ) : null}
             </nav>
+        </>
+    );
+};
+
+const Bug = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeModal() {
+        setIsOpen(false);
+    }
+    Modal.setAppElement(document.getElementById("root"));
+    return (
+        <>
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                overlayClassName={"Overlay"}
+                className={"Modal"}
+            >
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+
+                        return false;
+                    }}
+                >
+                    <div className="issue">
+                        What is the issue?
+                        <textarea
+                            style={{ resize: "none", width: "500px", height: "200px" }}
+                            required
+                        ></textarea>
+                        <input type="text" placeholder="Your name...." required />
+                        <button>Submit</button>
+                    </div>
+                </form>
+            </Modal>
+            <AiFillBug
+                className="icon"
+                onMouseOver={(e) => {
+                    e.preventDefault();
+                    e.target.previousSibling.classList.add("visible");
+                }}
+                onMouseLeave={(e) => {
+                    e.preventDefault();
+                    e.target.previousSibling.classList.remove("visible");
+                }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    openModal();
+                }}
+            />
         </>
     );
 };

@@ -27,14 +27,16 @@ const Create = () => {
     Modal.setAppElement(document.getElementById("root"));
 
     return (
-        <>
+        <div className="create">
             <div>
-                <h5>Welcome!</h5>
+                <div style={{ textAlign: "center", fontWeight: "bold", fontSize: "2.5rem" }}>Welcome!</div>
                 Here you can contribute to our community and create your own quizes!
             </div>
-            <button onClick={openModal} disabled={!userLoggedIn}>
-                Create a new Quiz
-            </button>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <button onClick={openModal} disabled={!userLoggedIn}>
+                    Create a new Quiz
+                </button>
+            </div>
             {!userLoggedIn && (
                 <button
                     onClick={(e) => {
@@ -54,7 +56,7 @@ const Create = () => {
             >
                 <AnimatedForm />
             </Modal>
-        </>
+        </div>
     );
 };
 
@@ -291,7 +293,7 @@ const AnimatedForm = () => {
                         className={"Modal"}
                     >
                         <questionContext.Provider
-                            value={{ setQuestionsCreated, questionsCreated, closeModal, howMany }}
+                            value={{ setQuestionsCreated, questionsCreated, closeModal, howMany, closeModal }}
                         >
                             <QuestionCreate lang={lang} />
                         </questionContext.Provider>

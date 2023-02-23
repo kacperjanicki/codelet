@@ -66,7 +66,7 @@ const QuizPreview = () => {
                                     <span className="previewTop"> Publicity:</span>
                                     <span>{quiz.public ? "Public" : "Private"}</span>
                                 </div>
-                                <div style={{ display: "flex", alignItems: "center" }}>
+                                <div style={{ display: "flex", alignItems: "center", marginRight: "10px" }}>
                                     <Link to={`/quiz/${type}_${idString}/play`}>Start quiz</Link>
                                 </div>
                             </div>
