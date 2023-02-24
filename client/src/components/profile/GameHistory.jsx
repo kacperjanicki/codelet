@@ -27,7 +27,8 @@ const GameHistory = ({ games, personalContent }) => {
         <div className="gameLog">
             {games.length > 0 && (
                 <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ fontSize: "2.5rem" }}> Game history:</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "1.5rem" }}>
                         Games are being sorted {sortingStr}
                         {sorting == "desc" ? <RxClock /> : <RxCounterClockwiseClock />}
                     </div>
@@ -54,7 +55,6 @@ const GameHistory = ({ games, personalContent }) => {
                         </button>
                     </div>
                     <div className="gamesContainer">
-                        Game history:
                         {games.map((game) => (
                             <div className="gameDiv">
                                 <GameRaport data={game} personalContent={personalContent} />

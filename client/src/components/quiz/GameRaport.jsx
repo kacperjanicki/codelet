@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { changeQuizPrivacy } from "../../api_helper/user_functions";
 import { quizContext } from "./Quiz";
 import Moment from "react-moment";
+import { Link } from "react-router-dom";
 
 const GameRaport = ({ data, personalContent }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -50,9 +51,13 @@ const GameRaport = ({ data, personalContent }) => {
         <>
             {personalContent || (!personalContent && data.public) ? (
                 <div key={data.id} className="gameLogCard">
-                    <div>
+                    <span>
+                        <Link to={`/quiz/${data.quizdata.quizid}`}>{data.quizdata.quizname}</Link>
+                        by {data.quizdata.author.name}
+                    </span>
+                    <span style={{ fontSize: "1.5rem" }}>
                         Quiz played at <Moment date={data.date.toLocaleString()} format="DD/MM/YYYY"></Moment>
-                    </div>
+                    </span>
                     <div>
                         Score: {data.score}/{data.callback.callback.length}
                     </div>

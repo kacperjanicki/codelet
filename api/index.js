@@ -24,13 +24,18 @@ pool.query(
 
     CREATE TABLE IF NOT EXISTS quizgames (
         id SERIAL PRIMARY KEY,
+        quizId VARCHAR(255) NOT NULL,
+        quizData JSONB NOT NULL,
+        lang VARCHAR(255) NOT NULL,
+        no VARCHAR(255) NOT NULL,
         player_id INT NOT NULL,
         score INT NOT NULL,
         callback JSONB NOT NULL,
         questions JSONB NOT NULL,
         date TIMESTAMP,
         public BOOLEAN NOT NULL,
-        CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id));
+        CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id),
+        CONSTRAINT fk_quizid FOREIGN KEY(quizId) REFERENCES quizes(quizid));
 
     CREATE TABLE IF NOT EXISTS quizes (
         id SERIAL PRIMARY KEY,
@@ -63,7 +68,7 @@ app.post("/login", async (req, res) => {
         let correctPass = await bcrypt.compare(password, queryRes.password);
         if (correctPass) {
             const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-                expiresIn: 3600,
+                expiresIn: 1000000,
             });
 
             res.status(200).send({ token: token, user: queryRes, ok: correctPass });

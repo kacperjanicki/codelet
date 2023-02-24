@@ -18,6 +18,11 @@ router.get("/:id/byId", verifyJWT, async (req, res) => {
     res.send(query);
 });
 
+router.get("/allUsersFetch", async (req, res) => {
+    let query = await pool.query("SELECT * FROM users;");
+    res.send(query.rows);
+});
+
 router.put("/:id/editProfile", verifyJWT, personalAction, async (req, res) => {
     const { id } = req.params;
 

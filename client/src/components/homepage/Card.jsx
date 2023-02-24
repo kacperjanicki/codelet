@@ -21,7 +21,7 @@ const Card = ({ quiz }) => {
                             className="quizName"
                             style={{ display: "flex", alignItems: "center", gap: "10px" }}
                         >
-                            <i class={`devicon-${type}-plain`}></i>
+                            <i className={`devicon-${type}-plain`}></i>
 
                             {id}
                         </div>

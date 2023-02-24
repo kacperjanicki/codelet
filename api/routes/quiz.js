@@ -42,13 +42,15 @@ router.get("/allQuizesFetch", async (req, res) => {
 
 // this endpoint handles saving data about game that user just played, score,date etc.
 router.post("/newquiz", async (req, res) => {
-    const { user_id, score, callback, questions } = req.body;
+    const { lang, no, quizId, user_id, score, callback, questions } = req.body;
     let raport = { callback: callback };
     let questionData = { questions: questions };
     let date = new Date();
+    let quizById = await pool.query("SELECT * FROM quizes WHERE quizid=$1;", [quizId]);
+
     let pol = await pool.query(
-        `INSERT INTO quizgames(player_id,score,date,callback,questions,public) VALUES($1,$2,$3,$4,$5,$6);`,
-        [user_id, score, date, raport, questionData, true]
+        `INSERT INTO quizgames(quizId,quizData,lang,no,player_id,score,date,callback,questions,public) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);`,
+        [quizId, quizById.rows[0], lang, no, user_id, score, date, raport, questionData, true]
     );
     let id = await pool.query(
         `

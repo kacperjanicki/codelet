@@ -56,7 +56,7 @@ export const isUserAuth = () => {
     return request;
 };
 
-export const saveQuizToDb = (id, score, callback, questions) => {
+export const saveQuizToDb = (quizId, lang, no, id, score, callback, questions) => {
     // console.log(id, score);
     let request = fetch(apiUrl + "quiz/newquiz", {
         method: "POST",
@@ -65,6 +65,9 @@ export const saveQuizToDb = (id, score, callback, questions) => {
             "x-access-token": localStorage.getItem("token"),
         },
         body: JSON.stringify({
+            quizId: quizId,
+            lang: lang,
+            no: no,
             user_id: id,
             score: score,
             callback: callback,
@@ -133,6 +136,22 @@ export const changeQuizPrivacy = (privacy, id) => {
 
 export const quizesAvailable = () => {
     let request = fetch(apiUrl + `quiz/allQuizesFetch`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": localStorage.getItem("token"),
+        },
+    })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            return data;
+        });
+    return request;
+};
+export const getAllUsers = () => {
+    let request = fetch(apiUrl + `user/allUsersFetch`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

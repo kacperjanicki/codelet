@@ -52,11 +52,20 @@ const Quiz = () => {
     const userObj = useContext(UserContext).userObj;
 
     const [quizObj, setQuizObj] = useState(false);
+    console.log(quizId);
     useEffect(() => {
         //wait until questions run out and save quiz results into database
         if (quizEnded) {
             async function saveQuiz() {
-                let res = await saveQuizToDb(userObj.id, score, progress, questions);
+                let res = await saveQuizToDb(
+                    quizLang + quizId,
+                    quizLang,
+                    quizId,
+                    userObj.id,
+                    score,
+                    progress,
+                    questions
+                );
                 setQuizObj(res);
             }
             saveQuiz();

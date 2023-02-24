@@ -20,6 +20,7 @@ const Profile = () => {
             async function fetchProfile() {
                 let info = await getProfileInfo(username);
                 if (!info.err) setProfile(info.res);
+                console.log(info);
                 // console.log(info);
             }
             fetchProfile();

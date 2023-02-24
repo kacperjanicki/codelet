@@ -40,12 +40,12 @@ const EditProfile = () => {
                 </div>
             </div>
             <div className="profileEdit">
-                <div className="left">
-                    <div>
+                <div className="formContainer">
+                    <div className="formRow">
                         <label>Username</label>
                         <input type="text" disabled defaultValue={userCon.userObj.name} />
                     </div>
-                    <div>
+                    <div className="formRow">
                         <label>Name</label>
                         <input
                             type="text"
@@ -55,7 +55,7 @@ const EditProfile = () => {
                             defaultValue={userCon.userObj.fname}
                         />
                     </div>
-                    <div>
+                    <div className="formRow">
                         <label>Age</label>
                         <input
                             type="number"
@@ -68,32 +68,18 @@ const EditProfile = () => {
                     <div>
                         <AddProfilePic />
                     </div>
-
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            let obj = {};
-                            if (fname !== userCon.userObj.fname) obj["fname"] = fname;
-                            if (age !== userCon.userObj.age) obj["age"] = age;
-                            submitProfileEdit(obj);
-                        }}
-                    >
-                        Edit
-                    </button>
-                </div>
-                <div className="right">
-                    <div className="preview">
-                        <div>Profile preview</div>
-                        <div className="profPicSection">
-                            <img
-                                src="https://e7.pngegg.com/pngimages/90/53/png-clipart-team-fortress-2-playerunknown-s-battlegrounds-counter-strike-global-offensive-avatar-steam-avatar-thumbnail.png"
-                                style={{ height: "200px", width: "200px" }}
-                            />
-                            <span>
-                                {/* {userCon.userObj.fname[0].toUpperCase() + profile.fname.slice(1)}{" "}
-                                {userCon.userObj.lname[0].toUpperCase() + profile.lname.slice(1)} */}
-                            </span>
-                        </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                let obj = {};
+                                if (fname !== userCon.userObj.fname) obj["fname"] = fname;
+                                if (age !== userCon.userObj.age) obj["age"] = age;
+                                submitProfileEdit(obj);
+                            }}
+                        >
+                            Edit
+                        </button>
                     </div>
                 </div>
             </div>
