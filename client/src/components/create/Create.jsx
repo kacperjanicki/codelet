@@ -10,6 +10,7 @@ import "./createNewQuiz.css";
 import "./script.js";
 import QuestionCreate from "./QuestionCreate";
 import { createContext } from "react";
+import Preview from "./Preview";
 
 const Create = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -184,6 +185,10 @@ const AnimatedForm = () => {
     }, [howMany]);
 
     useEffect(() => {
+        console.log(questionsCreated);
+    }, [questionsCreated]);
+
+    useEffect(() => {
         let filtered = questionsCreated.filter((e) => typeof e === "object");
 
         if (filtered.length > 0) {
@@ -336,6 +341,7 @@ const AnimatedForm = () => {
                 <div data-step className="card">
                     <div className="formGroup">
                         <Summary
+                            questions={questionsCreated}
                             quizDesc={quizDesc}
                             quizName={quizName}
                             id={id}
@@ -356,7 +362,7 @@ const AnimatedForm = () => {
                         lang={lang}
                         publicity={publicity}
                         questions={questionsCreated}
-                        preview={openModal}
+                        setQuestions={setQuestionsCreated}
                     />
                 </div>
             </div>
@@ -364,7 +370,14 @@ const AnimatedForm = () => {
     );
 };
 
-const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, preview }) => {
+const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, setQuestions }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeModal() {
+        setIsOpen(false);
+    }
     return (
         <div style={{ display: "flex", gap: ".5rem", flexDirection: "column" }}>
             {quizName && (
@@ -416,11 +429,20 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, preview }
                             type="button"
                             onClick={(e) => {
                                 e.preventDefault();
-                                preview();
+                                openModal();
                             }}
                         >
-                            Preview
+                            Preview or change
                         </button>
+                        <Modal
+                            isOpen={isOpen}
+                            onRequestClose={closeModal}
+                            contentLabel="Example Modal"
+                            overlayClassName={"Overlay"}
+                            className={"Modal"}
+                        >
+                            <Preview />
+                        </Modal>
                     </div>
                 )}
             </div>
