@@ -171,7 +171,55 @@ const AnimatedForm = () => {
     // creating questions logic
     const [isOpen, setIsOpen] = useState(false);
     const [howMany, setHowMany] = useState(2);
-    const [questionsCreated, setQuestionsCreated] = useState([]);
+    const [questionsCreated, setQuestionsCreated] = useState([
+        {
+            code: "body1",
+            question: "q1",
+            correct: "B",
+            options: [
+                {
+                    choice: "A",
+                    answer: "a",
+                },
+                {
+                    choice: "B",
+                    answer: "b",
+                },
+                {
+                    choice: "C",
+                    answer: "c",
+                },
+                {
+                    choice: "D",
+                    answer: "d",
+                },
+            ],
+        },
+        {
+            code: "b2",
+            question: "q2",
+            correct: "C",
+            options: [
+                {
+                    choice: "A",
+                    answer: "x",
+                },
+                {
+                    choice: "B",
+                    answer: "d",
+                },
+                {
+                    choice: "C",
+                    answer: "d",
+                },
+                {
+                    choice: "D",
+                    answer: "x",
+                },
+            ],
+        },
+    ]);
+    const [shouldFilter, setShouldFilter] = useState(true);
     function openModal() {
         setIsOpen(true);
     }
@@ -179,7 +227,7 @@ const AnimatedForm = () => {
         setIsOpen(false);
     }
     useEffect(() => {
-        if (typeof howMany == "number" && howMany > 0) {
+        if (typeof howMany == "number" && howMany > 0 && questionsCreated.length == 0) {
             setQuestionsCreated([...Array(howMany).keys()]);
         }
     }, [howMany]);
@@ -194,16 +242,15 @@ const AnimatedForm = () => {
         if (filtered.length > 0) {
             // let objs = document.querySelectorAll("[data-step-q]");
             // objs.forEach((o) => o.classList.remove("active"));
-            closeModal();
-            let all = [...document.querySelectorAll("[data-step]")];
-            let active = [...document.querySelectorAll("[data-step]")].filter((e) =>
-                e.classList.contains("active")
-            )[0];
-            let index = all.indexOf(active);
-            active.classList.remove("active");
-            all[index + 1].classList.add("active");
-
-            console.log(active);
+            // closeModal();
+            // let all = [...document.querySelectorAll("[data-step]")];
+            // console.log(all);
+            // let active = [...document.querySelectorAll("[data-step]")].filter((e) =>
+            //     e.classList.contains("active")
+            // )[0];
+            // let index = all.indexOf(active);
+            // active.classList.remove("active");
+            // all[index + 1].classList.add("active");
         }
     }, [questionsCreated]);
 
@@ -441,7 +488,7 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, setQuesti
                             overlayClassName={"Overlay"}
                             className={"Modal"}
                         >
-                            <Preview />
+                            <Preview questions={questions} setQuestions={setQuestions} />
                         </Modal>
                     </div>
                 )}
