@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { singUpReq } from "../api_helper/user_functions";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../App";
 
 const Signup = () => {
     const [username, setUsername] = useState("");
@@ -17,6 +18,14 @@ const Signup = () => {
             navigate(`/login?msg=Account created, now you can log in
         &username=${username}`);
     }, [shouldRedirect]);
+    const userObj = useContext(UserContext);
+
+    useEffect(() => {
+        if (userObj.userObj) {
+            navigate("/home");
+        }
+    }, []);
+
     return (
         <div className="middle">
             {err}

@@ -26,7 +26,9 @@ const Card = ({ quiz }) => {
                             {id}
                         </div>
                         <div>
-                            <a href={`/quiz/${type}_${idString}`}>View more</a>
+                            <a href={`/quiz/${type}_${idString}`} className="linkEffect">
+                                View more
+                            </a>
                             {/* <Link to={`/quiz/${type}_${idString}`}>See more</Link> */}
                         </div>
                         <div
@@ -48,7 +50,9 @@ const Card = ({ quiz }) => {
                                         history(`/profile/${author.name}`);
                                     }}
                                 />
-                                <Link to={`/profile/${author.name}`}>{author.name}</Link>
+                                <Link to={`/profile/${author.name}`} className="linkEffect">
+                                    {author.name}
+                                </Link>
                                 {/* <span style={{ fontSize: "1.5rem" }}>{author.name}</span> */}
                             </div>
                         </div>

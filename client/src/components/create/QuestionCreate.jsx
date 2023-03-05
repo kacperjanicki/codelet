@@ -28,7 +28,7 @@ const tabsInTxt = () => {
 };
 
 const QuestionCreate = ({ lang }) => {
-    const { questionsCreated, setQuestionsCreated, howMany } = useContext(questionContext);
+    const { questionsCreated, setQuestionsCreated, howMany, closeModal } = useContext(questionContext);
     let questions = questionsCreated;
     let setQuestions = setQuestionsCreated;
     tabsInTxt();
@@ -91,7 +91,7 @@ const QuestionCreate = ({ lang }) => {
 
     return (
         <questionCreateContext.Provider
-            value={{ lang, currentStep, setCurrentStep, questions, setQuestions }}
+            value={{ lang, currentStep, setCurrentStep, questions, setQuestions, closeModal }}
         >
             <form data-multi-step-q>
                 {questions.map((q) => (

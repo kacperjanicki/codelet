@@ -24,7 +24,9 @@ const Login = () => {
     }, [msg, redirectedUser]);
 
     const userObj = useContext(UserContext);
-    // console.log(userObj);
+    if (userObj.userObj) {
+        history("/home");
+    }
 
     return (
         <div className="middle">

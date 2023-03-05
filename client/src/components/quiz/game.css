@@ -27,6 +27,12 @@
 .incorrect {
     background-color: red;
 }
+.changeCorrect {
+    background-color: #7a7a7a;
+}
+.changeCorrect:hover {
+    background-color: rgb(13, 110, 13);
+}
 
 /* timer styling */
 .timer {
@@ -110,7 +116,6 @@
 /* quiz preview */
 .previewContainer {
     width: 700px;
-    background-color: #1b1e24;
     position: relative;
     left: 50%;
     top: 0%;
@@ -118,6 +123,14 @@
     display: flex;
     flex-direction: column;
 }
+.previewSection {
+    /* border-radius: 10px; */
+}
+.previewQuizContainer {
+    background-color: #3c3f46;
+    padding: 1rem;
+}
+
 .previewBg {
     background-color: #282c34;
     height: 300px;
@@ -131,7 +144,6 @@
 .info {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
 }
 .link {
     font-size: 1.5rem;

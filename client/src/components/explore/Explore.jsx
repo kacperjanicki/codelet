@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { quizesAvailable } from "../../api_helper/user_functions";
+import "./explore.css";
 import Card from "../homepage/Card";
 
 const Explore = () => {
@@ -33,10 +34,10 @@ const Explore = () => {
     }, []);
 
     return (
-        <>
-            <div className="sortContainer">
-                Sort:
-                <div className="sortOptions">
+        <div className="homePage">
+            <div className="homeBlock">
+                <div className="header"> Sort:</div>
+                <div className="sortContainer">
                     <div>
                         <label htmlFor="lang">By language:</label>
                         <select
@@ -50,19 +51,21 @@ const Explore = () => {
                             <option value="javascript">Javascript</option>
                         </select>
                     </div>
+                    {lang && quizes && (
+                        <div>
+                            <div className="cardsContainer">
+                                {quizes.map((quiz) => (
+                                    <div key={quiz}>
+                                        <Card key={quiz.quizid} quiz={quiz} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {/* copy from /profile sorting buttons */}
                 </div>
             </div>
-            {lang && quizes && (
-                <div className="quizRecommended">
-                    {quizes.map((quiz) => (
-                        <div key={quiz}>
-                            <Card key={quiz.quizid} quiz={quiz} />
-                        </div>
-                    ))}
-                </div>
-            )}
-        </>
+        </div>
     );
 };
 

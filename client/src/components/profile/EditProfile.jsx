@@ -32,8 +32,10 @@ const EditProfile = () => {
     return (
         <div>
             <div className="msgAlert">
-                <div className="bigMsg">{msg}</div>
-                <div className="smallMsg">
+                <div className="bigMsg" style={{ textAlign: "center" }}>
+                    {msg}
+                </div>
+                <div className="smallMsg" style={{ textAlign: "center" }}>
                     {msg &&
                         msg !== "No changes applied" &&
                         "In order for changes to properly appear, we recommend refreshing your page"}
@@ -90,12 +92,13 @@ const EditProfile = () => {
 const AddProfilePic = () => {
     return (
         <div>
-            <span> Profile picture</span>
+            <span> Profile picture: </span>
+            <span style={{ fontSize: "1rem" }}>coming soon...</span>
             <div>
-                <DefaultPics />
+                {/* <DefaultPics />
                 <div>
                     <input type="file" />
-                </div>
+                </div> */}
             </div>
         </div>
     );

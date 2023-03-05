@@ -6,6 +6,8 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
+    margin-left: 10%;
+    margin-right: 10%;
     gap: 1rem;
 }
 .homeBlock {
@@ -15,6 +17,11 @@
 }
 .header {
     margin: 0.5rem;
+}
+.headerAll {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .user {
@@ -46,14 +53,14 @@
     background-color: #323335;
     width: 300px;
 }
-.homeCard a {
+.linkEffect {
     box-shadow: inset 0 0 0 0 #5a5f61;
     color: #bcbebe;
     margin: 0 -0.25rem;
     padding: 0 0.25rem;
     transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
-.homeCard a:hover {
+.linkEffect:hover {
     box-shadow: inset 250px 0 0 0 #7f8385;
     color: white;
 }

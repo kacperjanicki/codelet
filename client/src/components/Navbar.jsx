@@ -184,15 +184,17 @@ const Bug = () => {
                         return false;
                     }}
                 >
-                    <div className="issue">
-                        What is the issue?
-                        <textarea
-                            style={{ resize: "none", width: "500px", height: "200px" }}
-                            required
-                        ></textarea>
-                        <input type="text" placeholder="Your name...." required />
-                        <button>Submit</button>
-                    </div>
+                    <div className="issue">Please email me at kacper.janicki523@gmail.com</div>
+                    Bugs I'm aware of:
+                    <ul>
+                        <li>On publicity step in quiz creation you need to click 'next' button two times.</li>
+                    </ul>
+                    Features coming:
+                    <ul>
+                        <li>Profile pictures</li>
+                        <li>Friend requests, friends community tab, see what quizes your friends' play </li>
+                        <li>Rank system, for every win you gain xp, for every lose you lose xp</li>
+                    </ul>
                 </form>
             </Modal>
             <AiFillBug

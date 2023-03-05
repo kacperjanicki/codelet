@@ -135,15 +135,14 @@ const AnimatedForm = () => {
             nxt.onclick = (e) => {
                 e.preventDefault();
                 setSwitched(true);
-                if (input && !input.checkValidity()) {
-                    input.classList.add("wrongInput");
-                    input.placeholder = "Input needed...";
-                } else {
-                    formSteps[currentStep].classList.remove("active");
-                    currentStep++;
-                    formSteps[currentStep].classList.add("active");
-                    input.classList.remove("wrongInput");
-                }
+                // if (input && !input.checkValidity()) {
+                //     input.classList.add("wrongInput");
+                //     input.placeholder = "Input needed...";
+
+                formSteps[currentStep].classList.remove("active");
+                currentStep++;
+                formSteps[currentStep].classList.add("active");
+                input.classList.remove("wrongInput");
             };
             if (!input) return;
             input.addEventListener("keydown", (e) => {
@@ -170,55 +169,15 @@ const AnimatedForm = () => {
 
     // creating questions logic
     const [isOpen, setIsOpen] = useState(false);
-    const [howMany, setHowMany] = useState(2);
-    const [questionsCreated, setQuestionsCreated] = useState([
-        {
-            code: "body1",
-            question: "q1",
-            correct: "B",
-            options: [
-                {
-                    choice: "A",
-                    answer: "a",
-                },
-                {
-                    choice: "B",
-                    answer: "b",
-                },
-                {
-                    choice: "C",
-                    answer: "c",
-                },
-                {
-                    choice: "D",
-                    answer: "d",
-                },
-            ],
-        },
-        {
-            code: "b2",
-            question: "q2",
-            correct: "C",
-            options: [
-                {
-                    choice: "A",
-                    answer: "x",
-                },
-                {
-                    choice: "B",
-                    answer: "d",
-                },
-                {
-                    choice: "C",
-                    answer: "d",
-                },
-                {
-                    choice: "D",
-                    answer: "x",
-                },
-            ],
-        },
-    ]);
+    const [howMany, setHowMany] = useState(0);
+    const [questionsCreated, setQuestionsCreated] = useState([]);
+
+    useEffect(() => {
+        if (typeof howMany == "number" && howMany > 0 && questionsCreated.length == 0) {
+            setQuestionsCreated([...Array(howMany).keys()]);
+        }
+    }, [howMany]);
+
     const [shouldFilter, setShouldFilter] = useState(true);
     function openModal() {
         setIsOpen(true);
@@ -226,12 +185,6 @@ const AnimatedForm = () => {
     function closeModal() {
         setIsOpen(false);
     }
-    useEffect(() => {
-        if (typeof howMany == "number" && howMany > 0 && questionsCreated.length == 0) {
-            setQuestionsCreated([...Array(howMany).keys()]);
-        }
-    }, [howMany]);
-
     useEffect(() => {
         console.log(questionsCreated);
     }, [questionsCreated]);
@@ -354,7 +307,23 @@ const AnimatedForm = () => {
                         <button type="button" data-previous>
                             Previous
                         </button>
-                        <button type="button" onClick={openModal}>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (questionsCreated[0].code) {
+                                    const formSteps = [...document.querySelectorAll("[data-step]")];
+
+                                    let currentStep = formSteps.findIndex((step) =>
+                                        step.classList.contains("active")
+                                    );
+                                    formSteps[currentStep].classList.remove("active");
+                                    formSteps[currentStep + 1].classList.add("active");
+                                } else {
+                                    openModal();
+                                }
+                            }}
+                        >
                             Next
                         </button>
                     </div>
@@ -367,7 +336,6 @@ const AnimatedForm = () => {
                         name="select"
                         required
                         onChange={(e) => {
-                            console.log(publicity);
                             e.preventDefault();
                             setPublicity(e.target.value);
                         }}
@@ -386,15 +354,7 @@ const AnimatedForm = () => {
                     </div>
                 </div>
                 <div data-step className="card">
-                    <div className="formGroup">
-                        <Summary
-                            questions={questionsCreated}
-                            quizDesc={quizDesc}
-                            quizName={quizName}
-                            id={id}
-                            lang={lang}
-                            publicity={publicity}
-                        />
+                    <div className="formGroup" style={{ textAlign: "center" }}>
                         <button type="submit">Submit</button>
                     </div>
                 </div>
@@ -425,6 +385,17 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, setQuesti
     function closeModal() {
         setIsOpen(false);
     }
+    useEffect(() => {
+        if (!quizName) {
+            console.log(questions);
+            setQuestions([]);
+        }
+    }, []);
+
+    var canShowPreview = false;
+    if (questions.length == 0) canShowPreview = false;
+    if (questions.length > 0 && questions[0].code) canShowPreview = true;
+
     return (
         <div style={{ display: "flex", gap: ".5rem", flexDirection: "column" }}>
             {quizName && (
@@ -478,6 +449,7 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, setQuesti
                                 e.preventDefault();
                                 openModal();
                             }}
+                            disabled={!canShowPreview}
                         >
                             Preview or change
                         </button>
@@ -488,7 +460,7 @@ const Summary = ({ lang, id, quizName, quizDesc, publicity, questions, setQuesti
                             overlayClassName={"Overlay"}
                             className={"Modal"}
                         >
-                            <Preview questions={questions} setQuestions={setQuestions} />
+                            <Preview close={closeModal} questions={questions} setQuestions={setQuestions} />
                         </Modal>
                     </div>
                 )}

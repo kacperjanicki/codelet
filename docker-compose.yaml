@@ -1,0 +1,38 @@
+version: "3"
+services:
+    postgres:
+        image: "postgres:15.2-alpine"
+        environment:
+            - POSTGRES_PASSWORD=jd
+    nginx:
+        depends_on:
+            - api
+            - client
+        restart: always
+        build:
+            dockerfile: Dockerfile
+            context: ./nginx
+        ports:
+            - "3050:80"
+    api:
+        build:
+            dockerfile: Dockerfile
+            context: "./api"
+        volumes:
+            - /app/node_modules
+            - ./api:/app
+        environment:
+            - PGUSER = 'postgres'
+            - PG_HOST = 'localhost'
+            - PG_DB = "codelet"
+            - PG_PASSWORD = "jd"
+            - PG_PORT = 5432
+            - JWT_SECRET = "sdfkfsdjifeioeerwikwerkmvmdklvkmlmksdl;fsksd"
+    client:
+        stdin_open: true
+        build:
+            dockerfile: Dockerfile
+            context: "./client"
+        volumes:
+            - /app/node_modules
+            - ./client:/app

@@ -2,40 +2,27 @@ import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-const Preview = ({ questions, setQuestions }) => {
-    // useEffect(() => {
-    //     setQuestions([
-    //         {
-    //             code: "body1",
-    //             question: "q1",
-    //             correct: "B",
-    //             options: [
-    //                 {
-    //                     choice: "A",
-    //                     answer: "a",
-    //                 },
-    //                 {
-    //                     choice: "B",
-    //                     answer: "b",
-    //                 },
-    //                 {
-    //                     choice: "C",
-    //                     answer: "c",
-    //                 },
-    //                 {
-    //                     choice: "D",
-    //                     answer: "d",
-    //                 },
-    //             ],
-    //         },
-    //     ]);
-    // }, []);
-
+const Preview = ({ questions, setQuestions, close }) => {
     return (
-        <div className="previewContainer">
-            {questions.map((q) => (
-                <Question key={q.code} questions={questions} data={q} setQuestions={setQuestions} />
-            ))}
+        <div>
+            <div className="previewContainer">
+                {questions.map((q) => (
+                    <div className="previewSection">
+                        <Question key={q.code} questions={questions} data={q} setQuestions={setQuestions} />
+                    </div>
+                ))}
+            </div>
+            <div style={{ display: "flex", margin: "10px", justifyContent: "center" }}>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        close();
+                        // add `x changes applied alert in top right corner`
+                    }}
+                >
+                    Confirm changes
+                </button>
+            </div>
         </div>
     );
 };
@@ -47,14 +34,17 @@ const Question = ({ questions, data, setQuestions }) => {
 
     const [codeString, setCodeString] = useState(data.code);
     const [questionPrompt, setQuestionPrompt] = useState(data.question);
+    const [correct, setCorrect] = useState(data.correct);
+    const [correctStr, setCorrectStr] = useState(`${data.correct} is set to be a correct answer`);
 
     useEffect(() => {
         let q = questions;
         q[key].code = codeString;
         q[key].question = questionPrompt;
+        q[key].correct = correct;
         setQuestions(q);
         console.log(questions);
-    }, [codeString, questionPrompt]);
+    }, [codeString, questionPrompt, correct]);
 
     let lang = "python";
     // useEffect(() => {
@@ -65,12 +55,38 @@ const Question = ({ questions, data, setQuestions }) => {
     // }, []);
 
     const changeCorrect = () => {
+        let parent = document.getElementById("preview" + key);
         // change top text to `choose correct answer for your question`
-        // when button gets clicked, handle recording it in a state
+        setCorrectStr("Choose a correct answer");
+        // hide change btn
+        let changeBtn = document.getElementById("changeBtn");
+        changeBtn.classList.add("hidden");
+        // make all btns gray but slightly lighter, remove current correct answer indication
+        let btns = parent.querySelectorAll(".option-btn");
+        btns.forEach((btn) => {
+            btn.classList = "option-btn changeCorrect";
+            // when button gets clicked, handle recording it in a state
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                setCorrect(e.target.value.toUpperCase());
+                setCorrectStr(`${correct} is set to be a correct answer`);
+                // make btns like initial state
+                btns.forEach((btn) => btn.classList.remove("changeCorrect", "correct"));
+
+                btn.classList = "option-btn correct";
+                changeBtn.classList.remove("hidden");
+            });
+            // btn.onClick = (e) => {
+            //     e.preventDefault();
+            //     console.log("a");
+            //     // setCorrect(e.target.innerHTML)
+            //     console.log(e.target.innerHTML);
+            // };
+        });
     };
 
     return (
-        <div className="previewQuestion">
+        <div className="previewQuestion" id={`preview${key}`}>
             <div>
                 <div className="questionBody">
                     Question:{" "}
@@ -105,9 +121,18 @@ const Question = ({ questions, data, setQuestions }) => {
                 </div>
             </div>
             <div className="options">
-                <span style={{ fontSize: ".9rem", marginTop: "10px" }}>
-                    {data.correct} is set to be a correct answer
+                <span style={{ fontSize: ".9rem", marginTop: "10px" }} id="correctIndicator">
+                    {correctStr}
                 </span>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        changeCorrect();
+                    }}
+                    id="changeBtn"
+                >
+                    Change
+                </button>
                 {data.options.map((op) => (
                     <Option
                         key={op.choice}
@@ -126,17 +151,9 @@ const Option = ({ choice, answer, correct, handleCorrectChange }) => {
     return (
         <div style={{ display: "flex", alignItems: "center", marginLeft: "1rem" }}>
             {choice}
-            <button className={`option-btn ${choice == correct && "correct"}`}>{answer}</button>
-            {choice == correct && (
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        handleCorrectChange();
-                    }}
-                >
-                    Change
-                </button>
-            )}
+            <button className={`option-btn ${choice == correct && "correct"}`} value={answer}>
+                {answer}
+            </button>
         </div>
     );
 };

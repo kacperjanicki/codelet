@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchQuiz } from "../../api_helper/user_functions";
 
 const QuizPreview = () => {
@@ -9,6 +9,7 @@ const QuizPreview = () => {
     let type = id.split("_")[0];
     let idString = id.split("_")[1];
     const [quiz, setQuiz] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getAllQuizes() {
@@ -40,34 +41,42 @@ const QuizPreview = () => {
                                     <img
                                         className="profileImage smallImage"
                                         src="https://www.pwshoponline.com/assets/images/avatars/avatar1_big.png"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            navigate(`/profile/${quiz.author.name}`);
+                                        }}
                                         alt=""
                                     />
                                 </div>
                             </div>
-                            <div className="previewSection">
-                                <span className="previewTop"> Description:</span>
-                                <span> {quiz.quizdesc ? quiz.quizdesc : "No description"}</span>
-                            </div>
-
-                            <div className="previewSection">
-                                <span className="previewTop"> Language:</span>
-                                <span>
-                                    <Link style={{ textDecoration: "none" }} to={`/explore?lang=${type}`}>
-                                        {type}
-                                    </Link>
-                                </span>
-                            </div>
-                            <div className="previewSection">
-                                <span className="previewTop"> Date:</span>
-                                <span>{new Date(quiz.date).toISOString()}</span>
-                            </div>
-                            <div className="previewRight">
+                            <div className="previewQuizContainer">
                                 <div className="previewSection">
-                                    <span className="previewTop"> Publicity:</span>
-                                    <span>{quiz.public ? "Public" : "Private"}</span>
+                                    <span className="previewTop"> Description:</span>
+                                    <span> {quiz.quizdesc ? quiz.quizdesc : "No description"}</span>
                                 </div>
-                                <div style={{ display: "flex", alignItems: "center", marginRight: "10px" }}>
-                                    <Link to={`/quiz/${type}_${idString}/play`}>Start quiz</Link>
+
+                                <div className="previewSection">
+                                    <span className="previewTop"> Language:</span>
+                                    <span>
+                                        <Link style={{ textDecoration: "none" }} to={`/explore?lang=${type}`}>
+                                            {type}
+                                        </Link>
+                                    </span>
+                                </div>
+                                <div className="previewSection">
+                                    <span className="previewTop"> Date:</span>
+                                    <span>{new Date(quiz.date).toISOString()}</span>
+                                </div>
+                                <div className="previewRight">
+                                    <div className="previewSection">
+                                        <span className="previewTop"> Publicity:</span>
+                                        <span>{quiz.public ? "Public" : "Private"}</span>
+                                    </div>
+                                    <div
+                                        style={{ display: "flex", alignItems: "center", marginRight: "10px" }}
+                                    >
+                                        <Link to={`/quiz/${type}_${idString}/play`}>Start quiz</Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>

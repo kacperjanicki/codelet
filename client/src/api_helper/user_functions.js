@@ -1,4 +1,5 @@
-let apiUrl = process.env.REACT_APP_apiURL;
+// let apiUrl = process.env.REACT_APP_apiURL;
+let apiUrl = "http://localhost:3050/api/";
 
 export const loginReq = (username, password) => {
     return fetch(apiUrl + "login", {
