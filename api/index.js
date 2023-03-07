@@ -23,6 +23,18 @@ pool.query(
                 lname VARCHAR NOT NULL CHECK (lname <> ''),
                 password VARCHAR(255) NOT NULL CHECK (password <> ''),
                 age INT NOT NULL);
+    CREATE TABLE IF NOT EXISTS quizes (
+        id SERIAL PRIMARY KEY,
+        author_id INT NOT NULL,
+        author JSONB NOT NULL,
+        lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
+        quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
+        quizname VARCHAR(255) NOT NULL CHECK (quizName <> ''),
+        quizDesc VARCHAR(255),
+        date TIMESTAMP,
+        public BOOLEAN NOT NULL,
+        questions JSONB NOT NULL,
+        CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(user_id));
 
     CREATE TABLE IF NOT EXISTS quizgames (
         id SERIAL PRIMARY KEY,
@@ -39,18 +51,7 @@ pool.query(
         CONSTRAINT fk_author FOREIGN KEY(player_id) REFERENCES users(user_id),
         CONSTRAINT fk_quizid FOREIGN KEY(quizId) REFERENCES quizes(quizid));
 
-    CREATE TABLE IF NOT EXISTS quizes (
-        id SERIAL PRIMARY KEY,
-        author_id INT NOT NULL,
-        author JSONB NOT NULL,
-        lang VARCHAR(255) NOT NULL CHECK (lang <> ''),
-        quizid VARCHAR(255) UNIQUE NOT NULL CHECK (quizid <> ''),
-        quizname VARCHAR(255) NOT NULL CHECK (quizName <> ''),
-        quizDesc VARCHAR(255),
-        date TIMESTAMP,
-        public BOOLEAN NOT NULL,
-        questions JSONB NOT NULL,
-        CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(user_id));`
+   `
 ).catch((err) => console.error(err));
 
 app.use("/quiz", quizRouter);
